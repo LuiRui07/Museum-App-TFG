@@ -5,7 +5,7 @@ const ObjectId = mongoose.Types.ObjectId;
 const usuariosSchema = require("../models/usuarios.js");
 //LLAMADAS CRUD-------------------------------------------------------------------------------
 
-//Create
+//Create (Revisar)
 router.post("/", (req, res) => {
   const user = usuariosSchema(req.body);
   axios.get('http://localhost:5001/usuarios/correo/' + user.correo).then((response) => {
@@ -32,7 +32,7 @@ router.get("/", (req, res) => {
 });
 
 // Get by ID
-router.get("/:id", (req, res) => {
+router.get("/user/:id", (req, res) => {
   const { id } = req.params;
   usuariosSchema
     .findById(id)
@@ -46,7 +46,7 @@ router.get("/:id", (req, res) => {
     .catch((error) => res.json({ message: error }));
 });
 
-// delete, comprobado con Postman 
+// Delete
 router.delete("/:id", (req, res) => {
   const { id } = req.params;
   usuariosSchema
@@ -55,7 +55,7 @@ router.delete("/:id", (req, res) => {
     .catch((error) => res.json({ message: error }));
 });
 
-// update, comprobado con Postman
+// Update (Revisar)
 router.put("/:id", (req, res) => {
   const { id } = req.params;
   const { nombreCompleto, calle, numero, codigoPostal, ciudad, provincia, pais, valoraciones, numeroValoraciones} = req.body;
@@ -65,7 +65,22 @@ router.put("/:id", (req, res) => {
     .catch((error) => res.json({ message: error }));
 });
 
+//------------------------------------------------------------------------------------
 
+// Login
+router.get("/login", (req, res) => {
+  const { user, password } = req.body;
+  usuariosSchema
+    .findOne({ user: user, password: password })
+    .then((data) => {
+      if (data) {
+        res.json({ message: "Usuario logueado correctamente"});
+      } else {
+        res.json({ message: "Correo o contraseña incorrectos." });
+      }
+    })
+    .catch((error) => res.json({ message: error }));
+});
 
 
 module.exports = router
