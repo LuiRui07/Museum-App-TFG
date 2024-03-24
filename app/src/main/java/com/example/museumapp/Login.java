@@ -2,6 +2,11 @@ package com.example.museumapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import okhttp3.MediaType;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+
+
 import android.media.MediaTimestamp;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
@@ -31,20 +36,28 @@ public class Login extends AppCompatActivity {
             Toast.makeText(this, "Debe escribir un usuario y una contraseña", Toast.LENGTH_SHORT).show();
         }
 
-        MediaType JSON = MediaType.parse();
+        MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
-        JSONObject jsonbody = new JSONObject();
+        JSONObject jsonBody = new JSONObject();
         try{
-            jsonbody.put("username",user);
-            jsonbody.put("password",contra);
+            jsonBody.put("username",user);
+            jsonBody.put("password",contra);
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
+        RequestBody requestBody = RequestBody.create(JSON, jsonBody. toString();
+        String url = "http://192.168.18.24:3000/users/login";
+        Request request = new Request.Builder()
+                .url(url)
+                .post (requestBody)
+                .build();
+        new AsyncTask().execute(request);
+    }
 
-
-
-
-
+    private class AsyncTask {
+        protected void execute(Request req) {
+            
+        }
     }
 }
