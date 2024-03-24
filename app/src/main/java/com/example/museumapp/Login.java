@@ -40,7 +40,7 @@ public class Login extends AppCompatActivity {
 
         JSONObject jsonBody = new JSONObject();
         try{
-            jsonBody.put("username",user);
+            jsonBody.put("user",user);
             jsonBody.put("password",contra);
         } catch (JSONException e) {
             e.printStackTrace();
