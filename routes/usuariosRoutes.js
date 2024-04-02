@@ -68,7 +68,7 @@ router.put("/:id", (req, res) => {
 //------------------------------------------------------------------------------------
 
 // Login
-router.get("/login", (req, res) => {
+router.post("/login", (req, res) => {
   const { user, password } = req.body;
   usuariosSchema
     .findOne({ user: user, password: password })
