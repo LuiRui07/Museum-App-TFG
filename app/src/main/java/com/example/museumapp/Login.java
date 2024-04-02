@@ -1,20 +1,18 @@
 package com.example.museumapp;
 
+
 import androidx.appcompat.app.AppCompatActivity;
-
-import okhttp3.MediaType;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-
-
-import android.media.MediaTimestamp;
+import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.speech.tts.TextToSpeech;
+import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import org.json.JSONException;
-import org.json.JSONObject;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class Login extends AppCompatActivity {
 
@@ -27,37 +25,49 @@ public class Login extends AppCompatActivity {
         setContentView(R.layout.activity_main);
     }
 
-    protected void login() {
+    @SuppressLint("NotConstructor")
+    public void Login(View view) {
         TextView c = findViewById(R.id.contra);
         contra = c.getText().toString();
         TextView u = findViewById(R.id.user);
         user = u.getText().toString();
-        if (user != "" && contra != "") {
+
+        if (user.isEmpty() || contra.isEmpty()) {
             Toast.makeText(this, "Debe escribir un usuario y una contraseña", Toast.LENGTH_SHORT).show();
         }
 
-        MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-
-        JSONObject jsonBody = new JSONObject();
-        try{
-            jsonBody.put("user",user);
-            jsonBody.put("password",contra);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        RequestBody requestBody = RequestBody.create(JSON, jsonBody. toString();
-        String url = "http://192.168.18.24:3000/users/login";
-        Request request = new Request.Builder()
-                .url(url)
-                .post (requestBody)
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://192.168.0.17:5001/")
+                .addConverterFactory(GsonConverterFactory.create())
                 .build();
-        new AsyncTask().execute(request);
+
+        ApiService apiService = retrofit.create(ApiService.class);
+
+        LoginRequest loginRequest = new LoginRequest(user, contra);
+        Call<LoginResponse> call1 = apiService.loginUser(loginRequest);
+
+
+        call1.enqueue(new Callback<LoginResponse>() {
+            @Override
+            public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
+                if (response.isSuccessful()) {
+                    LoginResponse loginResponse = response.body();
+                    String message = loginResponse.getMessage();
+                    if (loginResponse != null) {
+                        Log.d("LoginResponse", message);
+                    } else {
+                        Log.d("LoginResponse", loginResponse.toString());
+                    }
+                } else {
+                    Log.d("LoginResponse", response.toString());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<LoginResponse> call, Throwable t) {
+                Log.e("LoginResponse", "Error en la solicitud: " + t.getMessage());
+            }
+        });
     }
 
-    private class AsyncTask {
-        protected void execute(Request req) {
-            
-        }
-    }
 }
