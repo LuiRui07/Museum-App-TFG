@@ -3,6 +3,7 @@ package com.example.museumapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -22,7 +23,11 @@ public class Login extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.login);
+    }
+
+    protected void toast(String text) {
+        Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
     }
 
     @SuppressLint("NotConstructor")
@@ -44,22 +49,23 @@ public class Login extends AppCompatActivity {
         ApiService apiService = retrofit.create(ApiService.class);
 
         LoginRequest loginRequest = new LoginRequest(user, contra);
-        Call<LoginResponse> call1 = apiService.loginUser(loginRequest);
+        Call<LoginResponse> call = apiService.loginUser(loginRequest);
 
 
-        call1.enqueue(new Callback<LoginResponse>() {
+        call.enqueue(new Callback<LoginResponse>() {
             @Override
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
                 if (response.isSuccessful()) {
                     LoginResponse loginResponse = response.body();
                     String message = loginResponse.getMessage();
-                    if (loginResponse != null) {
-                        Log.d("LoginResponse", message);
+                    if (message.contains("1")) {
+                        Intent intent = new Intent(getApplicationContext(), Home.class);
+                        startActivity(intent);
                     } else {
-                        Log.d("LoginResponse", loginResponse.toString());
+                        toast("Correo o Contraseña Incorrectos");
                     }
                 } else {
-                    Log.d("LoginResponse", response.toString());
+                    Log.d("LoginResponse", response.message());
                 }
             }
 

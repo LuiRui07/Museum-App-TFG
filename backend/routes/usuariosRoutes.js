@@ -74,9 +74,9 @@ router.post("/login", (req, res) => {
     .findOne({ user: user, password: password })
     .then((data) => {
       if (data) {
-        res.json({ message: "Usuario logueado correctamente"});
+        res.json({ message: "1"});
       } else {
-        res.json({ message: "Correo o contraseña incorrectos." });
+        res.json({ message: "0" });
       }
     })
     .catch((error) => res.json({ message: error }));
