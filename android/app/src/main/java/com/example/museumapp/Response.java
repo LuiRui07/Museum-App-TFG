@@ -1,6 +1,6 @@
 package com.example.museumapp;
 
-public class LoginResponse {
+public class Response {
     private String message;
 
     public String getMessage() {

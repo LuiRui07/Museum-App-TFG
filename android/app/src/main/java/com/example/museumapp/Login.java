@@ -11,7 +11,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import retrofit2.Call;
 import retrofit2.Callback;
-import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -26,7 +25,7 @@ public class Login extends AppCompatActivity {
         setContentView(R.layout.login);
     }
 
-    protected void toast(String text) {
+    public void toast(String text) {
         Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
     }
 
@@ -49,14 +48,14 @@ public class Login extends AppCompatActivity {
         ApiService apiService = retrofit.create(ApiService.class);
 
         LoginRequest loginRequest = new LoginRequest(user, contra);
-        Call<LoginResponse> call = apiService.loginUser(loginRequest);
+        Call<Response> call = apiService.loginUser(loginRequest);
 
 
-        call.enqueue(new Callback<LoginResponse>() {
+        call.enqueue(new Callback<Response>() {
             @Override
-            public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
+            public void onResponse(Call<Response> call, retrofit2.Response<Response> response) {
                 if (response.isSuccessful()) {
-                    LoginResponse loginResponse = response.body();
+                    Response loginResponse = response.body();
                     String message = loginResponse.getMessage();
                     if (message.contains("1")) {
                         Intent intent = new Intent(getApplicationContext(), Home.class);
@@ -70,7 +69,7 @@ public class Login extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<LoginResponse> call, Throwable t) {
+            public void onFailure(Call<Response> call, Throwable t) {
                 Log.e("LoginResponse", "Error en la solicitud: " + t.getMessage());
             }
         });
