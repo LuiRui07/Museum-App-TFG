@@ -29,6 +29,11 @@ public class Login extends AppCompatActivity {
         Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
     }
 
+    public void Register(View view){
+        Intent intent = new Intent(this, Register.class);
+        startActivity(intent);
+    }
+
     @SuppressLint("NotConstructor")
     public void Login(View view) {
         TextView c = findViewById(R.id.contra);

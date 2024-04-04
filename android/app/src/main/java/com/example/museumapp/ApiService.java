@@ -17,4 +17,6 @@ public interface ApiService {
     @GET("users/check")
     Call<Response> checkExists(@Query("mail") String mail, @Query("user") String user);
 
+    @POST("users/")
+    Call<Response> createUser(@Body UserBody userBody);
 }
