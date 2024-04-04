@@ -7,7 +7,7 @@ const fetch = require("node-fetch");
 
 //LLAMADAS CRUD-------------------------------------------------------------------------------
 
-//Create (Revisar) // Que guarde el correo en minsuculas!!
+//Create 
 router.post("/", (req, res) => {
   const user = usuariosSchema(req.body);
   user.mail = user.mail.toLowerCase();
@@ -76,8 +76,12 @@ router.put("/:id", (req, res) => {
 // Login
 router.post("/login", (req, res) => {
   const { user, password } = req.body;
+  const mail = user.toLowerCase();
   usuariosSchema
-    .findOne({ user: user, password: password })
+    .findOne({ 
+      $or: [{ mail: mail }, { user: user }],
+      password: password
+     })
     .then((data) => {
       if (data) {
         res.json({ message: "1"});
@@ -122,6 +126,8 @@ router.get("/check", (req, res) => {
     })
     .catch((error) => res.json({ message: error }));
 });
+
+
 
 
 module.exports = router
