@@ -64,8 +64,8 @@ public class Register extends AppCompatActivity {
 
         ApiService apiService = retrofit.create(ApiService.class);
 
-
-        Call<Response> call = apiService.checkExists(correo,username);
+        UserBody userBody = new UserBody(username,correo,pass);
+        Call<Response> call = apiService.createUser(userBody);
 
         call.enqueue(new Callback<Response>() {
             @Override
@@ -73,9 +73,11 @@ public class Register extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     Response responseb = response.body();
                     String message = responseb.getMessage();
-                    Log.d("Check?", message);
+                    Log.d("Create?", message);
                     if (message.contains("1")) {
-                        finalizar(correo,username,pass);
+                        toast("Usuario Creado");
+                        Intent intent = new Intent(getApplicationContext(), Login.class);
+                        startActivity(intent);
                     } else {
                         toast("No");
                     }
@@ -90,44 +92,5 @@ public class Register extends AppCompatActivity {
             }
         });
     }}
-
-    public void finalizar (String mail, String user, String pass){
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.0.17:5001/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        ApiService apiService = retrofit.create(ApiService.class);
-
-        UserBody userBody = new UserBody(user,mail,pass);
-        Call<Response> call = apiService.createUser(userBody);
-
-        call.enqueue(new Callback<Response>() {
-            @Override
-            public void onResponse(Call<Response> call, retrofit2.Response<Response> response) {
-                if (response.isSuccessful()) {
-                    Response createResponse = response.body();
-                    String message = createResponse.getMessage();
-                    Log.d("Create?", message);
-                    if (message.contains("1")) {
-                        toast("Usuario Creado");
-                    } else {
-                        toast("No");
-                        Log.d("Create?", message);
-                    }
-                } else {
-                    Log.d("CreateResponse", response.message());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Response> call, Throwable t) {
-                Log.e("CreateResponse", "Error en la solicitud: " + t.getMessage());
-            }
-        });
-
-
-    }
 
 }

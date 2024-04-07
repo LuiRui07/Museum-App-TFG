@@ -3,7 +3,7 @@ const router = express.Router();
 const mongoose = require("mongoose");
 const ObjectId = mongoose.Types.ObjectId;
 const usuariosSchema = require("../models/usuarios.js");
-const fetch = require("node-fetch");
+const axios = require('axios');
 
 //LLAMADAS CRUD-------------------------------------------------------------------------------
 
@@ -11,22 +11,22 @@ const fetch = require("node-fetch");
 router.post("/", (req, res) => {
   const user = usuariosSchema(req.body);
   user.mail = user.mail.toLowerCase();
-  fetch(`http://localhost:5001/users/check?mail=${user.mail}&user=${user.user}`)
-  .then((response) => response.json()) // Parsea la respuesta como JSON
-  .then((data) => {
-    const { message } = data;
-    console.log(user);
-    if (message === "1") {
-      user.save()
-        .then((data) => {
-          res.json({ message: "1" }); // Responde una vez que el usuario se ha guardado correctamente
-        })
-        .catch((error) => res.json({ message: error }));
-    } else {
-      res.json({ message: "Ya existe un usuario con ese correo o usuario." }); // Responde si ya existe un usuario con ese correo
-    }
-  })
-  .catch((error) => res.json({ message: error }));
+  axios.get(`http://localhost:5001/users/check?mail=${user.mail}&user=${user.user}`)
+    .then((response) => {
+      const { message } = response.data; // Parsea la respuesta como JSON y obtiene la propiedad "message"
+      console.log(user);
+      console.log(message);
+      if (message === "1") {
+        user.save()
+          .then(() => {
+            res.json({ message: "1" }); // Responde una vez que el usuario se ha guardado correctamente
+          })
+          .catch((error) => res.json({ message: error }));
+      } else {
+        res.json({ message: "Ya existe un usuario con ese correo o usuario." }); // Responde si ya existe un usuario con ese correo
+      }
+    })
+    .catch((error) => res.json({ message: error }));
 });
 
 // Get All
@@ -94,14 +94,14 @@ router.post("/login", (req, res) => {
 
 // Comprobar que no existe correo y/o usuario
 router.get("/check", (req, res) => {
-  const correo = req.query.mail.toLowerCase(); 
+  const mail = req.query.mail.toLowerCase(); 
   const user = req.query.user; 
 
   let correoExists = false;
   let userExists = false;
 
   usuariosSchema
-    .find({ mail: correo })
+    .find({ mail: mail })
     .then((dataCorreo) => {
       if (dataCorreo && dataCorreo.length > 0) { 
         correoExists = true;
