@@ -37,11 +37,11 @@ router.get("/", (req, res) => {
     .catch((error) => res.json({ message: error }));
 });
 
-// Get by ID
-router.get("/user/:id", (req, res) => {
+// Get by ID 
+router.get("/:id", (req, res) => {
   const { id } = req.params;
   usuariosSchema
-    .findById(id)
+    .findById({_id: id})
     .then((data) => {
       if (data) {
         res.json(data);
@@ -52,7 +52,7 @@ router.get("/user/:id", (req, res) => {
     .catch((error) => res.json({ message: error }));
 });
 
-// Delete
+// Delete 
 router.delete("/:id", (req, res) => {
   const { id } = req.params;
   usuariosSchema
@@ -61,12 +61,12 @@ router.delete("/:id", (req, res) => {
     .catch((error) => res.json({ message: error }));
 });
 
-// Update (Revisar)
+// Update 
 router.put("/:id", (req, res) => {
   const { id } = req.params;
-  const { nombreCompleto, calle, numero, codigoPostal, ciudad, provincia, pais, valoraciones, numeroValoraciones} = req.body;
+  const {user, mail, password} = req.body;
   usuariosSchema
-    .updateOne({ _id: id }, { $set: { nombreCompleto, calle, numero, codigoPostal, ciudad, provincia, pais,valoraciones, numeroValoraciones} })
+    .updateOne({ _id: id }, { $set: { user, mail, password} })
     .then((data) => res.json(data))
     .catch((error) => res.json({ message: error }));
 });
