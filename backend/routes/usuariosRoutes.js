@@ -19,7 +19,7 @@ router.post("/", (req, res) => {
     if (message === "1") {
       user.save()
         .then((data) => {
-          res.json({ message: "Usuario creado correctamente." }); // Responde una vez que el usuario se ha guardado correctamente
+          res.json({ message: "1" }); // Responde una vez que el usuario se ha guardado correctamente
         })
         .catch((error) => res.json({ message: error }));
     } else {

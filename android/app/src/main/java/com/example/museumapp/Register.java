@@ -75,8 +75,7 @@ public class Register extends AppCompatActivity {
                     String message = responseb.getMessage();
                     Log.d("Check?", message);
                     if (message.contains("1")) {
-                        toast("Todo perfe");
-                        finalizar(correo,username,pass); // Por alguna razon no entra 
+                        finalizar(correo,username,pass);
                     } else {
                         toast("No");
                     }
@@ -102,29 +101,29 @@ public class Register extends AppCompatActivity {
         ApiService apiService = retrofit.create(ApiService.class);
 
         UserBody userBody = new UserBody(user,mail,pass);
-
         Call<Response> call = apiService.createUser(userBody);
 
         call.enqueue(new Callback<Response>() {
             @Override
             public void onResponse(Call<Response> call, retrofit2.Response<Response> response) {
                 if (response.isSuccessful()) {
-                    Response responsec = response.body();
-                    String message = responsec.getMessage();
+                    Response createResponse = response.body();
+                    String message = createResponse.getMessage();
                     Log.d("Create?", message);
-                    if (message.contains("correctamente")) {
+                    if (message.contains("1")) {
                         toast("Usuario Creado");
                     } else {
                         toast("No");
+                        Log.d("Create?", message);
                     }
                 } else {
-                    Log.d("LoginResponse", response.message());
+                    Log.d("CreateResponse", response.message());
                 }
             }
 
             @Override
             public void onFailure(Call<Response> call, Throwable t) {
-                Log.e("LoginResponse", "Error en la solicitud: " + t.getMessage());
+                Log.e("CreateResponse", "Error en la solicitud: " + t.getMessage());
             }
         });
 
