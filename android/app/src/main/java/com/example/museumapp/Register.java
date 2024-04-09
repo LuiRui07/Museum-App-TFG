@@ -74,12 +74,15 @@ public class Register extends AppCompatActivity {
                     Response responseb = response.body();
                     String message = responseb.getMessage();
                     Log.d("Create?", message);
+                    Log.d("Correo", correo);
+                    Log.d("Username",username);
+                    Log.d("Password", password);
                     if (message.contains("1")) {
                         toast("Usuario Creado");
                         Intent intent = new Intent(getApplicationContext(), Login.class);
                         startActivity(intent);
                     } else {
-                        toast("No");
+                        toast(message);
                     }
                 } else {
                     Log.d("LoginResponse", response.message());

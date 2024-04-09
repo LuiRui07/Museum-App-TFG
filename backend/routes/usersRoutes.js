@@ -5,9 +5,64 @@ const ObjectId = mongoose.Types.ObjectId;
 const usersSchema = require("../models/users.js");
 const axios = require('axios');
 
+/* Comprobar que no existe correo y/o usuario */
+router.get("/check", (req, res) => {
+  const mail = req.query.mail.toLowerCase(); 
+  const user = req.query.user; 
+
+  let correoExists = false;
+  let userExists = false;
+
+  usersSchema
+    .find({ mail: mail })
+    .then((dataCorreo) => {
+      if (dataCorreo && dataCorreo.length > 0) { 
+        correoExists = true;
+      }
+
+      usersSchema
+        .find({ user: user })
+        .then((dataUser) => {
+          if (dataUser && dataUser.length > 0) { 
+            userExists = true;
+          }
+
+          if (correoExists) {
+            res.json({ message: "Ya existe ese correo" });
+          } else if (userExists) {
+            res.json({ message: "Ya existe ese nombre de usuario" });
+          } else {
+            res.json({ message: "1" });
+          }
+        })
+        .catch((error) => res.json({ message: error }));
+    })
+    .catch((error) => res.json({ message: error }));
+});
+
+/* Login */
+router.post("/login", (req, res) => {
+  const { user, password } = req.body;
+  const mail = user.toLowerCase();
+  usersSchema
+    .findOne({ 
+      $or: [{ mail: mail }, { user: user }],
+      password: password
+     })
+    .then((data) => {
+      if (data) {
+        res.json({ message: "1"});
+      } else {
+        res.json({ message: "0" });
+      }
+    })
+    .catch((error) => res.json({ message: error }));
+});
+
+
 //LLAMADAS CRUD-------------------------------------------------------------------------------
 
-//Create 
+// Create 
 router.post("/", (req, res) => {
   const user = usersSchema(req.body);
   user.mail = user.mail.toLowerCase();
@@ -70,63 +125,6 @@ router.put("/:id", (req, res) => {
     .then((data) => res.json(data))
     .catch((error) => res.json({ message: error }));
 });
-
-//------------------------------------------------------------------------------------
-
-// Login
-router.post("/login", (req, res) => {
-  const { user, password } = req.body;
-  const mail = user.toLowerCase();
-  usersSchema
-    .findOne({ 
-      $or: [{ mail: mail }, { user: user }],
-      password: password
-     })
-    .then((data) => {
-      if (data) {
-        res.json({ message: "1"});
-      } else {
-        res.json({ message: "0" });
-      }
-    })
-    .catch((error) => res.json({ message: error }));
-});
-
-// Comprobar que no existe correo y/o usuario
-router.get("/check", (req, res) => {
-  const mail = req.query.mail.toLowerCase(); 
-  const user = req.query.user; 
-
-  let correoExists = false;
-  let userExists = false;
-
-  usersSchema
-    .find({ mail: mail })
-    .then((dataCorreo) => {
-      if (dataCorreo && dataCorreo.length > 0) { 
-        correoExists = true;
-      }
-
-      usersSchema
-        .find({ user: user })
-        .then((dataUser) => {
-          if (dataUser && dataUser.length > 0) { 
-            userExists = true;
-          }
-
-          if (correoExists) {
-            res.json({ message: "Ya existe ese correo" });
-          } else if (userExists) {
-            res.json({ message: "Ya existe ese nombre de usuario" });
-          } else {
-            res.json({ message: "1" });
-          }
-        })
-        .catch((error) => res.json({ message: error }));
-    })
-    .catch((error) => res.json({ message: error }));
-});
-
 
 
 
