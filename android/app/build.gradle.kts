@@ -36,7 +36,10 @@ dependencies {
     implementation("com.google.code.gson:gson:2.8.6")
     implementation("com.google.android.material:material:1.11.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
+    implementation("com.mapbox.maps:android:11.3.0")
+    implementation("com.mapbox.extension:maps-compose:11.0.0")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+
 }
