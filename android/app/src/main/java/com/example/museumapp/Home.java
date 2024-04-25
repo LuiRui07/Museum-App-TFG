@@ -1,15 +1,15 @@
 package com.example.museumapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.mapbox.geojson.Point;
-import com.mapbox.maps.CameraOptions;
-import com.mapbox.maps.MapView;
-import com.mapbox.maps.MapboxMap;
-import com.mapbox.maps.CameraOptions;
-import com.mapbox.maps.Style;
+import com.mapbox.mapboxsdk.Mapbox;
+import com.mapbox.mapboxsdk.maps.MapView;
+import com.mapbox.mapboxsdk.maps.MapboxMap;
+import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
+import com.mapbox.mapboxsdk.maps.Style;
 
 
 public class Home extends AppCompatActivity {
@@ -20,35 +20,64 @@ public class Home extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        // Inicializar Mapbox
-
-
-        // Configurar el diseño de la actividad
+        Mapbox.getInstance(this, getString(R.string.mapbox_access_token));
         setContentView(R.layout.home);
 
-        // Crear el mapa
-        mapView = new MapView(this);
+        // Initialize MapView
+        mapView = findViewById(R.id.mapView);
+        mapView.onCreate(savedInstanceState);
 
-        // Configurar la posición de la cámara inicial
-        CameraOptions cameraOptions = new CameraOptions.Builder()
-                .center(Point.fromLngLat(-98.0, 39.5))
-                .zoom(2.0)
-                .pitch(0.0)
-                .bearing(0.0)
-                .build();
-
-        // Agregar el mapa a la actividad
-        setContentView(mapView);
-
-        // Inicializar el mapa asíncronamente
-        mapView.getMapboxMap().getStyle(style -> {
-            // Configurar el estilo del mapa
-
-
-            // Establecer la cámara inicial
-            mapboxMap.setCamera(cameraOptions);
+        // Use MapView
+        mapView.getMapAsync(new OnMapReadyCallback() {
+            @Override
+            public void onMapReady(MapboxMap mapboxMap) {
+                mapboxMap.setStyle(Style.OUTDOORS);
+            }
         });
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mapView.onStart();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mapView.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mapView.onPause();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mapView.onStop();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        mapView.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mapView.onDestroy();
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        mapView.onLowMemory();
+    }
+
+
 
 }
