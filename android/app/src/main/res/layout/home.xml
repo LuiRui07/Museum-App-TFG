@@ -7,8 +7,11 @@
     tools:context=".home">
 
     <RelativeLayout
+        android:id="@+id/relativeLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        tools:layout_editor_absoluteX="-106dp"
+        tools:layout_editor_absoluteY="-55dp">
 
         <com.mapbox.mapboxsdk.maps.MapView
             android:id="@+id/mapView"
@@ -22,15 +25,23 @@
             app:mapbox_cameraTargetLng="50"
             app:mapbox_cameraZoom="50" />
 
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="130dp"
+            android:layout_height="59dp"
+            android:layout_alignStart="@id/mapView"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="130dp"
+            android:layout_marginTop="71dp"
+            android:layout_marginEnd="151dp"
+            android:layout_marginBottom="601dp"
+            android:text="BUENAS" />
+
         <!-- Other views can be added here if needed -->
 
     </RelativeLayout>
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="BUENAS"
-        tools:layout_editor_absoluteX="175dp"
-        tools:layout_editor_absoluteY="76dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>

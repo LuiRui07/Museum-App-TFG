@@ -6,6 +6,8 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.mapbox.mapboxsdk.Mapbox;
+import com.mapbox.mapboxsdk.camera.CameraPosition;
+import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
@@ -31,10 +33,25 @@ public class Home extends AppCompatActivity {
         mapView.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(MapboxMap mapboxMap) {
-                mapboxMap.setStyle(Style.OUTDOORS);
+                // Establece el estilo del mapa
+                mapboxMap.setStyle(Style.OUTDOORS, new Style.OnStyleLoaded() {
+                    @Override
+                    public void onStyleLoaded(Style style) {
+                        // Configura la cámara para centrarse en Madrid
+                        CameraPosition position = new CameraPosition.Builder()
+                                .target(new LatLng(40.4168, -3.7038)) // Coordenadas de Madrid
+                                .zoom(12) // Nivel de zoom
+                                .tilt(0) // Inclinación de la cámara
+                                .build();
+
+                        // Mueve la cámara a la posición configurada
+                        mapboxMap.setCameraPosition(position);
+                    }
+                });
             }
         });
     }
+
 
     @Override
     protected void onStart() {
@@ -45,7 +62,9 @@ public class Home extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        mapView.onResume();
+        if (mapView != null) {
+            mapView.onResume();
+        }
     }
 
     @Override
