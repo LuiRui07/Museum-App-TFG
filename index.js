@@ -7,8 +7,10 @@ const port = 5001;
 app.use(express.json());
 app.use(cors());
 
-const usuariosRoutes = require("./routes/usuariosRoutes");
-app.use('/users', usuariosRoutes);
+const usersRoutes = require("./routes/usersRoutes");
+const artRoutes = require("./routes/artRoutes");
+app.use('/users', usersRoutes);
+app.use('/art', artRoutes);
 
 mongoose.connect(
   "mongodb+srv://ei:ei@cluster0.1acabfy.mongodb.net/Museum").then(() =>
