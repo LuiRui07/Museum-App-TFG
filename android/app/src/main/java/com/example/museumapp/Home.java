@@ -7,9 +7,16 @@ import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.view.Gravity;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
+import androidx.appcompat.widget.Toolbar;
 
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.mapbox.android.core.location.LocationEngine;
 import com.mapbox.android.core.location.LocationEngineCallback;
@@ -37,14 +44,18 @@ public class Home extends AppCompatActivity implements PermissionsListener {
 
     private MapView mapView;
     private MapboxMap mapboxMap;
-
     private PermissionsManager permissionsManager;
-
+    private DrawerLayout drawerLayout;
+    private Button btnMenu;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Mapbox.getInstance(this, getString(R.string.mapbox_access_token));
         setContentView(R.layout.home);
+
+        // Obtener referencias a las vistas
+        drawerLayout = findViewById(R.id.drawer_layout);
+        btnMenu = findViewById(R.id.btn_menu);
 
         // Initialize MapView
         mapView = findViewById(R.id.mapView);
@@ -71,6 +82,13 @@ public class Home extends AppCompatActivity implements PermissionsListener {
                 }
             });
         }
+
+    // Método invocado cuando se hace clic en el botón del menú
+    public void onMenuButtonClick(View view) {
+        // Abrir el cajón de navegación
+        drawerLayout.openDrawer(Gravity.START);
+    }
+
 
     @SuppressWarnings("MissingPermission")
     private void enableLocationComponent(Style loadedMapStyle) {
