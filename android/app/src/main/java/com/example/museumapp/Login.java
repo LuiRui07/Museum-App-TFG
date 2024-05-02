@@ -1,14 +1,32 @@
 package com.example.museumapp;
 
 
+import static android.content.ContentValues.TAG;
+
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.SignInButton;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.Task;
+
+import java.net.URI;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -16,8 +34,16 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class Login extends AppCompatActivity {
 
-    String contra ;
-    String user ;
+    private static final int RC_SIGN_IN = 183107755; // Constante para el código de solicitud de inicio de sesión
+
+    private GoogleSignInClient mGoogleSignInClient;
+
+    private ActivityResultLauncher<Intent> signInLauncher;
+
+
+    private boolean signedGoogle;
+    private String contra ;
+    private String user ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,8 +89,7 @@ public class Login extends AppCompatActivity {
                     Response loginResponse = response.body();
                     String message = loginResponse.getMessage();
                     if (message.contains("1")) {
-                        Intent intent = new Intent(getApplicationContext(), Home.class);
-                        startActivity(intent);
+                        goHome(loginResponse.getUser(),loginResponse.getCorreo(),null);  // Meter datos
                     } else {
                         toast("Correo o Contraseña Incorrectos");
                     }
@@ -78,6 +103,17 @@ public class Login extends AppCompatActivity {
                 Log.e("LoginResponse", "Error en la solicitud: " + t.getMessage());
             }
         });
+    }
+
+    public void goHome(String user, String mail, Uri photo) {
+        SharedData sharedData = SharedData.getInstance();
+        sharedData.setUser(user);
+        sharedData.setMail(mail);
+        sharedData.setPhoto(photo);
+        Log.e("UserData", sharedData.toString());
+        Intent intent = new Intent(getApplicationContext(), Home.class);
+        startActivity(intent);
+
     }
 
 }

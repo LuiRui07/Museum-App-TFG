@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
 const ObjectId = mongoose.Types.ObjectId;
-const usersSchema = require("../models/users.js");
+const usersSchema = require("../models/user.js");
 const axios = require('axios');
 
 /* Comprobar que no existe correo y/o usuario */
@@ -29,6 +29,7 @@ router.get("/check", (req, res) => {
 
           if (correoExists) {
             res.json({ message: "Ya existe ese correo" });
+    
           } else if (userExists) {
             res.json({ message: "Ya existe ese nombre de usuario" });
           } else {
@@ -51,13 +52,15 @@ router.post("/login", (req, res) => {
      })
     .then((data) => {
       if (data) {
-        res.json({ message: "1"});
+        // Si se encuentra el usuario, devolver además de "1", el user y el mail
+        res.json({ message: "1", user: data.user, mail: data.mail });
       } else {
+        // Si no se encuentra el usuario, devolver "0"
         res.json({ message: "0" });
       }
     })
     .catch((error) => res.json({ message: error }));
-});
+}); 
 
 
 //LLAMADAS CRUD-------------------------------------------------------------------------------

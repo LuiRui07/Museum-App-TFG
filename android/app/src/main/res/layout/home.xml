@@ -26,7 +26,7 @@
             app:mapbox_cameraZoom="50" />
 
         <TextView
-            android:id="@+id/textView"
+            android:id="@+id/userText"
             android:layout_width="130dp"
             android:layout_height="59dp"
             android:layout_alignStart="@id/mapView"
@@ -34,11 +34,21 @@
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
-            android:layout_marginStart="130dp"
-            android:layout_marginTop="71dp"
-            android:layout_marginEnd="151dp"
-            android:layout_marginBottom="601dp"
-            android:text="BUENAS" />
+            android:layout_marginStart="3dp"
+            android:layout_marginTop="3dp"
+            android:layout_marginEnd="277dp"
+            android:layout_marginBottom="669dp"
+            android:text="HOLA" />
+
+        <ScrollView
+            android:layout_width="367dp"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+        </ScrollView>
 
         <!-- Other views can be added here if needed -->
 
