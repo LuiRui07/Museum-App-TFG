@@ -1,23 +1,21 @@
-package com.example.museumapp;
+package com.example.museumapp.Activities;
 
-import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
-import android.location.Criteria;
-import android.location.Location;
-import android.location.LocationManager;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import androidx.appcompat.widget.Toolbar;
 
-import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.annotation.NonNull;
+
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import com.example.museumapp.R;
+import com.example.museumapp.SharedData;
+import com.google.android.material.navigation.NavigationView;
 import com.mapbox.android.core.location.LocationEngine;
 import com.mapbox.android.core.location.LocationEngineCallback;
 import com.mapbox.android.core.location.LocationEngineProvider;
@@ -25,7 +23,6 @@ import com.mapbox.android.core.location.LocationEngineResult;
 import com.mapbox.android.core.permissions.PermissionsListener;
 import com.mapbox.android.core.permissions.PermissionsManager;
 import com.mapbox.mapboxsdk.Mapbox;
-import com.mapbox.mapboxsdk.camera.CameraPosition;
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.location.LocationComponent;
@@ -36,7 +33,6 @@ import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.maps.Style;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -46,6 +42,7 @@ public class Home extends AppCompatActivity implements PermissionsListener {
     private MapboxMap mapboxMap;
     private PermissionsManager permissionsManager;
     private DrawerLayout drawerLayout;
+    private NavigationView navigationView;
     private Button btnMenu;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +53,7 @@ public class Home extends AppCompatActivity implements PermissionsListener {
         // Obtener referencias a las vistas
         drawerLayout = findViewById(R.id.drawer_layout);
         btnMenu = findViewById(R.id.btn_menu);
+        navigationView = findViewById(R.id.navigation_view);
 
         // Initialize MapView
         mapView = findViewById(R.id.mapView);
@@ -81,12 +79,32 @@ public class Home extends AppCompatActivity implements PermissionsListener {
                     });
                 }
             });
+        // Configurar Drawer
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                if (item.getItemId() == R.id.nav_item1) {
+                    Intent intent1 = new Intent(Home.this, Cuenta.class);
+                    startActivity(intent1);
+                } else if (item.getItemId() == R.id.nav_item2) {
+                    Intent intent2 = new Intent(Home.this, Obras.class);
+                    startActivity(intent2);
+                } else {
+                    Intent intent3 = new Intent(Home.this, Recorridos.class);
+                    startActivity(intent3);
+                }
+
+                // Cierra el drawer layout después de que se haya seleccionado un elemento
+                drawerLayout.closeDrawer(GravityCompat.START);
+                return true;
+            }
+        });
         }
 
-    // Método invocado cuando se hace clic en el botón del menú
-    public void onMenuButtonClick(View view) {
-        // Abrir el cajón de navegación
-        drawerLayout.openDrawer(Gravity.START);
+        // Método invocado cuando se hace clic en el botón del menú
+        public void onMenuButtonClick(View view) {
+            // Abrir el cajón de navegación
+            drawerLayout.openDrawer(GravityCompat.START);
     }
 
 

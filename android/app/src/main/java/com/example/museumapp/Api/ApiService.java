@@ -1,4 +1,8 @@
-package com.example.museumapp;
+package com.example.museumapp.Api;
+
+import com.example.museumapp.Models.Obra;
+
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -19,4 +23,7 @@ public interface ApiService {
 
     @POST("users")
     Call<Response> createUser(@Body UserBody userBody);
+
+    @GET("art")
+    Call<List<Obra>> getAllArt();
 }

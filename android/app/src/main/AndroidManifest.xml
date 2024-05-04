@@ -21,7 +21,7 @@
         android:theme="@style/Theme.MuseumApp"
         tools:targetApi="31">
         <activity
-            android:name=".Login"
+            android:name=".Activities.Login"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -31,7 +31,7 @@
         </activity>
 
         <activity
-            android:name=".Home"
+            android:name=".Activities.Home"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -40,7 +40,25 @@
         </activity>
 
         <activity
-            android:name=".Register"
+            android:name=".Activities.Register"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".Activities.Cuenta"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".Activities.Obras"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

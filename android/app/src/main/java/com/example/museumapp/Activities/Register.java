@@ -1,4 +1,4 @@
-package com.example.museumapp;
+package com.example.museumapp.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,7 +9,10 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import org.w3c.dom.Text;
+import com.example.museumapp.Api.ApiService;
+import com.example.museumapp.R;
+import com.example.museumapp.Api.Response;
+import com.example.museumapp.Api.UserBody;
 
 import retrofit2.Call;
 import retrofit2.Callback;

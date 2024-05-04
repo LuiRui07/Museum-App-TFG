@@ -1,4 +1,4 @@
-package com.example.museumapp;
+package com.example.museumapp.Api;
 
 public class UserBody {
     String user;
