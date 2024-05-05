@@ -69,7 +69,7 @@ router.post("/login", (req, res) => {
 router.post("/", (req, res) => {
   const user = usersSchema(req.body);
   user.mail = user.mail.toLowerCase();
-  axios.get(`http://localhost:5001/users/check?mail=${user.mail}&user=${user.user}`)
+  axios.get(`https://tfg-tkck.vercel.app/users/check?mail=${user.mail}&user=${user.user}`)
     .then((response) => {
       const { message } = response.data; 
       console.log(user);
