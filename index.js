@@ -11,6 +11,7 @@ const usersRoutes = require("./routes/usersRoutes");
 const artRoutes = require("./routes/artRoutes");
 app.use('/users', usersRoutes);
 app.use('/art', artRoutes);
+app.use('/beacon', require('./routes/beaconsRoutes'));
 
 mongoose.connect(
   "mongodb+srv://ei:ei@cluster0.1acabfy.mongodb.net/Museum").then(() =>
