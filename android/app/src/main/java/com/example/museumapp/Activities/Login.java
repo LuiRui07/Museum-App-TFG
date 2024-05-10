@@ -64,7 +64,7 @@ public class Login extends AppCompatActivity {
         }
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.0.17:5001/")
+                .baseUrl("https://tfg-tkck.vercel.app/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
@@ -81,7 +81,7 @@ public class Login extends AppCompatActivity {
                     Response loginResponse = response.body();
                     String message = loginResponse.getMessage();
                     if (message.contains("1")) {
-                        goHome(loginResponse.getUser(),loginResponse.getCorreo(),null);  // Meter datos
+                        goHome(loginResponse.getUser(),loginResponse.getMail(),null);  // Meter datos
                     } else {
                         toast("Correo o Contraseña Incorrectos");
                     }

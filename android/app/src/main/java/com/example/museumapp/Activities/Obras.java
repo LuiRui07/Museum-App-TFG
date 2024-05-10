@@ -40,7 +40,7 @@ public class Obras extends AppCompatActivity {
 
     public void getObras() {
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.0.17:5001/")
+                .baseUrl("https://tfg-tkck.vercel.app/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 

@@ -10,6 +10,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.museumapp.R;
 import com.example.museumapp.SharedData;
 
+import org.w3c.dom.Text;
+
 public class Cuenta extends AppCompatActivity {
 
 
@@ -21,6 +23,10 @@ public class Cuenta extends AppCompatActivity {
         SharedData data = SharedData.getInstance();
 
         TextView userName = findViewById(R.id.account_name);
+
+        TextView mail = findViewById(R.id.account_email);
+
+        mail.setText(data.mail);
 
         userName.setText(data.user);
 

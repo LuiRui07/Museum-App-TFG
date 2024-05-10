@@ -9,7 +9,7 @@ public class Response {
 
     private String user;
 
-    private String correo;
+    private String mail;
 
     private List<Obra> obras;
 
@@ -17,8 +17,8 @@ public class Response {
         return message;
     }
 
-    public String getCorreo() {
-        return correo;
+    public String getMail() {
+        return mail;
     }
 
     public String getUser() {

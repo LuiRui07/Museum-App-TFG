@@ -1,5 +1,7 @@
 package com.example.museumapp.Activities;
 
+import android.app.Activity;
+import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -7,6 +9,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -75,10 +79,12 @@ public class Home extends AppCompatActivity implements PermissionsListener {
                         public void onStyleLoaded(Style style) {
                             // Habilita el componente de ubicación
                             enableLocationComponent(style);
+
                         }
                     });
                 }
             });
+
         // Configurar Drawer
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -98,53 +104,87 @@ public class Home extends AppCompatActivity implements PermissionsListener {
                 drawerLayout.closeDrawer(GravityCompat.START);
                 return true;
             }
-        });
+            });
         }
 
-        // Método invocado cuando se hace clic en el botón del menú
-        public void onMenuButtonClick(View view) {
-            // Abrir el cajón de navegación
-            drawerLayout.openDrawer(GravityCompat.START);
+    // Método invocado cuando se hace clic en el botón del menú
+    public void onMenuButtonClick(View view) {
+        // Abrir el cajón de navegación
+        drawerLayout.openDrawer(GravityCompat.START);
     }
+
+    private ActivityResultLauncher<Intent> enableBluetoothLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    // El usuario habilitó el Bluetooth
+                    // Aquí puedes realizar cualquier acción adicional que necesites
+                } else {
+                    // El usuario canceló la solicitud de habilitar Bluetooth
+                    // Aquí puedes manejar este caso, por ejemplo, mostrando un mensaje al usuarioe
+                    enableBluetooth();
+                }
+            }
+    );
+
+    private void enableBluetooth() {
+        BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+
+        if (bluetoothAdapter == null) {
+            // El dispositivo no soporta Bluetooth
+            // Aquí puedes manejar este caso, por ejemplo, mostrando un mensaje al usuario
+            return;
+        }
+
+        if (!bluetoothAdapter.isEnabled()) {
+            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            enableBluetoothLauncher.launch(enableBtIntent);
+        } else {
+            // El Bluetooth ya está habilitado
+            // Aquí puedes realizar cualquier acción adicional que necesites
+        }
+    }
+
+
 
 
     @SuppressWarnings("MissingPermission")
     private void enableLocationComponent(Style loadedMapStyle) {
-        // Verifica los permisos de ubicación
-        if (PermissionsManager.areLocationPermissionsGranted(this)) {
-            // Opciones de configuración del componente de ubicación
-            LocationComponentOptions options = LocationComponentOptions.builder(this)
-                    .build();
+    // Verifica los permisos de ubicación
+    if (PermissionsManager.areLocationPermissionsGranted(this)) {
+        // Opciones de configuración del componente de ubicación
+        LocationComponentOptions options = LocationComponentOptions.builder(this)
+                .build();
 
-            // Configura y activa el componente de ubicación
-            LocationComponent locationComponent = mapboxMap.getLocationComponent();
-            locationComponent.activateLocationComponent(LocationComponentActivationOptions.builder(this, loadedMapStyle)
-                    .locationComponentOptions(options)
-                    .build());
+        // Configura y activa el componente de ubicación
+        LocationComponent locationComponent = mapboxMap.getLocationComponent();
+        locationComponent.activateLocationComponent(LocationComponentActivationOptions.builder(this, loadedMapStyle)
+                .locationComponentOptions(options)
+                .build());
 
-            // Habilita la visualización de la ubicación del usuario en el mapa
-            locationComponent.setLocationComponentEnabled(true);
+        // Habilita la visualización de la ubicación del usuario en el mapa
+        locationComponent.setLocationComponentEnabled(true);
 
-            // Mueve la cámara a la ubicación actual del usuario
-            LocationEngine locationEngine = LocationEngineProvider.getBestLocationEngine(this);
-            locationEngine.getLastLocation(new LocationEngineCallback<LocationEngineResult>() {
-                @Override
-                public void onSuccess(LocationEngineResult result) {
-                    if (result.getLastLocation() != null) {
-                        mapboxMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
-                                new LatLng(result.getLastLocation().getLatitude(), result.getLastLocation().getLongitude()), 12));
-                    }
+        // Mueve la cámara a la ubicación actual del usuario
+        LocationEngine locationEngine = LocationEngineProvider.getBestLocationEngine(this);
+        locationEngine.getLastLocation(new LocationEngineCallback<LocationEngineResult>() {
+            @Override
+            public void onSuccess(LocationEngineResult result) {
+                if (result.getLastLocation() != null) {
+                    mapboxMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
+                            new LatLng(result.getLastLocation().getLatitude(), result.getLastLocation().getLongitude()), 12));
                 }
+            }
 
-                @Override
-                public void onFailure(Exception exception) {
-                    // Manejar el caso en que no se pueda obtener la ubicación actual del usuario
-                }
-            });
+            @Override
+            public void onFailure(Exception exception) {
+                // Manejar el caso en que no se pueda obtener la ubicación actual del usuario
+            }
+        });
         } else {
-            // Si los permisos de ubicación no están otorgados, solicítalos
-            permissionsManager = new PermissionsManager((PermissionsListener) this);
-            permissionsManager.requestLocationPermissions(this);
+        // Si los permisos de ubicación no están otorgados, se solicitan
+        permissionsManager = new PermissionsManager((PermissionsListener) this);
+        permissionsManager.requestLocationPermissions(this);
         }
     }
 
