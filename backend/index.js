@@ -12,6 +12,7 @@ const artRoutes = require("./routes/artRoutes");
 app.use('/users', usersRoutes);
 app.use('/art', artRoutes);
 app.use('/beacon', require('./routes/beaconsRoutes'));
+app.use("/map", require("./routes/mapRoutes"));
 
 mongoose.connect(
   "mongodb+srv://ei:ei@cluster0.1acabfy.mongodb.net/Museum").then(() =>
