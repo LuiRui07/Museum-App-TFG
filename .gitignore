@@ -7,3 +7,7 @@
 /android
 android/.gradle/8.0/checksums/checksums.lock
 /android
+/android/.gradle
+/android/.gradle
+/.idea
+android/.gradle/8.0/executionHistory/executionHistory.lock
