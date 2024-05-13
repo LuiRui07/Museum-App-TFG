@@ -24,6 +24,6 @@ public interface ApiService {
     @POST("users")
     Call<Response> createUser(@Body UserBody userBody);
 
-    @GET("art")
+    @GET("art/")
     Call<List<Obra>> getAllArt();
 }

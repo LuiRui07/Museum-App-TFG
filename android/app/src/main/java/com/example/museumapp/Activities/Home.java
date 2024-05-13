@@ -70,7 +70,7 @@ public class Home extends AppCompatActivity implements PermissionsListener {
         userText.setText(sharedData.user);
 
         // Use MapView
-            mapView.getMapAsync(new OnMapReadyCallback() {
+        mapView.getMapAsync(new OnMapReadyCallback() {
                 @Override
                 public void onMapReady(MapboxMap mapboxMap) {
                     Home.this.mapboxMap = mapboxMap;
@@ -83,7 +83,7 @@ public class Home extends AppCompatActivity implements PermissionsListener {
                         }
                     });
                 }
-            });
+        });
 
         // Configurar Drawer
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
@@ -105,13 +105,15 @@ public class Home extends AppCompatActivity implements PermissionsListener {
                 return true;
             }
             });
-        }
+    }
 
     // Método invocado cuando se hace clic en el botón del menú
     public void onMenuButtonClick(View view) {
         // Abrir el cajón de navegación
         drawerLayout.openDrawer(GravityCompat.START);
     }
+
+    /// METODOS PARA PEDIR PERMISO BLUETHOOT Y LOCALIZACIÓN
 
     private ActivityResultLauncher<Intent> enableBluetoothLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -144,9 +146,6 @@ public class Home extends AppCompatActivity implements PermissionsListener {
             // Aquí puedes realizar cualquier acción adicional que necesites
         }
     }
-
-
-
 
     @SuppressWarnings("MissingPermission")
     private void enableLocationComponent(Style loadedMapStyle) {
@@ -188,6 +187,8 @@ public class Home extends AppCompatActivity implements PermissionsListener {
         }
     }
 
+
+    // MÉTODOS DEFAULT MAPA
     @Override
     protected void onStart() {
         super.onStart();

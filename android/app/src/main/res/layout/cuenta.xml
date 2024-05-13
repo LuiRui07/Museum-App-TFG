@@ -21,14 +21,17 @@
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:src="@drawable/default_user_photo"
-        tools:layout_editor_absoluteX="155dp"
-        tools:layout_editor_absoluteY="76dp" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteY="79dp" />
 
     <TextView
         android:id="@+id/account_email"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
         android:text="correo@ejemplo.com"
-        tools:layout_editor_absoluteX="138dp"
-        tools:layout_editor_absoluteY="269dp" />
+        app:layout_constraintTop_toBottomOf="@+id/account_name"
+        tools:layout_editor_absoluteX="138dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>
