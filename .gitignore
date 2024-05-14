@@ -1,13 +1,7 @@
 
 /node_modules
-.idea/workspace.xml
+/android/.gradle
+/android/.idea
 /.gradle
 /.idea
-/app
-/android
-android/.gradle/8.0/checksums/checksums.lock
-/android
-/android/.gradle
-/android/.gradle
-/.idea
-android/.gradle/8.0/executionHistory/executionHistory.lock
+
