@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const ObjectId = mongoose.Types.ObjectId;
 const artSchema = require("../models/art.js");
 const axios = require('axios');
+const { route } = require("./usersRoutes.js");
 
 //LLAMADAS CRUD-------------------------------------------------------------------------------
 
@@ -65,5 +66,14 @@ router.put("/:id", (req, res) => {
 );
 
 //------------------------------------------------------------------------------------
+
+// Obtener todas las obras de un museo
+router.get("/obrasMuseo/:id", (req, res) => {
+    const { id } = req.params;
+    artSchema
+        .find({ map: id })
+        .then((data) => res.json(data))
+        .catch((error) => res.json({ message: error }));
+});
 
 module.exports = router;

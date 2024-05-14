@@ -24,6 +24,11 @@ const artSchema = new mongoose.Schema({
     category: {
         type: String,
         required: true
+    },
+    map : {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'maps',
+        required: true
     }
 });
 
