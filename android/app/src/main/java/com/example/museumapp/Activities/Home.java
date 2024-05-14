@@ -74,11 +74,12 @@ public class Home extends AppCompatActivity implements PermissionsListener {
                 @Override
                 public void onMapReady(MapboxMap mapboxMap) {
                     Home.this.mapboxMap = mapboxMap;
-                    mapboxMap.setStyle(Style.MAPBOX_STREETS, new Style.OnStyleLoaded() {
+                    mapboxMap.setStyle(new Style.Builder().fromUri("mapbox://styles/luisruiz11/clw3f43jf02ip01qvcs4hcdv7"), new Style.OnStyleLoaded() {
                         @Override
                         public void onStyleLoaded(Style style) {
                             // Habilita el componente de ubicación
                             enableLocationComponent(style);
+                            enableBluetooth();
 
                         }
                     });
