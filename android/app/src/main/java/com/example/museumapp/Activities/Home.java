@@ -3,10 +3,12 @@ package com.example.museumapp.Activities;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
+import android.media.Image;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -62,6 +64,8 @@ public class Home extends AppCompatActivity implements PermissionsListener {
         // Initialize MapView
         mapView = findViewById(R.id.mapView);
         mapView.onCreate(savedInstanceState);
+        // Obtén una referencia al botón de ubicación
+        ImageButton btnLocate = findViewById(R.id.btn_locate);
         //mapView.getMapAsync((OnMapReadyCallback) this);
 
         // SharedData
@@ -106,6 +110,21 @@ public class Home extends AppCompatActivity implements PermissionsListener {
                 return true;
             }
             });
+    }
+
+    public void locate(View view){
+        // Solicita la ubicación del usuario y centra el mapa en esa ubicación
+        if (mapboxMap != null) {
+            // Verifica si se tienen los permisos de ubicación
+            if (PermissionsManager.areLocationPermissionsGranted(Home.this)) {
+                // Activa y configura el componente de ubicación si los permisos están otorgados
+                enableLocationComponent(mapboxMap.getStyle());
+            } else {
+                // Solicita los permisos de ubicación si no están otorgados
+                permissionsManager = new PermissionsManager(Home.this);
+                permissionsManager.requestLocationPermissions(Home.this);
+            }
+        }
     }
 
     // Método invocado cuando se hace clic en el botón del menú

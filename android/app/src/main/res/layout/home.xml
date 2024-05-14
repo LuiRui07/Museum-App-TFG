@@ -28,23 +28,40 @@
             app:mapbox_cameraTargetLng="50"
             app:mapbox_cameraZoom="50" />
 
+        <!-- Botón para ubicar la posición del usuario -->
+        <ImageButton
+            android:id="@+id/btn_locate"
+            android:layout_width="65dp"
+            android:layout_height="60dp"
+            android:background="@android:color/transparent"
+            android:contentDescription="Botón para ubicar el mapa en la ubicación del usuario"
+            android:onClick="locate"
+            android:scaleType="fitCenter"
+            android:src="@drawable/locate_user_icon"
+            app:layout_constraintBottom_toBottomOf="@id/mapView"
+            app:layout_constraintEnd_toEndOf="@id/mapView" />
+
         <Button
             android:id="@+id/btn_menu"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
-            android:layout_marginEnd="232dp"
-            android:layout_marginBottom="92dp"
+            android:layout_marginEnd="212dp"
+            android:layout_marginBottom="72dp"
             android:onClick="onMenuButtonClick"
             android:text="Menú"
             app:layout_constraintBottom_toTopOf="@+id/mapView"
-            app:layout_constraintEnd_toStartOf="@+id/userText" />
+            app:layout_constraintEnd_toStartOf="@+id/userText"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0" />
 
         <TextView
             android:id="@+id/userText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
+            android:layout_marginEnd="52dp"
             android:layout_marginBottom="104dp"
             android:text="TextView"
             app:layout_constraintBottom_toTopOf="@+id/mapView"
