@@ -42,7 +42,7 @@ router.get("/fromCoords/:lat/:lon", (req, res) => {
 
   // Realiza la búsqueda en la base de datos utilizando el operador $and para combinar las condiciones
   museumSchema
-    .find({
+    .findOne({
       $and: [
         { lat: { $gte: latRange[0], $lte: latRange[1] } }, // Latitud dentro del rango
         { lon: { $gte: lonRange[0], $lte: lonRange[1] } }  // Longitud dentro del rango
