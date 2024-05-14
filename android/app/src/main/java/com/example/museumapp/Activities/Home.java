@@ -161,16 +161,17 @@ public class Home extends AppCompatActivity implements PermissionsListener {
                         Log.e("Respuesta Museo", t.getMessage());
             }
         });
-    }}
+    }
 
     public void locate(View view){
-        getLocation();
         // Solicita la ubicación del usuario y centra el mapa en esa ubicación
         if (mapboxMap != null) {
             // Verifica si se tienen los permisos de ubicación
             if (PermissionsManager.areLocationPermissionsGranted(Home.this)) {
                 // Activa y configura el componente de ubicación si los permisos están otorgados
                 enableLocationComponent(mapboxMap.getStyle());
+                getLocation();
+                locateOnMuseum();
             } else {
                 // Solicita los permisos de ubicación si no están otorgados
                 permissionsManager = new PermissionsManager(Home.this);
