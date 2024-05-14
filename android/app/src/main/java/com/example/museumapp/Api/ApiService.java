@@ -1,5 +1,6 @@
 package com.example.museumapp.Api;
 
+import com.example.museumapp.Models.Museum;
 import com.example.museumapp.Models.Obra;
 
 import java.util.List;
@@ -8,6 +9,7 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface ApiService {
@@ -26,4 +28,9 @@ public interface ApiService {
 
     @GET("art/")
     Call<List<Obra>> getAllArt();
+
+    @GET("museum/fromCoords/{lat}/{lon}")
+    Call<Museum> getMuseumFromCoords(@Path("lat") double lat, @Path("lon") double lon);
+
+
 }

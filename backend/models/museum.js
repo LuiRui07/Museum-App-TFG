@@ -1,10 +1,14 @@
 const mongoose = require("mongoose")
 
 
-const mapsSchema = new mongoose.Schema({
+const museumSchema = new mongoose.Schema({
     geojson: {
         type: Object,
         required: true,
+    },
+    name: {
+        type: String,
+        required: true
     },
     lat: {
         type: Number,
@@ -16,4 +20,4 @@ const mapsSchema = new mongoose.Schema({
     }
     
 });
-module.exports = mongoose.model("maps", mapsSchema);
+module.exports = mongoose.model("museums", museumSchema);

@@ -1,15 +1,23 @@
 package com.example.museumapp.Activities;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.media.Image;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -19,6 +27,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import com.example.museumapp.Api.ApiService;
+import com.example.museumapp.Api.LoginRequest;
+import com.example.museumapp.Api.Response;
+import com.example.museumapp.Models.Museum;
 import com.example.museumapp.R;
 import com.example.museumapp.SharedData;
 import com.google.android.material.navigation.NavigationView;
@@ -41,15 +53,25 @@ import com.mapbox.mapboxsdk.maps.Style;
 
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
 
 public class Home extends AppCompatActivity implements PermissionsListener {
 
     private MapView mapView;
     private MapboxMap mapboxMap;
     private PermissionsManager permissionsManager;
+
+    private LocationManager locationManager;
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
     private Button btnMenu;
+
+    private Double[] userLocation = {};
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -112,7 +134,37 @@ public class Home extends AppCompatActivity implements PermissionsListener {
             });
     }
 
+    private void locateOnMuseum(){
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://tfg-tkck.vercel.app/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        ApiService apiService = retrofit.create(ApiService.class);
+        Call<Museum> call = apiService.getMuseumFromCoords(userLocation[0],userLocation[1]);
+
+        call.enqueue(new Callback<Museum>() {
+            @Override
+            public void onResponse(Call<Museum> call, retrofit2.Response<Museum> response) {
+                if (response.isSuccessful()) {
+                    if (response.body() != null) {  ///Otra condición
+                        Log.e("Respuesta Museo", response.message());
+                        Museum museo = response.body();
+                        Log.e("Museo Encontrado----", museo.toString());
+                    } else {
+                        toast("No está en nignun museo");
+                        Log.e("Respuesta Museo", response.message());
+                    }
+                }}
+            @Override
+            public void onFailure(Call<Museum> call, Throwable t) {
+                        Log.e("Respuesta Museo", t.getMessage());
+            }
+        });
+    }}
+
     public void locate(View view){
+        getLocation();
         // Solicita la ubicación del usuario y centra el mapa en esa ubicación
         if (mapboxMap != null) {
             // Verifica si se tienen los permisos de ubicación
@@ -126,6 +178,49 @@ public class Home extends AppCompatActivity implements PermissionsListener {
             }
         }
     }
+
+    @SuppressLint("MissingPermission")
+    private void getLocation() {
+        // Inicializar LocationManager
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+        // Verificar si el proveedor de ubicación está habilitado
+        if (locationManager != null && locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            // Si el proveedor de ubicación está habilitado, solicitar actualizaciones de ubicación
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+        } else {
+            // Si el proveedor de ubicación no está habilitado, mostrar un mensaje al usuario
+            Toast.makeText(this, "Habilita el proveedor de ubicación", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    // LocationListener para escuchar los cambios en la ubicación del usuario
+    private final LocationListener locationListener = new LocationListener() {
+        @Override
+        public void onLocationChanged(@NonNull Location location) {
+            // Obtener las coordenadas de ubicación del usuario
+            double latitude = location.getLatitude();
+            double longitude = location.getLongitude();
+            setUserLocation(latitude,longitude);
+            Log.e("UBICACION", "LAt: " + latitude + "LON: " + longitude);
+
+            // Hacer lo que necesites con las coordenadas (por ejemplo, almacenarlas en MongoDB)
+            // Aquí puedes llamar a tus métodos para almacenar las coordenadas en tu base de datos MongoDB
+
+            // Detener las actualizaciones de ubicación una vez que las coordenadas se obtienen
+            locationManager.removeUpdates(locationListener);
+        }
+
+        @Override
+        public void onProviderEnabled(@NonNull String provider) {}
+
+        @Override
+        public void onProviderDisabled(@NonNull String provider) {}
+
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) {}
+    };
+
 
     // Método invocado cuando se hace clic en el botón del menú
     public void onMenuButtonClick(View view) {
@@ -193,6 +288,7 @@ public class Home extends AppCompatActivity implements PermissionsListener {
                     mapboxMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
                             new LatLng(result.getLastLocation().getLatitude(), result.getLastLocation().getLongitude()), 12));
                 }
+                getLocation();
             }
 
             @Override
@@ -262,5 +358,13 @@ public class Home extends AppCompatActivity implements PermissionsListener {
     @Override
     public void onPermissionResult(boolean granted) {
 
+    }
+
+    public void setUserLocation(double lat, double lon) {
+        userLocation = new Double[]{lat, lon};
+    }
+
+    public void toast(String text) {
+        Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
     }
 }
