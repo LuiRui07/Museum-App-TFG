@@ -72,8 +72,6 @@ public class Home extends AppCompatActivity implements PermissionsListener {
 
     private SharedData sharedData = SharedData.getInstance();
 
-    private Museum MuseoSeleccionado;
-
     private Double[] userLocation = {};
 
     @Override
@@ -167,10 +165,10 @@ public class Home extends AppCompatActivity implements PermissionsListener {
                         Museum museo = response.body();
                         Log.e("Museo Encontrado----", museo.toString());
                         if (tipo == 1){
-                           sharedData.setMuseumActual(museo);
+                            sharedData.setMuseumLocalizado(museo);
                             Log.e("ESTA EN EL MUSEO", museo.toString());
                         } else {
-                            MuseoSeleccionado = museo;
+                            sharedData.setMuseumSeleccionado(museo);
                             Log.e("CLICKO EN EL MUSEO", museo.toString());
                         }
                     } else {
@@ -195,7 +193,7 @@ public class Home extends AppCompatActivity implements PermissionsListener {
                 // Activa y configura el componente de ubicación si los permisos están otorgados
                 enableLocationComponent(mapboxMap.getStyle());
                 getLocation();
-                locateMuseum(1,userLocation[0],userLocation[1]);
+                //locateMuseum(1,userLocation[0],userLocation[1]);
             } else {
                 // Solicita los permisos de ubicación si no están otorgados
                 permissionsManager = new PermissionsManager(Home.this);

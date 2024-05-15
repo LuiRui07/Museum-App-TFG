@@ -26,6 +26,8 @@ public class Obras extends AppCompatActivity {
 
     public ObrasAdapter obrasAdapter;
 
+    public SharedData sharedData = SharedData.getInstance();
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,25 +48,57 @@ public class Obras extends AppCompatActivity {
 
         ApiService apiService = retrofit.create(ApiService.class);
 
-        Call<List<Obra>> call = apiService.getAllArt();
-
-        call.enqueue(new Callback<List<Obra>>() {
-            @Override
-            public void onResponse(Call<List<Obra>> call, retrofit2.Response<List<Obra>> response) {
-                if (response.isSuccessful()) {
-                    List<Obra> obras = response.body();
-                    Log.d("GetObras", obras.toString());
-                    obrasAdapter = new ObrasAdapter(obras);
-                    recyclerView.setAdapter(obrasAdapter);
-                } else {
-                    Log.d("GetObras", response.message());
+        if (sharedData.museumSeleccionado == null && sharedData.museumLocalizado == null) {
+            Call<List<Obra>> call = apiService.getAllArt();
+            call.enqueue(new Callback<List<Obra>>() {
+                @Override
+                public void onResponse(Call<List<Obra>> call, retrofit2.Response<List<Obra>> response) {
+                    if (response.isSuccessful()) {
+                        List<Obra> obras = response.body();
+                        Log.d("GetObras", obras.toString());
+                        obrasAdapter = new ObrasAdapter(obras);
+                        recyclerView.setAdapter(obrasAdapter);
+                    } else {
+                        Log.d("GetObras", response.message());
+                    }
                 }
-            }
 
-            @Override
-            public void onFailure(Call<List<Obra>> call, Throwable t) {
-                Log.e("GetObrasFail", "Error en la solicitud: " + t.getMessage());
+                @Override
+                public void onFailure(Call<List<Obra>> call, Throwable t) {
+                    Log.e("GetObrasFail", "Error en la solicitud: " + t.getMessage());
+                }
+            });
+        } else {
+            String id;
+            if (sharedData.museumLocalizado != null){
+                id = sharedData.museumLocalizado.getId();
+            } else {
+                id = sharedData.museumSeleccionado.getId();
             }
-        });
+            Call<List<Obra>> call = apiService.getObrasFromMuseum(id);
+
+            call.enqueue(new Callback<List<Obra>>() {
+                @Override
+                public void onResponse(Call<List<Obra>> call, retrofit2.Response<List<Obra>> response) {
+                    if (response.isSuccessful()) {
+                        List<Obra> obras = response.body();
+                        Log.d("GetObrasDeMuseo", obras.toString());
+                        obrasAdapter = new ObrasAdapter(obras);
+                        recyclerView.setAdapter(obrasAdapter);
+                    } else {
+                        Log.d("GetObrasDeMuseo", response.message());
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<List<Obra>> call, Throwable t) {
+                    Log.e("GetObrasdeMuseoFail", "Error en la solicitud: " + t.getMessage());
+                }
+            });
+
+
+
+        }
+
     }
 }

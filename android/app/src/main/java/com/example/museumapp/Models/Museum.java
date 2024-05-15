@@ -2,15 +2,7 @@ package com.example.museumapp.Models;
 
 public class Museum {
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    private String id;
+    private String _id;
     private String geojson;
 
     private String name;
@@ -18,6 +10,14 @@ public class Museum {
     private Double lat;
 
     private Double lon;
+
+    public String getId() {
+        return _id;
+    }
+
+    public void setId(String id) {
+        this._id = id;
+    }
 
     public String getGeojson() {
         return geojson;
@@ -54,6 +54,7 @@ public class Museum {
     @Override
     public String toString() {
         return "Museum{" +
+                "id='" + _id + '\'' +
                 "geojson='" + geojson + '\'' +
                 ", name='" + name + '\'' +
                 ", lat=" + lat +

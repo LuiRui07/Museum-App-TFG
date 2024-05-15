@@ -71,7 +71,7 @@ router.put("/:id", (req, res) => {
 router.get("/obrasMuseo/:id", (req, res) => {
     const { id } = req.params;
     artSchema
-        .find({ map: id })
+        .find({ museum: id })
         .then((data) => res.json(data))
         .catch((error) => res.json({ message: error }));
 });

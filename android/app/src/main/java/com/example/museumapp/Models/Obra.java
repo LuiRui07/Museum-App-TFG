@@ -2,25 +2,23 @@ package com.example.museumapp.Models;
 
 public class Obra {
 
-    private String id;
+    private String _id;
     private String name;
-
     private String description;
-
     private String author;
-
     private String date;
-
+    private String century;
     private String image;
-
     private String category;
 
+    private String Museum;
+
     public String getId() {
-        return id;
+        return _id;
     }
 
     public void setId(String id) {
-        this.id = id;
+        this._id = id;
     }
 
     public String getName() {
@@ -69,5 +67,36 @@ public class Obra {
 
     public void setCategory(String category) {
         this.category = category;
+    }
+
+    public String getCentury() {
+        return century;
+    }
+
+    public void setCentury(String century) {
+        this.century = century;
+    }
+
+    public String getMuseum() {
+        return Museum;
+    }
+
+    public void setMuseum(String museum) {
+        Museum = museum;
+    }
+
+    @Override
+    public String toString() {
+        return "Obra{" +
+                "id='" + _id + '\'' +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", author='" + author + '\'' +
+                ", date='" + date + '\'' +
+                ", century='" + century + '\'' +
+                ", image='" + image + '\'' +
+                ", category='" + category + '\'' +
+                ", Museum='" + Museum + '\'' +
+                '}';
     }
 }

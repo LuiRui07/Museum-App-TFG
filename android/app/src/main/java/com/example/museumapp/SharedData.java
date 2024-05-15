@@ -16,11 +16,15 @@ public class SharedData {
 
     public Uri photo;
 
-    public Museum museumActual;
+    public Museum museumLocalizado = null;
 
-    public void setMuseumActual(Museum museumActual) {
-        this.museumActual = museumActual;
+    public Museum museumSeleccionado = null;
+
+    public void setMuseumLocalizado(Museum museumActual) {
+        this.museumLocalizado= museumActual;
     }
+
+    public void setMuseumSeleccionado(Museum museumSeleccionado) {this.museumSeleccionado = museumSeleccionado ;}
 
     public void setMail(String mail) {
         this.mail = mail;

@@ -3,6 +3,7 @@ package com.example.museumapp.Adapters;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -10,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.museumapp.Models.Obra;
 import com.example.museumapp.R;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -42,17 +44,21 @@ public class ObrasAdapter extends RecyclerView.Adapter<ObrasAdapter.ObrasViewHol
     public static class ObrasViewHolder extends RecyclerView.ViewHolder {
         TextView titleTextView;
         TextView descriptionTextView;
+        ImageView imageView;
 
         public ObrasViewHolder(@NonNull View itemView) {
             super(itemView);
             titleTextView = itemView.findViewById(R.id.title_text_view);
             descriptionTextView = itemView.findViewById(R.id.description_text_view);
+            imageView = itemView.findViewById(R.id.image_view);
         }
 
         public void bind(Obra obra) {
             titleTextView.setText(obra.getName());
             descriptionTextView.setText(obra.getDescription());
             // Aquí puedes establecer otros atributos de la vista según los datos de la obra
+            Picasso.get().load(obra.getImage()).into(imageView); // Suponiendo que Obra tiene un método getImageUrl() que devuelve la URL de la imagen
         }
     }
+
 }

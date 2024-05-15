@@ -32,5 +32,8 @@ public interface ApiService {
     @GET("museum/fromCoords/{lat}/{lon}")
     Call<Museum> getMuseumFromCoords(@Path("lat") double lat, @Path("lon") double lon);
 
+    @GET("/obrasMuseo/{id}")
+    Call<List<Obra>> getObrasFromMuseum(@Path("id") String id);
+
 
 }
