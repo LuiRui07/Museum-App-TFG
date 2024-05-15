@@ -82,11 +82,11 @@ public class Obras extends AppCompatActivity {
                 public void onResponse(Call<List<Obra>> call, retrofit2.Response<List<Obra>> response) {
                     if (response.isSuccessful()) {
                         List<Obra> obras = response.body();
-                        Log.d("GetObrasDeMuseo", obras.toString());
+                        Log.d("GetObrasDeMuseoA", obras.toString());
                         obrasAdapter = new ObrasAdapter(obras);
                         recyclerView.setAdapter(obrasAdapter);
                     } else {
-                        Log.d("GetObrasDeMuseo", response.message());
+                        Log.d("GetObrasDeMuseoB", response.errorBody().toString());
                     }
                 }
 
