@@ -15,7 +15,11 @@ const artSchema = new mongoose.Schema({
     },
     date: {
         type: String,
-        required: true
+        required: false
+    },
+    century: {
+        type: String,
+        required: false
     },
     image: {
         type: String,
@@ -25,9 +29,9 @@ const artSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    map : {
+    museum: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'maps',
+        ref: 'museums',
         required: true
     }
 });
