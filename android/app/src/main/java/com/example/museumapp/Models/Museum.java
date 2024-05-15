@@ -1,6 +1,16 @@
 package com.example.museumapp.Models;
 
 public class Museum {
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    private String id;
     private String geojson;
 
     private String name;

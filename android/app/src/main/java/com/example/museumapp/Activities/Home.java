@@ -70,6 +70,10 @@ public class Home extends AppCompatActivity implements PermissionsListener {
     private NavigationView navigationView;
     private Button btnMenu;
 
+    private SharedData sharedData = SharedData.getInstance();
+
+    private Museum MuseoSeleccionado;
+
     private Double[] userLocation = {};
 
     @Override
@@ -90,8 +94,6 @@ public class Home extends AppCompatActivity implements PermissionsListener {
         ImageButton btnLocate = findViewById(R.id.btn_locate);
         //mapView.getMapAsync((OnMapReadyCallback) this);
 
-        // SharedData
-        SharedData sharedData = SharedData.getInstance();
         TextView userText = findViewById(R.id.userText);
         userText.setText(sharedData.user);
 
@@ -100,6 +102,19 @@ public class Home extends AppCompatActivity implements PermissionsListener {
                 @Override
                 public void onMapReady(MapboxMap mapboxMap) {
                     Home.this.mapboxMap = mapboxMap;
+                    mapboxMap.addOnMapClickListener(new MapboxMap.OnMapClickListener() {
+                        @Override
+                        public boolean onMapClick(@NonNull LatLng point) {
+                            // Se ejecuta cuando el usuario hace clic en el mapa
+                            // Aquí puedes obtener las coordenadas del punto donde se ha hecho clic
+                            double latitude = point.getLatitude();
+                            double longitude = point.getLongitude();
+                            Log.e("HA CLICADO EN-----"," LAT: " + latitude + "LON: " + longitude);
+                            locateMuseum(2,latitude,longitude);
+                            return true; // Devuelve true si has consumido el evento y no deseas que se propague más
+                        }
+                    });
+
                     mapboxMap.setStyle(new Style.Builder().fromUri("mapbox://styles/luisruiz11/clw3f43jf02ip01qvcs4hcdv7"), new Style.OnStyleLoaded() {
                         @Override
                         public void onStyleLoaded(Style style) {
@@ -134,14 +149,14 @@ public class Home extends AppCompatActivity implements PermissionsListener {
             });
     }
 
-    private void locateOnMuseum(){
+    private void locateMuseum(int tipo,double lat, double lon ){
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://tfg-tkck.vercel.app/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
         ApiService apiService = retrofit.create(ApiService.class);
-        Call<Museum> call = apiService.getMuseumFromCoords(userLocation[0],userLocation[1]);
+        Call<Museum> call = apiService.getMuseumFromCoords(lat,lon);
 
         call.enqueue(new Callback<Museum>() {
             @Override
@@ -151,9 +166,18 @@ public class Home extends AppCompatActivity implements PermissionsListener {
                         Log.e("Respuesta Museo", response.message());
                         Museum museo = response.body();
                         Log.e("Museo Encontrado----", museo.toString());
+                        if (tipo == 1){
+                           sharedData.setMuseumActual(museo);
+                            Log.e("ESTA EN EL MUSEO", museo.toString());
+                        } else {
+                            MuseoSeleccionado = museo;
+                            Log.e("CLICKO EN EL MUSEO", museo.toString());
+                        }
                     } else {
-                        toast("No está en nignun museo");
-                        Log.e("Respuesta Museo", response.message());
+                        if (tipo == 1){
+                            toast("No está en ningún museo");
+                        }
+                        Log.e("Respuesta Museo NULA", response.message());
                     }
                 }}
             @Override
@@ -171,7 +195,7 @@ public class Home extends AppCompatActivity implements PermissionsListener {
                 // Activa y configura el componente de ubicación si los permisos están otorgados
                 enableLocationComponent(mapboxMap.getStyle());
                 getLocation();
-                locateOnMuseum();
+                locateMuseum(1,userLocation[0],userLocation[1]);
             } else {
                 // Solicita los permisos de ubicación si no están otorgados
                 permissionsManager = new PermissionsManager(Home.this);
@@ -221,6 +245,7 @@ public class Home extends AppCompatActivity implements PermissionsListener {
         @Override
         public void onStatusChanged(String provider, int status, Bundle extras) {}
     };
+
 
 
     // Método invocado cuando se hace clic en el botón del menú
