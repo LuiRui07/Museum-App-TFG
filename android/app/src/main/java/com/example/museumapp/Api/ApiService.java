@@ -15,7 +15,7 @@ import retrofit2.http.Query;
 public interface ApiService {
 
 
-    // Usuarios
+    //------------ Usuarios
 
     @GET("users/")
     Call<Response> getAllUsers();
@@ -29,14 +29,14 @@ public interface ApiService {
     @POST("users")
     Call<Response> createUser(@Body UserBody userBody);
 
-    // Obras
+    //------------ Obras
     @GET("art/")
     Call<List<Obra>> getAllArt();
 
     @GET("art/obrasMuseo/{id}")
     Call<List<Obra>> getObrasFromMuseum(@Path("id") String id);
 
-    // Museos
+    //------------Museos
 
     @GET("museum/fromCoords/{lat}/{lon}")
     Call<Museum> getMuseumFromCoords(@Path("lat") double lat, @Path("lon") double lon);

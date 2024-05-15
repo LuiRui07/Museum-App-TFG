@@ -9,5 +9,5 @@
     <item
         android:id="@+id/nav_item3"
         android:title="Recorridos" />
-    <!-- Puedes agregar más elementos de menú según sea necesario -->
+
 </menu>
