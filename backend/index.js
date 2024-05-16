@@ -7,10 +7,11 @@ const port = 5001;
 app.use(express.json());
 app.use(cors());
 
-const usersRoutes = require("./routes/usersRoutes");
-const artRoutes = require("./routes/artRoutes");
-app.use('/users', usersRoutes);
-app.use('/art', artRoutes);
+const authMiddleware = require("./middleware");
+app.use(authMiddleware);  
+
+app.use('/users', require("./routes/usersRoutes"));
+app.use('/art', require('./routes/artRoutes'))
 app.use('/beacon', require('./routes/beaconsRoutes'));
 app.use("/museum", require("./routes/museumRoutes"));
 

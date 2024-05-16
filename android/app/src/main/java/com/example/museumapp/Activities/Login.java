@@ -73,6 +73,10 @@ public class Login extends AppCompatActivity {
         LoginRequest loginRequest = new LoginRequest(user, contra);
         Call<Response> call = apiService.loginUser(loginRequest);
 
+        // Añado el token JWT al encabezado de la solicitud
+        call.request().newBuilder()
+                .addHeader("Authorization", getString(R.string.JWTToken))
+                .build();
 
         call.enqueue(new Callback<Response>() {
             @Override
