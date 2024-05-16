@@ -1,6 +1,5 @@
 package com.example.museumapp.Activities;
 
-
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.appcompat.app.AppCompatActivity;
 import android.annotation.SuppressLint;
@@ -12,6 +11,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.museumapp.Api.ApiClient;
 import com.example.museumapp.Api.ApiService;
 import com.example.museumapp.Api.LoginRequest;
 import com.example.museumapp.R;
@@ -19,6 +19,7 @@ import com.example.museumapp.Api.Response;
 import com.example.museumapp.SharedData;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 
+import okhttp3.Request;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -62,25 +63,16 @@ public class Login extends AppCompatActivity {
         if (user.isEmpty() || contra.isEmpty()) {
             Toast.makeText(this, "Debe escribir un usuario y una contraseña", Toast.LENGTH_SHORT).show();
         }
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://tfg-tkck.vercel.app/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
+        Retrofit retrofit = ApiClient.addHeader(this);
         ApiService apiService = retrofit.create(ApiService.class);
 
         LoginRequest loginRequest = new LoginRequest(user, contra);
         Call<Response> call = apiService.loginUser(loginRequest);
 
-        // Añado el token JWT al encabezado de la solicitud
-        call.request().newBuilder()
-                .addHeader("Authorization", getString(R.string.JWTToken))
-                .build();
-
         call.enqueue(new Callback<Response>() {
             @Override
             public void onResponse(Call<Response> call, retrofit2.Response<Response> response) {
+                Log.e("LoginResponse", response.headers().toString());
                 if (response.isSuccessful()) {
                     Response loginResponse = response.body();
                     String message = loginResponse.getMessage();
@@ -96,7 +88,7 @@ public class Login extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<Response> call, Throwable t) {
-                Log.e("LoginResponse", "Error en la solicitud: " + t.getMessage());
+                Log.e("LoginResponse", "Error en la solicitud: " + t.toString());
             }
         });
     }

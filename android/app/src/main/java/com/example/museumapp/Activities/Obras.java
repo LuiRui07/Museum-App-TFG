@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.museumapp.Api.ApiClient;
 import com.example.museumapp.Api.ApiService;
 import com.example.museumapp.Models.Obra;
 import com.example.museumapp.Adapters.ObrasAdapter;
@@ -41,15 +42,12 @@ public class Obras extends AppCompatActivity {
     }
 
     public void getObras() {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://tfg-tkck.vercel.app/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
+        Retrofit retrofit = ApiClient.addHeader(this);
         ApiService apiService = retrofit.create(ApiService.class);
 
         if (sharedData.museumSeleccionado == null && sharedData.museumLocalizado == null) {
             Call<List<Obra>> call = apiService.getAllArt();
+
             call.enqueue(new Callback<List<Obra>>() {
                 @Override
                 public void onResponse(Call<List<Obra>> call, retrofit2.Response<List<Obra>> response) {

@@ -57,7 +57,7 @@ public class ObrasAdapter extends RecyclerView.Adapter<ObrasAdapter.ObrasViewHol
             titleTextView.setText(obra.getName());
             descriptionTextView.setText(obra.getDescription());
             // Aquí puedes establecer otros atributos de la vista según los datos de la obra
-            Picasso.get().load(obra.getImage()).into(imageView); // Suponiendo que Obra tiene un método getImageUrl() que devuelve la URL de la imagen
+            Picasso.get().load(obra.getImage()).into(imageView);
         }
     }
 

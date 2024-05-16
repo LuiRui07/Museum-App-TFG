@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.museumapp.Api.ApiClient;
 import com.example.museumapp.Api.ApiService;
 import com.example.museumapp.R;
 import com.example.museumapp.Api.Response;
@@ -60,11 +61,7 @@ public class Register extends AppCompatActivity {
             toast("El correo no es válido");
         } else {
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://tfg-tkck.vercel.app/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
+        Retrofit retrofit = ApiClient.addHeader(this);
         ApiService apiService = retrofit.create(ApiService.class);
 
         UserBody userBody = new UserBody(username,correo,pass);

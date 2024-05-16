@@ -27,6 +27,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import com.example.museumapp.Api.ApiClient;
 import com.example.museumapp.Api.ApiService;
 import com.example.museumapp.Api.LoginRequest;
 import com.example.museumapp.Api.Response;
@@ -148,12 +149,9 @@ public class Home extends AppCompatActivity implements PermissionsListener {
     }
 
     private void locateMuseum(int tipo,double lat, double lon ){
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://tfg-tkck.vercel.app/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
+        Retrofit retrofit = ApiClient.addHeader(this);
         ApiService apiService = retrofit.create(ApiService.class);
+
         Call<Museum> call = apiService.getMuseumFromCoords(lat,lon);
 
         call.enqueue(new Callback<Museum>() {
