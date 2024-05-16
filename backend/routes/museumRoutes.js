@@ -4,21 +4,11 @@ const mongoose = require("mongoose");
 const ObjectId = mongoose.Types.ObjectId;
 const museumSchema = require("../models/museum.js");
 
-// Get All 
-router.get("/", (req, res) => {
-    museumSchema
-      .find()
-      .then((data) => res.json(data))
-      .catch((error) => res.json({ message: error }));
-  });
 
-router.get("/:id", (req, res) => {
-  museumSchema
-      .findById(req.params.id)
-      .then((data) => res.json(data))
-      .catch((error) => res.json({ message: error }));
-  });
 
+//LLAMADAS CRUD-------------------------------------------------------------------------------
+
+//Create
 router.post("/", (req, res) => {
   const museum = museumSchema(req.body);
     museum.save()
@@ -28,8 +18,51 @@ router.post("/", (req, res) => {
         .catch((error) => res.json({ message: error }));
 });
 
+// Get All 
+router.get("/", (req, res) => {
+    museumSchema
+      .find()
+      .then((data) => res.json(data))
+      .catch((error) => res.json({ message: error }));
+  });
+
+// Get by ID 
+router.get("/:id", (req, res) => {
+  museumSchema
+      .findById(req.params.id)
+      .then((data) => res.json(data))
+      .catch((error) => res.json({ message: error }));
+  });
+
+
+
+// Delete 
+router.delete("/:id", (req, res) => {
+  const { id } = req.params;
+  museumSchema
+      .deleteOne({ _id: id })
+      .then((data) => res.json(data))
+      .catch((error) => res.json({ message: error }));
+  }
+);
+
+// Update 
+router.put("/:id", (req, res) => {
+  const { id } = req.params;
+  museumSchema
+      .updateOne({ _id: id
+      }, {
+          $set: req.body
+      })
+      .then((data) => res.json(data))
+      .catch((error) => res.json({ message: error }));
+  }
+);
+
+
 //--------------------------------------------
 
+// Obtener Un Museo por sus Coordenadas
 router.get("/fromCoords/:lat/:lon", (req, res) => {
   const tolerance = 0.01; // Define la tolerancia permitida en grados (ajusta según tus necesidades)
   
