@@ -13,8 +13,6 @@ function authMiddleware(req, res, next) {
 
     // Firma del token con la clave secreta
     const token1 = jwt.sign(payload, 'ClaveSecreta');
-
-    console.log(token1);
     */
    
     const token = req.headers.authorization;

@@ -66,25 +66,33 @@ router.post("/login", (req, res) => {
 //LLAMADAS CRUD-------------------------------------------------------------------------------
 
 // Create 
-router.post("/", (req, res) => {
-  const user = usersSchema(req.body);
-  user.mail = user.mail.toLowerCase();
-  axios.get(`https://tfg-tkck.vercel.app/users/check?mail=${user.mail}&user=${user.user}`)
-    .then((response) => {
-      const { message } = response.data; 
-      console.log(user);
-      console.log(message);
-      if (message === "1") {
-        user.save()
-          .then(() => {
-            res.json({ message: "1" }); // Responde una vez que el usuario se ha guardado correctamente
-          })
-          .catch((error) => res.json({ message: error }));
-      } else {
-        res.json({ message: "Ya existe un usuario con ese correo o usuario." }); // Responde si ya existe un usuario con ese correo
+router.post("/", async (req, res) => {
+  try {
+    const user = usersSchema(req.body);
+    user.mail = user.mail.toLowerCase();
+    const token = process.env.JWT_SECRET;
+    const response = await axios.get(`https://tfg-tkck.vercel.app/users/check?mail=${user.mail}&user=${user.user}`, {
+      headers: {
+        'Authorization': `${token}`
       }
-    })
-    .catch((error) => res.json({ message: error }));
+    });
+
+    const { message } = response.data; 
+    console.log(user);
+    console.log(message);
+    
+    if (message === "1") {
+      user.save()
+        .then(() => {
+          res.json({ message: "1" }); // Responde una vez que el usuario se ha guardado correctamente
+        })
+        .catch((error) => res.json({ message: error }));
+    } else {
+      res.json({ message: "Ya existe un usuario con ese correo o usuario." }); // Responde si ya existe un usuario con ese correo
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 });
 
 // Get All
