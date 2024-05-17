@@ -18,7 +18,6 @@ public class ApiClient {
 
     private static Retrofit retrofit;
 
-    private static String JWTToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIxMjM0NTY3ODkiLCJ1c2VybmFtZSI6ImVqZW1wbG9fdXN1YXJpbyIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTcxNTg1NDk4M30.VREIXyTuhEGiP5Zs3YKwjqPBFC41vwr6gkr1D2ogWUI";
     public static Retrofit addHeader(Context context) {
         String JWTToken = context.getString(R.string.JWTToken);
         OkHttpClient okHttpClient = new OkHttpClient().newBuilder()

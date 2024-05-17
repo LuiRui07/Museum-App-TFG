@@ -68,7 +68,7 @@ public class Login extends AppCompatActivity {
 
         LoginRequest loginRequest = new LoginRequest(user, contra);
         Call<Response> call = apiService.loginUser(loginRequest);
-
+        Log.d(call.toString(), "");
         call.enqueue(new Callback<Response>() {
             @Override
             public void onResponse(Call<Response> call, retrofit2.Response<Response> response) {

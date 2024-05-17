@@ -75,6 +75,8 @@ public class Home extends AppCompatActivity implements PermissionsListener {
 
     private Double[] userLocation = {};
 
+    TextView estas ;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -95,6 +97,8 @@ public class Home extends AppCompatActivity implements PermissionsListener {
 
         TextView userText = findViewById(R.id.userText);
         userText.setText(sharedData.user);
+        estas = findViewById(R.id.estas);
+
 
         // Use MapView
         mapView.getMapAsync(new OnMapReadyCallback() {
@@ -162,6 +166,7 @@ public class Home extends AppCompatActivity implements PermissionsListener {
                         Log.e("Respuesta Museo", response.message());
                         Museum museo = response.body();
                         Log.e("Museo Encontrado----", museo.toString());
+                        estas.setText("Estas en "+ museo.getName());
                         if (tipo == 1){
                             sharedData.setMuseumLocalizado(museo);
                             Log.e("ESTA EN EL MUSEO", museo.toString());

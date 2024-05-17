@@ -2,7 +2,6 @@ const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose")
 const app = express();
-const dotenv = require('dotenv').config({ path: './config.env' });
 
 const port = 5001;
 app.use(express.json());
@@ -16,7 +15,7 @@ app.use('/art', require('./routes/artRoutes'))
 app.use('/beacon', require('./routes/beaconsRoutes'));
 app.use("/museum", require("./routes/museumRoutes"));
 
-mongoose.connect(process.env.ATLAS_URI).then(() =>
+mongoose.connect("mongodb+srv://ei:ei@cluster0.1acabfy.mongodb.net/Museum").then(() =>
     console.log("Hemos conectado con mongoDB")
   ).catch((error) =>
     console.error(error)
