@@ -70,7 +70,7 @@ router.post("/", async (req, res) => {
   try {
     const user = usersSchema(req.body);
     user.mail = user.mail.toLowerCase();
-    const token = process.env.JWT_SECRET;
+    const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIxMjM0NTY3ODkiLCJ1c2VybmFtZSI6ImVqZW1wbG9fdXN1YXJpbyIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTcxNTg1NDk4M30.VREIXyTuhEGiP5Zs3YKwjqPBFC41vwr6gkr1D2ogWUI"
     const response = await axios.get(`https://tfg-tkck.vercel.app/users/check?mail=${user.mail}&user=${user.user}`, {
       headers: {
         'Authorization': `${token}`
