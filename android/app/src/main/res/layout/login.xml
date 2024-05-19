@@ -30,6 +30,37 @@
         app:layout_constraintHorizontal_bias="0.241"
         app:layout_constraintStart_toStartOf="parent" />
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".MainActivity">
+
+        <!-- Botón de inicio de sesión de Google -->
+
+        <!-- Botón de cierre de sesión de Google -->
+
+        <com.google.android.gms.common.SignInButton
+            android:id="@+id/sign_in_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="141dp"
+            android:layout_marginEnd="143dp"
+            android:layout_marginBottom="75dp" />
+
+        <Button
+            android:id="@+id/sign_out_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cerrar sesión"
+            android:layout_centerInParent="true"
+            android:layout_below="@id/sign_in_button"
+            android:visibility="gone"
+            android:layout_marginTop="20dp"/>
+    </RelativeLayout>
+
     <EditText
         android:id="@+id/contra"
         android:layout_width="wrap_content"

@@ -32,6 +32,7 @@ import com.example.museumapp.Api.ApiService;
 import com.example.museumapp.Api.LoginRequest;
 import com.example.museumapp.Api.Response;
 import com.example.museumapp.Models.Museum;
+import com.example.museumapp.Models.Obra;
 import com.example.museumapp.R;
 import com.example.museumapp.SharedData;
 import com.google.android.material.navigation.NavigationView;
@@ -134,16 +135,18 @@ public class Home extends AppCompatActivity implements PermissionsListener {
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                Intent intent = null;
                 if (item.getItemId() == R.id.nav_item1) {
-                    Intent intent1 = new Intent(Home.this, Cuenta.class);
-                    startActivity(intent1);
-                } else if (item.getItemId() == R.id.nav_item2) {
-                    Intent intent2 = new Intent(Home.this, Obras.class);
-                    startActivity(intent2);
-                } else {
-                    Intent intent3 = new Intent(Home.this, Recorridos.class);
-                    startActivity(intent3);
+                    intent = new Intent(Home.this, Cuenta.class);
                 }
+                if (item.getItemId() == R.id.nav_item2) {
+                    intent = new Intent(Home.this, Museos.class);
+                } else if (item.getItemId() == R.id.nav_item2) {
+                    intent = new Intent(Home.this, Obra.class);
+                } else {
+                    intent = new Intent(Home.this, Recorridos.class);
+                }
+                startActivity(intent);
 
                 // Cierra el drawer layout después de que se haya seleccionado un elemento
                 drawerLayout.closeDrawer(GravityCompat.START);

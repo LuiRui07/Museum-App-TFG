@@ -9,55 +9,52 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.museumapp.Models.Obra;
+import com.example.museumapp.Models.Museum;
 import com.example.museumapp.R;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-public class ObrasAdapter extends RecyclerView.Adapter<ObrasAdapter.ObrasViewHolder> {
+public class MuseosAdapter extends RecyclerView.Adapter<MuseosAdapter.MuseosViewHolder> {
 
-    private List<Obra> obras;
+    private List<Museum> museos;
 
-    public ObrasAdapter(List<Obra> obras) {
-        this.obras = obras;
+    public MuseosAdapter(List<Museum> museos) {
+        this.museos= museos;
     }
 
-    @NonNull
     @Override
-    public ObrasViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public MuseosAdapter.MuseosViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_obra, parent, false);
-        return new ObrasViewHolder(view);
+        return new MuseosAdapter.MuseosViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ObrasViewHolder holder, int position) {
-        Obra obra = obras.get(position);
-        holder.bind(obra);
+    public void onBindViewHolder(@NonNull MuseosAdapter.MuseosViewHolder holder, int position) {
+        Museum museo = museos.get(position);
+        holder.bind(museo);
     }
 
     @Override
     public int getItemCount() {
-        return obras.size();
+        return museos.size();
     }
 
-    public static class ObrasViewHolder extends RecyclerView.ViewHolder {
+    public static class MuseosViewHolder extends RecyclerView.ViewHolder {
         TextView titleTextView;
         TextView descriptionTextView;
         ImageView imageView;
 
-        public ObrasViewHolder(@NonNull View itemView) {
+        public MuseosViewHolder(@NonNull View itemView) {
             super(itemView);
             titleTextView = itemView.findViewById(R.id.title_text_view);
             descriptionTextView = itemView.findViewById(R.id.description_text_view);
             imageView = itemView.findViewById(R.id.image_view);
         }
 
-        public void bind(Obra obra) {
-            titleTextView.setText(obra.getName());
-            descriptionTextView.setText(obra.getDescription());
-            Picasso.get().load(obra.getImage()).into(imageView);
+        public void bind(Museum museo) {
+            titleTextView.setText(museo.getName());
+            //Picasso.get().load(obra.getImage()).into(imageView);
         }
     }
-
 }

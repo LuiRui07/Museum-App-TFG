@@ -1,4 +1,6 @@
 package com.example.museumapp.Activities;
 
-public class Recorridos {
+import androidx.appcompat.app.AppCompatActivity;
+
+public class Recorridos extends AppCompatActivity {
 }
