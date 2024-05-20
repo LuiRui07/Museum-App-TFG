@@ -1,5 +1,6 @@
 package com.example.museumapp.Activities;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -44,6 +45,7 @@ public class Museos extends AppCompatActivity {
     public void getMuseos() {
         Retrofit retrofit = ApiClient.addHeader(this);
         ApiService apiService = retrofit.create(ApiService.class);
+        Context context = this;
 
         Call<List<Museum>> call = apiService.getAllMuseum();
 
@@ -53,7 +55,7 @@ public class Museos extends AppCompatActivity {
                     if (response.isSuccessful()) {
                         List<Museum> museos = response.body();
                         Log.d("GetObras", museos.toString());
-                        museosAdapter = new MuseosAdapter(museos);
+                        museosAdapter = new MuseosAdapter(museos,context);
                         recyclerView.setAdapter(museosAdapter);
                     } else {
                         Log.d("GetObras", response.message());

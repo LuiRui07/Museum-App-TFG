@@ -138,11 +138,10 @@ public class Home extends AppCompatActivity implements PermissionsListener {
                 Intent intent = null;
                 if (item.getItemId() == R.id.nav_item1) {
                     intent = new Intent(Home.this, Cuenta.class);
-                }
-                if (item.getItemId() == R.id.nav_item2) {
-                    intent = new Intent(Home.this, Museos.class);
                 } else if (item.getItemId() == R.id.nav_item2) {
-                    intent = new Intent(Home.this, Obra.class);
+                    intent = new Intent(Home.this, Museos.class);
+                } else if (item.getItemId() == R.id.nav_item3) {
+                    intent = new Intent(Home.this, Obras.class);
                 } else {
                     intent = new Intent(Home.this, Recorridos.class);
                 }
