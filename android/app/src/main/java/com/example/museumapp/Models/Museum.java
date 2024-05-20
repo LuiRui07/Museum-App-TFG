@@ -11,6 +11,8 @@ public class Museum {
 
     private Double lon;
 
+    private String image;
+
     public String getId() {
         return _id;
     }
@@ -49,6 +51,14 @@ public class Museum {
 
     public void setLon(Double lon) {
         this.lon = lon;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 
     @Override

@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.museumapp.Activities.Home;
 import com.example.museumapp.Activities.Museos;
+import com.example.museumapp.Activities.Obras;
 import com.example.museumapp.Models.Museum;
 import com.example.museumapp.R;
 import com.squareup.picasso.Picasso;
@@ -41,8 +42,9 @@ public class MuseosAdapter extends RecyclerView.Adapter<MuseosAdapter.MuseosView
         holder.bind(museo);
 
         holder.itemView.setOnClickListener(v -> {
-            Intent intent = new Intent(context, Home.class);
-            intent.putExtra("nombre", museo.getName());
+            Intent intent = new Intent(context, Obras.class);
+            intent.putExtra("museum_id", museo.getId());
+            intent.putExtra("museum_name", museo.getName());
             context.startActivity(intent);
         });
     }
@@ -66,7 +68,7 @@ public class MuseosAdapter extends RecyclerView.Adapter<MuseosAdapter.MuseosView
 
         public void bind(Museum museo) {
             titleTextView.setText(museo.getName());
-            //Picasso.get().load(obra.getImage()).into(imageView);
+            Picasso.get().load(museo.getImage()).into(imageView);
         }
     }
 }

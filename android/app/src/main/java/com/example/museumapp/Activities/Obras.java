@@ -1,7 +1,9 @@
 package com.example.museumapp.Activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -32,20 +34,31 @@ public class Obras extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.obras);
-
         SharedData data = SharedData.getInstance();
+
+        Intent intent = getIntent();
+        String museumId = intent.getStringExtra("museum_id");
+        String museumName = intent.getStringExtra("museum_name");
+        if (intent.hasExtra("museum_id")) {
+            Log.d("ObrasActivity", "Received museum_id: " + museumId + " " + museumName);
+
+            setContentView(R.layout.obras_museo);
+            TextView museumNameView = findViewById(R.id.museum_title);
+            museumNameView.setText(museumName);
+        } else {
+            setContentView(R.layout.obras);
+            Log.e("ObrasActivity", "No museum_id provided in Intent");
+        }
         recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-        getObras();
+        getObras(museumId);
     }
 
-    public void getObras() {
+    public void getObras(String id) {
         Retrofit retrofit = ApiClient.addHeader(this);
         ApiService apiService = retrofit.create(ApiService.class);
 
-        if (sharedData.museumSeleccionado == null && sharedData.museumLocalizado == null) {
+        if (id == null) {
             Call<List<Obra>> call = apiService.getAllArt();
 
             call.enqueue(new Callback<List<Obra>>() {
@@ -67,12 +80,6 @@ public class Obras extends AppCompatActivity {
                 }
             });
         } else {
-            String id;
-            if (sharedData.museumLocalizado != null){
-                id = sharedData.museumLocalizado.getId();
-            } else {
-                id = sharedData.museumSeleccionado.getId();
-            }
             Call<List<Obra>> call = apiService.getObrasFromMuseum(id);
 
             call.enqueue(new Callback<List<Obra>>() {
@@ -93,8 +100,6 @@ public class Obras extends AppCompatActivity {
                     Log.e("GetObrasdeMuseoFail", "Error en la solicitud: " + t.getMessage());
                 }
             });
-
-
 
         }
 

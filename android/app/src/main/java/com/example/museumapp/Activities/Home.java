@@ -74,6 +74,8 @@ public class Home extends AppCompatActivity implements PermissionsListener {
 
     private SharedData sharedData = SharedData.getInstance();
 
+    private Museum museoActual;
+
     private Double[] userLocation = {};
 
     TextView estas ;
@@ -142,6 +144,10 @@ public class Home extends AppCompatActivity implements PermissionsListener {
                     intent = new Intent(Home.this, Museos.class);
                 } else if (item.getItemId() == R.id.nav_item3) {
                     intent = new Intent(Home.this, Obras.class);
+                    if (museoActual != null) {
+                        intent.putExtra("museum_id", museoActual.getId());
+                        intent.putExtra("museum_name", museoActual.getName());
+                    }
                 } else {
                     intent = new Intent(Home.this, Recorridos.class);
                 }
@@ -169,11 +175,10 @@ public class Home extends AppCompatActivity implements PermissionsListener {
                         Museum museo = response.body();
                         Log.e("Museo Encontrado----", museo.toString());
                         estas.setText("Estas en "+ museo.getName());
+                        museoActual = museo;
                         if (tipo == 1){
-                            sharedData.setMuseumLocalizado(museo);
                             Log.e("ESTA EN EL MUSEO", museo.toString());
                         } else {
-                            sharedData.setMuseumSeleccionado(museo);
                             Log.e("CLICKO EN EL MUSEO", museo.toString());
                         }
                     } else {
