@@ -68,7 +68,13 @@ public class MuseosAdapter extends RecyclerView.Adapter<MuseosAdapter.MuseosView
 
         public void bind(Museum museo) {
             titleTextView.setText(museo.getName());
-            Picasso.get().load(museo.getImage()).into(imageView);
-        }
+                titleTextView.setText(museo.getName());
+                Picasso.get()
+                        .load(museo.getImage())
+                        .resize(300, 300)  // Redimensiona la imagen a 300x300 píxeles
+                        .centerCrop()     // Opcional: Recorta la imagen para llenar el `ImageView` manteniendo la relación de aspecto
+                        .error(R.drawable.default_art_icon) // Imagen de fallback en caso de error
+                        .into(imageView);
+            }
     }
 }

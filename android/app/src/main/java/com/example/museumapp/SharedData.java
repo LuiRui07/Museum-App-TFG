@@ -8,7 +8,7 @@ import java.net.URI;
 
 public class SharedData {
 
-    private static SharedData instance;
+    protected static SharedData instance;
 
     public String user;
 
@@ -35,6 +35,14 @@ public class SharedData {
             instance = new SharedData();
         }
         return instance;
+    }
+
+    public void destroy() {
+        this.photo = null;
+        this.mail = null;
+        this.user = null;
+        this.museo = null;
+        instance = null; // También nulifica la instancia única
     }
 
 }

@@ -56,7 +56,12 @@ public class ObrasAdapter extends RecyclerView.Adapter<ObrasAdapter.ObrasViewHol
         public void bind(Obra obra) {
             titleTextView.setText(obra.getName());
             descriptionTextView.setText(obra.getDescription());
-            Picasso.get().load(obra.getImage()).into(imageView);
+            Picasso.get()
+                    .load(obra.getImage())
+                    .resize(300, 300)  // Redimensiona la imagen a 300x300 píxeles
+                    .centerCrop()     // Opcional: Recorta la imagen para llenar el `ImageView` manteniendo la relación de aspecto
+                    .error(R.drawable.default_art_icon) // Imagen de fallback en caso de error
+                    .into(imageView);
         }
     }
 

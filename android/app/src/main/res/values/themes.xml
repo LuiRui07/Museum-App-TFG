@@ -6,4 +6,10 @@
     </style>
 
     <style name="Theme.MuseumApp" parent="Base.Theme.MuseumApp" />
+
+    <style name="RedButtonStyle" parent="Widget.Material3.Button">
+        <item name="backgroundTint">#FF0000</item>
+        <item name="android:textColor">#FFFFFF</item>
+    </style>
+
 </resources>
