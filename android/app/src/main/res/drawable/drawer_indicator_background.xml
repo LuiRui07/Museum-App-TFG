@@ -1,0 +1,9 @@
+<!-- drawable/drawer_indicator_background.xml -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+
+    <solid android:color="#CCCCCC" /> <!-- Color de fondo del indicador -->
+    <size android:width="4dp"
+        />
+
+</shape>

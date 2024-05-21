@@ -70,7 +70,6 @@ public class Home extends AppCompatActivity implements PermissionsListener {
     private LocationManager locationManager;
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
-    private Button btnMenu;
 
     private SharedData sharedData = SharedData.getInstance();
 
@@ -88,7 +87,6 @@ public class Home extends AppCompatActivity implements PermissionsListener {
 
         // Obtener referencias a las vistas
         drawerLayout = findViewById(R.id.drawer_layout);
-        btnMenu = findViewById(R.id.btn_menu);
         navigationView = findViewById(R.id.navigation_view);
 
         // Initialize MapView
@@ -253,14 +251,6 @@ public class Home extends AppCompatActivity implements PermissionsListener {
         @Override
         public void onStatusChanged(String provider, int status, Bundle extras) {}
     };
-
-
-
-    // Método invocado cuando se hace clic en el botón del menú
-    public void onMenuButtonClick(View view) {
-        // Abrir el cajón de navegación
-        drawerLayout.openDrawer(GravityCompat.START);
-    }
 
     /// METODOS PARA PEDIR PERMISO BLUETHOOT Y LOCALIZACIÓN
 
