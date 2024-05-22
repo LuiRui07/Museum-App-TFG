@@ -40,15 +40,6 @@
             app:layout_constraintBottom_toBottomOf="@id/mapView"
             app:layout_constraintEnd_toEndOf="@id/mapView" />
 
-        <View
-            android:id="@+id/drawer_indicator"
-            android:layout_width="8dp"
-            android:layout_height="match_parent"
-            android:background="@drawable/drawer_indicator_background"
-            app:layout_constraintBottom_toBottomOf="@id/mapView"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/mapView" />
-
         <TextView
             android:id="@+id/userText"
             android:layout_width="wrap_content"
@@ -68,14 +59,28 @@
             android:layout_marginBottom="120dp"
             app:layout_constraintBottom_toTopOf="@+id/mapView"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.131"
+            app:layout_constraintHorizontal_bias="0.618"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="1.0" />
 
+        <ImageButton
+            android:id="@+id/imageButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:background="#FEF8FF"
+            app:layout_constraintBottom_toTopOf="@+id/mapView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.018"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.007"
+            app:srcCompat="@drawable/drawer_icon" />
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <!-- Botón para abrir el menú -->
 
     <!-- Menú de navegación -->
     <com.google.android.material.navigation.NavigationView

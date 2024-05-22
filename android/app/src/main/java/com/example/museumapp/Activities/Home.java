@@ -35,6 +35,7 @@ import com.example.museumapp.Models.Museum;
 import com.example.museumapp.Models.Obra;
 import com.example.museumapp.R;
 import com.example.museumapp.SharedData;
+import com.google.android.material.chip.Chip;
 import com.google.android.material.navigation.NavigationView;
 import com.mapbox.android.core.location.LocationEngine;
 import com.mapbox.android.core.location.LocationEngineCallback;
@@ -74,7 +75,6 @@ public class Home extends AppCompatActivity implements PermissionsListener {
     private SharedData sharedData = SharedData.getInstance();
 
     private Museum museoActual;
-
     private Double[] userLocation = {};
 
     TextView estas ;
@@ -156,6 +156,10 @@ public class Home extends AppCompatActivity implements PermissionsListener {
                 return true;
             }
             });
+    }
+
+    public void onClickButton(View view){
+        drawerLayout.openDrawer(GravityCompat.START);
     }
 
     private void locateMuseum(int tipo,double lat, double lon ){
