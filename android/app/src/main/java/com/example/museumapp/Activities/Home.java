@@ -67,13 +67,10 @@ public class Home extends AppCompatActivity implements PermissionsListener {
     private MapView mapView;
     private MapboxMap mapboxMap;
     private PermissionsManager permissionsManager;
-
     private LocationManager locationManager;
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
-
     private SharedData sharedData = SharedData.getInstance();
-
     private Museum museoActual;
     private Double[] userLocation = {};
 
@@ -115,7 +112,7 @@ public class Home extends AppCompatActivity implements PermissionsListener {
                             double longitude = point.getLongitude();
                             Log.e("HA CLICADO EN-----"," LAT: " + latitude + "LON: " + longitude);
                             locateMuseum(2,latitude,longitude);
-                            return true; // Devuelve true si has consumido el evento y no deseas que se propague más
+                            return true;
                         }
                     });
 
@@ -182,6 +179,9 @@ public class Home extends AppCompatActivity implements PermissionsListener {
                             Log.e("ESTA EN EL MUSEO", museo.toString());
                         } else {
                             Log.e("CLICKO EN EL MUSEO", museo.toString());
+                            Intent intent = new Intent(Home.this, Obras.class);
+                            intent.putExtra("museum_id", museo.getId());
+                            intent.putExtra("museum_name", museo.getName());
                         }
                     } else {
                         if (tipo == 1){

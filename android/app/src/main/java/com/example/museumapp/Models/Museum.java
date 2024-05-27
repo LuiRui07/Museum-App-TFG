@@ -4,13 +4,8 @@ public class Museum {
 
     private String _id;
     private String geojson;
-
     private String name;
-
-    private Double lat;
-
-    private Double lon;
-
+    private Location location;
     private String image;
 
     public String getId() {
@@ -37,22 +32,6 @@ public class Museum {
         this.name = name;
     }
 
-    public Double getLat() {
-        return lat;
-    }
-
-    public void setLat(Double lat) {
-        this.lat = lat;
-    }
-
-    public Double getLon() {
-        return lon;
-    }
-
-    public void setLon(Double lon) {
-        this.lon = lon;
-    }
-
     public String getImage() {
         return image;
     }
@@ -61,14 +40,22 @@ public class Museum {
         this.image = image;
     }
 
+    public Location getLocation() {
+        return location;
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
+    }
+
     @Override
     public String toString() {
         return "Museum{" +
-                "id='" + _id + '\'' +
-                "geojson='" + geojson + '\'' +
+                "_id='" + _id + '\'' +
+                ", geojson='" + geojson + '\'' +
                 ", name='" + name + '\'' +
-                ", lat=" + lat +
-                ", lon=" + lon +
+                ", location=" + location +
+                ", image='" + image + '\'' +
                 '}';
     }
 }

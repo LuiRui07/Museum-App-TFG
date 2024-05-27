@@ -26,16 +26,13 @@ import retrofit2.Retrofit;
 public class Museos extends AppCompatActivity {
 
     private RecyclerView recyclerView;
-
     public MuseosAdapter museosAdapter;
-    public SharedData sharedData = SharedData.getInstance();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.museos);
 
-        SharedData data = SharedData.getInstance();
         recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 

@@ -26,8 +26,6 @@ public class Register extends AppCompatActivity {
     String correo;
     String pass;
 
-    byte check;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,7 +38,6 @@ public class Register extends AppCompatActivity {
 
 
     public void registerUser (View view) {
-
         TextView mail = findViewById(R.id.mailRegister);
         TextView user = findViewById(R.id.userRegister);
         TextView contra = findViewById(R.id.contraRegister);

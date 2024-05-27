@@ -29,12 +29,9 @@ public class Obras extends AppCompatActivity {
 
     public ObrasAdapter obrasAdapter;
 
-    public SharedData sharedData = SharedData.getInstance();
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        SharedData data = SharedData.getInstance();
 
         Intent intent = getIntent();
         String museumId = intent.getStringExtra("museum_id");
