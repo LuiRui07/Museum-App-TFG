@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,6 +25,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
@@ -73,7 +75,11 @@ public class Home extends AppCompatActivity implements PermissionsListener {
     private SharedData sharedData = SharedData.getInstance();
     private Museum museoActual;
     private Double[] userLocation = {};
+    private ConstraintLayout containerLayout;
 
+    private Button buttonEntrar;
+
+    private static final int BUTTON_ENTRAR_ID = View.generateViewId();
     TextView estas ;
 
     @Override
@@ -81,6 +87,9 @@ public class Home extends AppCompatActivity implements PermissionsListener {
         super.onCreate(savedInstanceState);
         Mapbox.getInstance(this, getString(R.string.mapbox_access_token));
         setContentView(R.layout.home);
+
+        // Encuentra el contenedor con el ID correcto
+        containerLayout = findViewById(R.id.container_layout);
 
         // Obtener referencias a las vistas
         drawerLayout = findViewById(R.id.drawer_layout);
@@ -92,9 +101,6 @@ public class Home extends AppCompatActivity implements PermissionsListener {
         // Obtén una referencia al botón de ubicación
         ImageButton btnLocate = findViewById(R.id.btn_locate);
         //mapView.getMapAsync((OnMapReadyCallback) this);
-
-        TextView userText = findViewById(R.id.userText);
-        userText.setText(sharedData.user);
         estas = findViewById(R.id.estas);
 
 
@@ -159,6 +165,48 @@ public class Home extends AppCompatActivity implements PermissionsListener {
         drawerLayout.openDrawer(GravityCompat.START);
     }
 
+    public void setButtonMuseo() {
+
+        // Crea un nuevo botón
+        buttonEntrar = new Button(this);
+
+        // Establece los parámetros del botón (texto, id, etc.)
+        buttonEntrar.setText("Entrar al Museo");
+        buttonEntrar.setId(BUTTON_ENTRAR_ID);
+
+        // Define los LayoutParams del botón
+        ConstraintLayout.LayoutParams params = new ConstraintLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+
+        params.setMargins(0, 0, 0, 20); // margen inferior de 20dp
+
+        // Establecer restricciones
+        params.bottomToTop = R.id.mapView;
+        params.endToEnd = ConstraintLayout.LayoutParams.PARENT_ID;
+        params.startToStart = ConstraintLayout.LayoutParams.PARENT_ID;
+        params.horizontalBias = 0.95f; // Bias horizontal
+
+        // Establece los LayoutParams en el botón
+        buttonEntrar.setLayoutParams(params);
+
+        // Añadir un Listener al botón
+        buttonEntrar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Acción cuando se presiona el botón
+                Toast.makeText(getApplicationContext(), "Entrando al Museo", Toast.LENGTH_SHORT).show();
+            }
+        });
+        containerLayout.addView(buttonEntrar);
+    }
+
+    public void destroyButtonMuseo(){
+        Log.e("Quitar boton", "Quitar boton");
+        containerLayout.removeView(findViewById(BUTTON_ENTRAR_ID));
+    }
+
     private void locateMuseum(int tipo,double lat, double lon ){
         Retrofit retrofit = ApiClient.addHeader(this);
         ApiService apiService = retrofit.create(ApiService.class);
@@ -173,6 +221,11 @@ public class Home extends AppCompatActivity implements PermissionsListener {
                         Log.e("Respuesta Museo", response.message());
                         Museum museo = response.body();
                         Log.e("Museo Encontrado----", museo.toString());
+                        if (museo.getId() == null){
+                            destroyButtonMuseo();
+                        } else {
+                            setButtonMuseo();
+                        }
                         estas.setText("Estas en "+ museo.getName());
                         museoActual = museo;
                         if (tipo == 1){
