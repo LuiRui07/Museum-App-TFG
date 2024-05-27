@@ -11,11 +11,11 @@ const museumSchema = require("../models/museum.js");
 //Create
 router.post("/", (req, res) => {
   const museum = museumSchema(req.body);
-    museum.save()
-        .then(() => {
-        res.json({ message: "1" }); // Responde una vez que el mapa se ha guardado correctamente
-        })
-        .catch((error) => res.json({ message: error }));
+  museum.save()
+      .then(() => {
+      res.json({ message: "1" }); // Responde una vez que el mapa se ha guardado correctamente
+      })
+      .catch((error) => res.json({ message: error }));
 });
 
 // Get All 
@@ -64,26 +64,42 @@ router.put("/:id", (req, res) => {
 
 // Obtener Un Museo por sus Coordenadas
 router.get("/fromCoords/:lat/:lon", (req, res) => {
-  const tolerance = 0.01; // Define la tolerancia permitida en grados (ajusta según tus necesidades)
-  
-  // Obtén las coordenadas del parámetro de la solicitud
   const { lat, lon } = req.params;
 
-  // Calcula el rango para las coordenadas latitud y longitud
-  const latRange = [parseFloat(lat) - tolerance, parseFloat(lat) + tolerance];
-  const lonRange = [parseFloat(lon) - tolerance, parseFloat(lon) + tolerance];
+  const latitude = parseFloat(lat);
+  const longitude = parseFloat(lon);
 
-  // Realiza la búsqueda en la base de datos utilizando el operador $and para combinar las condiciones
-  museumSchema
-    .findOne({
-      $and: [
-        { lat: { $gte: latRange[0], $lte: latRange[1] } }, // Latitud dentro del rango
-        { lon: { $gte: lonRange[0], $lte: lonRange[1] } }  // Longitud dentro del rango
-      ]
-    })
-    .then((data) => res.json(data))
-    .catch((error) => res.json({ message: error }));
+  // Define el punto de consulta en el formato GeoJSON
+  const point = {
+    type: "Point",
+    coordinates: [longitude, latitude]
+  };
+
+  // Realiza la búsqueda utilizando $geoNear
+  museumSchema.aggregate([
+    {
+      $geoNear: {
+        near: point,
+        distanceField: "dist.calculated",
+        spherical: true
+      }
+    },
+    {
+      $sort: { "dist.calculated": 1 }
+    },
+    {
+      $limit: 1
+    },
+    {
+      $project: {
+        dist: 0 // Excluir el campo 'dist'
+      }
+    }
+  ])
+  .then(data => res.json(data || {}))
+  .catch(error => res.json({ message: error }));
 });
+
 
 
 

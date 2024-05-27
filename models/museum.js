@@ -4,7 +4,7 @@ const mongoose = require("mongoose")
 const museumSchema = new mongoose.Schema({
     geojson: {
         type: Object,
-        required: true,
+        required: true
     },
     name: {
         type: String,
@@ -13,6 +13,10 @@ const museumSchema = new mongoose.Schema({
     image: {
         type: String,
         required: true
+    },
+    location: {
+        type: { type: String, enum: ['Point'], required: true },
+        coordinates: { type: [Number], required: true }
     },
     lat: {
         type: Number,
@@ -24,4 +28,6 @@ const museumSchema = new mongoose.Schema({
     }
     
 });
+
+museumSchema.index({ location: '2dsphere' });
 module.exports = mongoose.model("museums", museumSchema);
