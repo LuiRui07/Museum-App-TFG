@@ -96,7 +96,7 @@ router.get("/fromCoords/:lat/:lon", (req, res) => {
       }
     }
   ])
-  .then(data => res.json(data || {}))
+  .then(data => res.json(data[0] || {}))
   .catch(error => res.json({ message: error }));
 });
 
