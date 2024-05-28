@@ -145,10 +145,12 @@ public class Home extends AppCompatActivity implements PermissionsListener {
                     intent = new Intent(Home.this, Museos.class);
                 } else if (item.getItemId() == R.id.nav_item3) {
                     intent = new Intent(Home.this, Obras.class);
+                    /*
                     if (museoActual != null) {
                         intent.putExtra("museum_id", museoActual.getId());
                         intent.putExtra("museum_name", museoActual.getName());
                     }
+                    */
                 } else {
                     intent = new Intent(Home.this, Recorridos.class);
                 }
@@ -197,6 +199,10 @@ public class Home extends AppCompatActivity implements PermissionsListener {
             public void onClick(View v) {
                 // Acción cuando se presiona el botón
                 Toast.makeText(getApplicationContext(), "Entrando al Museo", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(Home.this,InsideMuseum.class);
+                intent.putExtra("Geojson", museoActual.getGeojson());
+                intent.putExtra("location", museoActual.getLocation().getCoordinates());
+                startActivity(intent);
             }
         });
         containerLayout.addView(buttonEntrar);
@@ -235,6 +241,8 @@ public class Home extends AppCompatActivity implements PermissionsListener {
                             Intent intent = new Intent(Home.this, Obras.class);
                             intent.putExtra("museum_id", museo.getId());
                             intent.putExtra("museum_name", museo.getName());
+                            startActivity(intent);
+                            // Meter que te lleve al museo
                         }
                     } else {
                         if (tipo == 1){
@@ -248,23 +256,6 @@ public class Home extends AppCompatActivity implements PermissionsListener {
                         Log.e("Respuesta Museo", t.getMessage());
             }
         });
-    }
-
-    public void locate(View view){
-        // Solicita la ubicación del usuario y centra el mapa en esa ubicación
-        if (mapboxMap != null) {
-            // Verifica si se tienen los permisos de ubicación
-            if (PermissionsManager.areLocationPermissionsGranted(Home.this)) {
-                // Activa y configura el componente de ubicación si los permisos están otorgados
-                enableLocationComponent(mapboxMap.getStyle());
-                getLocation();
-                //locateMuseum(1,userLocation[0],userLocation[1]);
-            } else {
-                // Solicita los permisos de ubicación si no están otorgados
-                permissionsManager = new PermissionsManager(Home.this);
-                permissionsManager.requestLocationPermissions(Home.this);
-            }
-        }
     }
 
     @SuppressLint("MissingPermission")
@@ -283,6 +274,22 @@ public class Home extends AppCompatActivity implements PermissionsListener {
     }
 
     // LocationListener para escuchar los cambios en la ubicación del usuario
+    public void locate(View view){
+        // Solicita la ubicación del usuario y centra el mapa en esa ubicación
+        if (mapboxMap != null) {
+            // Verifica si se tienen los permisos de ubicación
+            if (PermissionsManager.areLocationPermissionsGranted(Home.this)) {
+                // Activa y configura el componente de ubicación si los permisos están otorgados
+                enableLocationComponent(mapboxMap.getStyle());
+                getLocation();
+                //locateMuseum(1,userLocation[0],userLocation[1]);
+            } else {
+                // Solicita los permisos de ubicación si no están otorgados
+                permissionsManager = new PermissionsManager(Home.this);
+                permissionsManager.requestLocationPermissions(Home.this);
+            }
+        }
+    }
     private final LocationListener locationListener = new LocationListener() {
         @Override
         public void onLocationChanged(@NonNull Location location) {
@@ -290,7 +297,7 @@ public class Home extends AppCompatActivity implements PermissionsListener {
             double latitude = location.getLatitude();
             double longitude = location.getLongitude();
             setUserLocation(latitude,longitude);
-            Log.e("UBICACION", "LAt: " + latitude + "LON: " + longitude);
+            Log.e("UBICACION", "LAT: " + latitude + "LON: " + longitude);
 
             // Hacer lo que necesites con las coordenadas (por ejemplo, almacenarlas en MongoDB)
             // Aquí puedes llamar a tus métodos para almacenar las coordenadas en tu base de datos MongoDB
