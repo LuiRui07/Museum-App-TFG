@@ -14,6 +14,7 @@ app.use('/users', require("./routes/usersRoutes"));
 app.use('/art', require('./routes/artRoutes'))
 app.use('/beacon', require('./routes/beaconsRoutes'));
 app.use("/museum", require("./routes/museumRoutes"));
+app.use("/route", require("./routes/routeRoutes"));
 
 mongoose.connect("mongodb+srv://ei:ei@cluster0.1acabfy.mongodb.net/Museum").then(() =>
     console.log("Hemos conectado con mongoDB")

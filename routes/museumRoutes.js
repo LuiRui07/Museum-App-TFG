@@ -11,11 +11,11 @@ const museumSchema = require("../models/museum.js");
 //Create
 router.post("/", (req, res) => {
   const museum = museumSchema(req.body);
-  museum.save()
-      .then(() => {
-      res.json({ message: "1" }); // Responde una vez que el mapa se ha guardado correctamente
-      })
-      .catch((error) => res.json({ message: error }));
+    museum.save()
+        .then(() => {
+        res.json({ message: "1" }); // Responde una vez que el mapa se ha guardado correctamente
+        })
+        .catch((error) => res.json({ message: error }));
 });
 
 // Get All 
