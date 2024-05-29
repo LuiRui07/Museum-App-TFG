@@ -2,6 +2,10 @@ const mongoose = require("mongoose")
 
 
 const routesSchema = new mongoose.Schema({
+    name: {
+        type: String,
+        required: true,
+    },  
     museum: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'museum',
