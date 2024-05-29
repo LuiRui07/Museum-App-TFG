@@ -2,6 +2,7 @@ package com.example.museumapp.Api;
 
 import com.example.museumapp.Models.Museum;
 import com.example.museumapp.Models.Obra;
+import com.example.museumapp.Models.Route;
 
 import java.util.List;
 
@@ -40,7 +41,9 @@ public interface ApiService {
     @GET("museum/fromCoords/{lat}/{lon}")
     Call<Museum> getMuseumFromCoords(@Path("lat") double lat, @Path("lon") double lon);
 
-
+    //------------Recorridos
+    @GET("route/")
+    Call<List<Route>> getAllRoutes(); // Deberia ser la ruta del usuairo solo
 
 
 }
