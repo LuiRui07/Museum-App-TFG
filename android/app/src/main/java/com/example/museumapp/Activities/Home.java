@@ -5,11 +5,9 @@ import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -29,15 +27,10 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
-import com.example.museumapp.Api.ApiClient;
-import com.example.museumapp.Api.ApiService;
-import com.example.museumapp.Api.LoginRequest;
-import com.example.museumapp.Api.Response;
 import com.example.museumapp.Models.Museum;
-import com.example.museumapp.Models.Obra;
 import com.example.museumapp.R;
+import com.example.museumapp.Service.MuseumService;
 import com.example.museumapp.SharedData;
-import com.google.android.material.chip.Chip;
 import com.google.android.material.navigation.NavigationView;
 import com.mapbox.android.core.location.LocationEngine;
 import com.mapbox.android.core.location.LocationEngineCallback;
@@ -58,13 +51,8 @@ import com.mapbox.mapboxsdk.maps.Style;
 
 import java.util.List;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
-
-public class Home extends AppCompatActivity implements PermissionsListener {
+public class    Home extends AppCompatActivity implements PermissionsListener {
 
     private MapView mapView;
     private MapboxMap mapboxMap;
@@ -76,17 +64,18 @@ public class Home extends AppCompatActivity implements PermissionsListener {
     private Museum museoActual;
     private Double[] userLocation = {};
     private ConstraintLayout containerLayout;
-
     private Button buttonEntrar;
-
     private static final int BUTTON_ENTRAR_ID = View.generateViewId();
     TextView estas ;
+    MuseumService museumService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Mapbox.getInstance(this, getString(R.string.mapbox_access_token));
         setContentView(R.layout.home);
+
+        museumService = new MuseumService(this);
 
         // Encuentra el contenedor con el ID correcto
         containerLayout = findViewById(R.id.container_layout);
@@ -214,46 +203,30 @@ public class Home extends AppCompatActivity implements PermissionsListener {
     }
 
     private void locateMuseum(int tipo,double lat, double lon ){
-        Retrofit retrofit = ApiClient.addHeader(this);
-        ApiService apiService = retrofit.create(ApiService.class);
-
-        Call<Museum> call = apiService.getMuseumFromCoords(lat,lon);
-
-        call.enqueue(new Callback<Museum>() {
+        museumService.getMuseumFromCoords(lat,lon, tipo, new MuseumService.MuseumCallback() {
             @Override
-            public void onResponse(Call<Museum> call, retrofit2.Response<Museum> response) {
-                if (response.isSuccessful()) {
-                    if (response.body() != null) {  ///Otra condición
-                        Log.e("Respuesta Museo", response.message());
-                        Museum museo = response.body();
-                        Log.e("Museo Encontrado----", museo.toString());
-                        if (museo.getId() == null){
-                            destroyButtonMuseo();
-                        } else {
-                            setButtonMuseo();
-                        }
-                        estas.setText("Estas en "+ museo.getName());
-                        museoActual = museo;
-                        if (tipo == 1){
-                            Log.e("ESTA EN EL MUSEO", museo.toString());
-                        } else {
-                            Log.e("CLICKO EN EL MUSEO", museo.toString());
-                            Intent intent = new Intent(Home.this, Obras.class);
-                            intent.putExtra("museum_id", museo.getId());
-                            intent.putExtra("museum_name", museo.getName());
-                            startActivity(intent);
-                            // Meter que te lleve al museo
-                        }
-                    } else {
-                        if (tipo == 1){
-                            toast("No está en ningún museo");
-                        }
-                        Log.e("Respuesta Museo NULA", response.message());
-                    }
-                }}
+            public void onSuccess(Museum result, int tipo, List<Museum> museos, Context context) {
+                setButtonMuseo();
+                estas.setText("Estas en "+ result.getName());
+                museoActual = result;
+                if (tipo == 1){
+                    Log.e("ESTA EN EL MUSEO", result.toString());
+                } else {
+                    Log.e("CLICKO EN EL MUSEO", result.toString());
+                    Intent intent = new Intent(Home.this, Obras.class);
+                    intent.putExtra("museum_id", result.getId());
+                    intent.putExtra("museum_name", result.getName());
+                    startActivity(intent);
+                }
+            }
+
             @Override
-            public void onFailure(Call<Museum> call, Throwable t) {
-                        Log.e("Respuesta Museo", t.getMessage());
+            public void onFailure(String errorMessage) {
+                destroyButtonMuseo();
+                estas.setText("");
+                if (errorMessage != ""){
+                    toast(errorMessage);
+                }
             }
         });
     }

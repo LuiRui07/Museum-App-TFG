@@ -3,6 +3,7 @@ package com.example.museumapp.Activities;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -15,6 +16,8 @@ import com.example.museumapp.Api.ApiService;
 import com.example.museumapp.Models.Museum;
 import com.example.museumapp.Models.Obra;
 import com.example.museumapp.R;
+import com.example.museumapp.Service.MuseumService;
+import com.example.museumapp.Service.UserService;
 import com.example.museumapp.SharedData;
 
 import java.util.List;
@@ -28,10 +31,14 @@ public class Museos extends AppCompatActivity {
     private RecyclerView recyclerView;
     public MuseosAdapter museosAdapter;
 
+    public MuseumService museumService;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.museos);
+
+        museumService = new MuseumService(this);
 
         recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -40,30 +47,21 @@ public class Museos extends AppCompatActivity {
     }
 
     public void getMuseos() {
-        Retrofit retrofit = ApiClient.addHeader(this);
-        ApiService apiService = retrofit.create(ApiService.class);
-        Context context = this;
 
-        Call<List<Museum>> call = apiService.getAllMuseum();
+        museumService.getAllMuseums(new MuseumService.MuseumCallback() {
+            @Override
+            public void onSuccess(Museum museum, int tipo, List<Museum> museos, Context context) {
+                museosAdapter = new MuseosAdapter(museos,context);
+                recyclerView.setAdapter(museosAdapter);
+            }
 
-            call.enqueue(new Callback<List<Museum>>() {
-                @Override
-                public void onResponse(Call<List<Museum>> call, retrofit2.Response<List<Museum>> response) {
-                    if (response.isSuccessful()) {
-                        List<Museum> museos = response.body();
-                        Log.d("GetObras", museos.toString());
-                        museosAdapter = new MuseosAdapter(museos,context);
-                        recyclerView.setAdapter(museosAdapter);
-                    } else {
-                        Log.d("GetObras", response.message());
-                    }
-                }
+            @Override
+            public void onFailure(String errorMessage) {
+            }
+        });
 
-                @Override
-                public void onFailure(Call<List<Museum>> call, Throwable t) {
-                    Log.e("GetObrasFail", "Error en la solicitud: " + t.getMessage());
-                }
-            });
+
+
         }
 
     }

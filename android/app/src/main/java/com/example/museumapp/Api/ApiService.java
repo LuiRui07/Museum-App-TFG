@@ -18,9 +18,6 @@ public interface ApiService {
 
     //------------ Usuarios
 
-    @GET("users/")
-    Call<Response> getAllUsers();
-
     @POST("users/login/")
     Call<Response> loginUser(@Body LoginRequest loginRequest);
 
@@ -38,12 +35,15 @@ public interface ApiService {
     @GET("museum/")
     Call<List<Museum>> getAllMuseum();
 
+    @GET("museum/{id}")
+    Call<Museum> getMuseumFromId(@Path("id") String id);
+
     @GET("museum/fromCoords/{lat}/{lon}")
     Call<Museum> getMuseumFromCoords(@Path("lat") double lat, @Path("lon") double lon);
 
     //------------Recorridos
     @GET("route/")
-    Call<List<Route>> getAllRoutes(); // Deberia ser la ruta del usuairo solo
+    Call<List<Route>> getAllRoutes(); // Deberia ser la ruta del usuario solo
 
 
 }

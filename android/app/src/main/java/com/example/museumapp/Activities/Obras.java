@@ -14,6 +14,7 @@ import com.example.museumapp.Api.ApiService;
 import com.example.museumapp.Models.Obra;
 import com.example.museumapp.Adapters.ObrasAdapter;
 import com.example.museumapp.R;
+import com.example.museumapp.Service.ObraService;
 import com.example.museumapp.SharedData;
 
 import java.util.List;
@@ -29,9 +30,13 @@ public class Obras extends AppCompatActivity {
 
     public ObrasAdapter obrasAdapter;
 
+    public ObraService obraService;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        obraService = new ObraService(this);
 
         Intent intent = getIntent();
         String museumId = intent.getStringExtra("museum_id");
@@ -52,52 +57,23 @@ public class Obras extends AppCompatActivity {
     }
 
     public void getObras(String id) {
-        Retrofit retrofit = ApiClient.addHeader(this);
-        ApiService apiService = retrofit.create(ApiService.class);
-
         if (id == null) {
-            Call<List<Obra>> call = apiService.getAllArt();
-
-            call.enqueue(new Callback<List<Obra>>() {
+            obraService.getAllArt(new ObraService.ObraCallback() {
                 @Override
-                public void onResponse(Call<List<Obra>> call, retrofit2.Response<List<Obra>> response) {
-                    if (response.isSuccessful()) {
-                        List<Obra> obras = response.body();
-                        Log.d("GetObras", obras.toString());
-                        obrasAdapter = new ObrasAdapter(obras);
-                        recyclerView.setAdapter(obrasAdapter);
-                    } else {
-                        Log.d("GetObras", response.message());
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<List<Obra>> call, Throwable t) {
-                    Log.e("GetObrasFail", "Error en la solicitud: " + t.getMessage());
+                public void onSuccess(List<Obra> obras) {
+                    obrasAdapter = new ObrasAdapter(obras);
+                    recyclerView.setAdapter(obrasAdapter);
                 }
             });
+
         } else {
-            Call<List<Obra>> call = apiService.getObrasFromMuseum(id);
-
-            call.enqueue(new Callback<List<Obra>>() {
+            obraService.gerArtFromMuseum(id, new ObraService.ObraCallback() {
                 @Override
-                public void onResponse(Call<List<Obra>> call, retrofit2.Response<List<Obra>> response) {
-                    if (response.isSuccessful()) {
-                        List<Obra> obras = response.body();
-                        Log.d("GetObrasDeMuseoA", obras.toString());
-                        obrasAdapter = new ObrasAdapter(obras);
-                        recyclerView.setAdapter(obrasAdapter);
-                    } else {
-                        Log.d("GetObrasDeMuseoB", response.errorBody().toString());
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<List<Obra>> call, Throwable t) {
-                    Log.e("GetObrasdeMuseoFail", "Error en la solicitud: " + t.getMessage());
+                public void onSuccess(List<Obra> obras) {
+                    obrasAdapter = new ObrasAdapter(obras);
+                    recyclerView.setAdapter(obrasAdapter);
                 }
             });
-
         }
 
     }

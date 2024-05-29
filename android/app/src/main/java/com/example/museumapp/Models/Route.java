@@ -6,8 +6,9 @@ public class Route {
 
 
     private String _id;
-    private Museum museo;
-    private List<Obra> arts;
+    private String name;
+    private String museum;
+    private List<String> arts;
     private String user;
 
     public String get_id() {
@@ -18,19 +19,27 @@ public class Route {
         this._id = _id;
     }
 
-    public Museum getMuseo() {
-        return museo;
+    public String getName() {
+        return name;
     }
 
-    public void setMuseo(Museum museo) {
-        this.museo = museo;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public List<Obra> getArts() {
+    public String getMuseum() {
+        return museum;
+    }
+
+    public void setMuseum(String museum) {
+        this.museum = museum;
+    }
+
+    public List<String> getArts() {
         return arts;
     }
 
-    public void setArts(List<Obra> arts) {
+    public void setArts(List<String> arts) {
         this.arts = arts;
     }
 
@@ -46,7 +55,8 @@ public class Route {
     public String toString() {
         return "Route{" +
                 "_id='" + _id + '\'' +
-                ", museo=" + museo +
+                ", name='" + name + '\'' +
+                ", museum='" + museum + '\'' +
                 ", arts=" + arts +
                 ", user='" + user + '\'' +
                 '}';

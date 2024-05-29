@@ -11,30 +11,34 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.museumapp.Activities.Museos;
 import com.example.museumapp.Activities.Obras;
 import com.example.museumapp.Models.Museum;
 import com.example.museumapp.Models.Route;
 import com.example.museumapp.R;
+import com.example.museumapp.Service.MuseumService;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
 public class RutasAdapter extends RecyclerView.Adapter<RutasAdapter.RutasViewHolder> {
     private List<Route> rutas;
-    private Context context;
 
-    public RutasAdapter(List<Route> rutas) {
+    public Context context;
+
+    public RutasAdapter(List<Route> rutas, Context context) {
         this.rutas= rutas;
+        this.context = context;
     }
 
     @Override
-    public RutasAdapter.RutasViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public RutasViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_recorrido, parent, false);
-        return new RutasAdapter.RutasViewHolder(view);
+        return new RutasViewHolder(view, context);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RutasAdapter.RutasViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RutasViewHolder holder, int position) {
         Route ruta = rutas.get(position);
         holder.bind(ruta);
 
@@ -56,16 +60,29 @@ public class RutasAdapter extends RecyclerView.Adapter<RutasAdapter.RutasViewHol
     public static class RutasViewHolder extends RecyclerView.ViewHolder {
         TextView titleTextView;
         TextView descriptionTextView;
+        public MuseumService museumService;
 
-        public RutasViewHolder(@NonNull View itemView) {
+        public RutasViewHolder(@NonNull View itemView, Context context) {
             super(itemView);
             titleTextView = itemView.findViewById(R.id.title_text_view);
             descriptionTextView = itemView.findViewById(R.id.description_text_view);
+
+            museumService = new MuseumService(context);
         }
 
         public void bind(Route ruta) {
-            titleTextView.setText(ruta.getMuseo().getName());
-            titleTextView.setText(ruta.getMuseo().getName());
+            titleTextView.setText(ruta.getName());
+            museumService.getMuseumFromId(ruta.getMuseum(), new MuseumService.MuseumCallback() {
+                @Override
+                public void onSuccess(Museum museum, int tipo, List<Museum> museos, Context context) {
+                    descriptionTextView.setText(museum.getName());
+                }
+
+                @Override
+                public void onFailure(String errorMessage) {
+
+                }
+            });
         }
     }
 }
