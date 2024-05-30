@@ -58,4 +58,14 @@ router.post("/", (req, res) => {
     }
   );
 
+    // -------------------------------------------------------------------------------------------
+
+  // Get Routes From User
+  router.get("/user/:id", (req, res) => {
+    routesSchema
+        .find({user: req.params.id})
+        .then((data) => res.json(data))
+        .catch((error) => res.json({ message: error }));
+    });
+
 module.exports = router;
