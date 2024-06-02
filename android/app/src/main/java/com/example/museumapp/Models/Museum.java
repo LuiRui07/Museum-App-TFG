@@ -3,7 +3,7 @@ package com.example.museumapp.Models;
 public class Museum {
 
     private String _id;
-    private String geojson;
+    private String map;
     private String name;
     private Location location;
     private String image;
@@ -16,12 +16,12 @@ public class Museum {
         this._id = id;
     }
 
-    public String getGeojson() {
-        return geojson;
+    public String getMap() {
+        return map;
     }
 
-    public void setGeojson(String geojson) {
-        this.geojson = geojson;
+    public void setMap(String map) {
+        this.map = map;
     }
 
     public String getName() {
@@ -52,7 +52,7 @@ public class Museum {
     public String toString() {
         return "Museum{" +
                 "_id='" + _id + '\'' +
-                ", geojson='" + geojson + '\'' +
+                ", map='" + map + '\'' +
                 ", name='" + name + '\'' +
                 ", location=" + location +
                 ", image='" + image + '\'' +

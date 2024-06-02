@@ -1,17 +1,18 @@
 package com.example.museumapp.Api;
 
 import com.example.museumapp.Models.Obra;
+import com.example.museumapp.Models.User;
 
 import java.util.List;
 
 public class Response {
     private String message;
 
-    private String user;
-
     private String mail;
 
     private List<Obra> obras;
+
+    private User user;
 
     public String getMessage() {
         return message;
@@ -21,7 +22,7 @@ public class Response {
         return mail;
     }
 
-    public String getUser() {
+    public User getUser() {
         return user;
     }
 
@@ -30,7 +31,6 @@ public class Response {
     public Response(String message) {
         this.message = message;
     }
-
 
     public List<Obra> getObras() {
         return obras;

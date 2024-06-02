@@ -46,5 +46,25 @@ public class RouteService {
         });
     }
 
+    public void getRoutesFromUser (String id , RouteCallback callback) {
+        Call<List<Route>> call = apiService.getRouteFromUser(id);
+        call.enqueue(new Callback<List<Route>>() {
+            @Override
+            public void onResponse(Call<List<Route>> call, retrofit2.Response<List<Route>> response) {
+                if (response.isSuccessful()) {
+                    List<Route> rutas = response.body();
+                    Log.d("GetRutasFromUser", rutas.toString());
+                    callback.onSuccess(rutas);
+                } else {
+                    Log.d("GetRutasFromUser", response.message());
+                }
+            }
+            @Override
+            public void onFailure(Call<List<Route>> call, Throwable t) {
+                Log.e("GetRutasFromUserFail", "Error en la solicitud: " + t.getMessage());
+            }
+        });
+    }
+
 
 }

@@ -16,14 +16,14 @@ function authMiddleware(req, res, next) {
     */
    
     const token = req.headers.authorization;
-    console.log(token)
+    //console.log(token)
     if (!token) {
     return res.status(401).json({message: 'Authentication failed' });
     }
 
     try {
     const decoded = jwt.verify(token, "ClaveSecreta");
-    console.log(decoded);
+    //console.log(decoded);
     req.userId = decoded.userId;
     next();
     } catch (err) {

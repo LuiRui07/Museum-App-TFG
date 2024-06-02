@@ -1,5 +1,4 @@
-const mongoose = require("mongoose")
-
+const mongoose = require("mongoose");
 
 const usersSchema = new mongoose.Schema({
     user: {
@@ -12,8 +11,12 @@ const usersSchema = new mongoose.Schema({
     },
     password: {
         type: String,
-        required: true
+        required: false,
+    },
+    isGoogleUser: {
+        type: Boolean,
+        default: false
     }
-    
 });
+
 module.exports = mongoose.model("user", usersSchema);

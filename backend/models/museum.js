@@ -2,8 +2,8 @@ const mongoose = require("mongoose")
 
 
 const museumSchema = new mongoose.Schema({
-    geojson: {
-        type: Object,
+    map: {
+        type: String,
         required: true
     },
     name: {

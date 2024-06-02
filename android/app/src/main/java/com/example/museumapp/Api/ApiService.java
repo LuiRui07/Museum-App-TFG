@@ -3,11 +3,13 @@ package com.example.museumapp.Api;
 import com.example.museumapp.Models.Museum;
 import com.example.museumapp.Models.Obra;
 import com.example.museumapp.Models.Route;
+import com.example.museumapp.Models.User;
 
 import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.Field;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
@@ -20,6 +22,9 @@ public interface ApiService {
 
     @POST("users/login/")
     Call<Response> loginUser(@Body LoginRequest loginRequest);
+
+    @POST("users/google/")
+    Call<Response> loginGoogle(@Field("mail") String mail, @Field("user") String user);
 
     @POST("users")
     Call<Response> createUser(@Body UserBody userBody);
@@ -44,6 +49,9 @@ public interface ApiService {
     //------------Recorridos
     @GET("route/")
     Call<List<Route>> getAllRoutes(); // Deberia ser la ruta del usuario solo
+
+    @GET("route/user/{id}")
+    Call<List<Route>> getRouteFromUser(@Path("id") String id);
 
 
 }

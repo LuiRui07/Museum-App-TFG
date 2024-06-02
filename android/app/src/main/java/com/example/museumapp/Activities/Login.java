@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.museumapp.Models.User;
 import com.example.museumapp.R;
 import com.example.museumapp.Service.UserService;
 import com.example.museumapp.SharedData;
@@ -24,16 +25,9 @@ import com.google.android.gms.tasks.Task;
 public class Login extends AppCompatActivity {
 
     private static final int RC_SIGN_IN = 183107755; // Constante para el código de solicitud de inicio de sesión
-
     private GoogleSignInClient mGoogleSignInClient;
-
-    private ActivityResultLauncher<Intent> signInLauncher;
-
-
-    private boolean signedGoogle;
     private String contra ;
-    private String user ;
-
+    private String username ;
     private UserService usersService;
 
     @Override
@@ -86,7 +80,19 @@ public class Login extends AppCompatActivity {
     private void updateUI(GoogleSignInAccount account) {
         if (account != null) {
             // Usuario está logueado
-            goHome(account.getDisplayName(),account.getEmail(),account.getPhotoUrl());
+            usersService.loginGoogle(account.getEmail(), account.getDisplayName(), new UserService.UserCallback() {
+                @Override
+                public void onSuccess(User user) {
+                    goHome(user);
+                }
+
+                @Override
+                public void onFailure(String errorMessage) {
+                    toast(errorMessage);
+                }
+            });
+
+
         } else {
             // Usuario no está logueado
         }
@@ -106,16 +112,16 @@ public class Login extends AppCompatActivity {
         TextView c = findViewById(R.id.contra);
         contra = c.getText().toString();
         TextView u = findViewById(R.id.user);
-        user = u.getText().toString();
+        username = u.getText().toString();
 
-        if (user.isEmpty() || contra.isEmpty()) {
+        if (username.isEmpty() || contra.isEmpty()) {
             Toast.makeText(this, "Debe escribir un usuario y una contraseña", Toast.LENGTH_SHORT).show();
         }
 
-        usersService.loginUser(user, contra, new UserService.UserCallback() {
+        usersService.loginUser(username, contra, new UserService.UserCallback() {
             @Override
-            public void onSuccess(String[] result) {
-                    goHome(user,result[1],null);
+            public void onSuccess(User user) {
+                    goHome(user);
             }
 
             @Override
@@ -125,15 +131,12 @@ public class Login extends AppCompatActivity {
         });
     }
 
-    public void goHome(String user, String mail, Uri photo) {
+    public void goHome(User user) {
         SharedData sharedData = SharedData.getInstance();
         sharedData.setUser(user);
-        sharedData.setMail(mail);
-        sharedData.setPhoto(photo);
         Log.e("UserData", sharedData.toString());
         Intent intent = new Intent(getApplicationContext(), Home.class);
         startActivity(intent);
-
     }
 
 }

@@ -3,6 +3,7 @@ package com.example.museumapp;
 import android.net.Uri;
 
 import com.example.museumapp.Models.Museum;
+import com.example.museumapp.Models.User;
 
 import java.net.URI;
 
@@ -10,24 +11,24 @@ public class SharedData {
 
     protected static SharedData instance;
 
-    public String user;
-
-    public String mail;
-
-    public Uri photo;
+    public User user;
 
     public Museum museo = null;
 
-    public void setMail(String mail) {
-        this.mail = mail;
+    public User getUser() {
+        return user;
     }
 
-    public void setUser(String user) {
+    public void setUser(User user) {
         this.user = user;
     }
 
-    public void setPhoto(Uri photo) {
-        this.photo = photo;
+    public Museum getMuseo() {
+        return museo;
+    }
+
+    public void setMuseo(Museum museo) {
+        this.museo = museo;
     }
 
     public static synchronized SharedData getInstance() {
@@ -38,8 +39,6 @@ public class SharedData {
     }
 
     public void destroy() {
-        this.photo = null;
-        this.mail = null;
         this.user = null;
         this.museo = null;
         instance = null; // También nulifica la instancia única

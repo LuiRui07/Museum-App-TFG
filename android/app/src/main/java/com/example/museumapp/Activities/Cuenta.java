@@ -16,11 +16,9 @@ import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
 public class Cuenta extends AppCompatActivity {
 
-
     Button leave;
 
     SharedData data;
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -38,14 +36,14 @@ public class Cuenta extends AppCompatActivity {
         leave = findViewById(R.id.logOut);
 
 
-        mail.setText(data.mail);
+        mail.setText(data.user.getMail());
 
-        userName.setText(data.user);
+        userName.setText(data.user.getUser());
 
 
-        if (data.photo != null){
+        if (data.user.getPhoto() != null){
             Picasso.get()
-                    .load(data.photo)
+                    .load(data.user.getPhoto())
                     .transform(new CropCircleTransformation())
                     .into(photo);
         }
