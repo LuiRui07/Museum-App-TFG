@@ -76,7 +76,7 @@ router.post("/google", (req, res) => {
           user: req.query.user, // Asegúrate de que user se envíe en req.body
           mail: mail.toLowerCase(),
           password: "",
-          isGoogleUser: true
+          isGoogleUser: req.query.photo,
         });
         newUser.save() 
         .then(() => {
