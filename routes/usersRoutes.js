@@ -55,7 +55,7 @@ router.post("/login", (req, res) => {
     .then((data) => {
       if (data) {
         // Si se encuentra el usuario, devolver además de "1", el user y el mail
-        res.json({ message: "1", user: data.user});
+        res.json({ message: "1", user: data});
       } else {
         // Si no se encuentra el usuario, devolver "0"
         res.json({ message: "0" });
