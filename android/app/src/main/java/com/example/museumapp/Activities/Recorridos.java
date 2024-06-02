@@ -48,11 +48,11 @@ public class Recorridos extends AppCompatActivity {
         getRecorridos(sharedData.user.getId());
     }
 
-    public void getRecorridos(String user) {
+    public void getRecorridos(String userId) {
 
         Context context = this;
 
-        routeService.getAllRoutes(new RouteService.RouteCallback() {
+        routeService.getRoutesFromUser(userId, new RouteService.RouteCallback() {
             @Override
             public void onSuccess(List<Route> rutas) {
                 rutasAdapter = new RutasAdapter(rutas,context);
