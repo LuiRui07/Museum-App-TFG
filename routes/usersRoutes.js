@@ -76,7 +76,8 @@ router.post("/google", (req, res) => {
           user: user,
           mail: mail.toLowerCase(),
           password: "",
-          isGoogleUser: photo,
+          isGoogleUser: true,
+          photo: photo
         });
         newUser.save() 
         .then(() => {
