@@ -2,15 +2,21 @@ package com.example.museumapp.Models;
 
 public class User {
 
-    String user;
+    private String _id;
 
-    String mail;
+    private String user;
 
-    String password;
+    private String mail;
 
-    String photo;
+    private String password;
 
-    Boolean isGoogleUser;
+    private String photo;
+
+    private Boolean isGoogleUser;
+
+    public String getId() {
+        return _id;
+    }
 
     public String getUser() {
         return user;

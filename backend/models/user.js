@@ -13,6 +13,10 @@ const usersSchema = new mongoose.Schema({
         type: String,
         required: false,
     },
+    photo: {
+        type: String,
+        required: false,
+    },
     isGoogleUser: {
         type: Boolean,
         default: false

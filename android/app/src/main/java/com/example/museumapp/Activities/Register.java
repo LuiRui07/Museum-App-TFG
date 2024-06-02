@@ -6,6 +6,8 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.museumapp.Models.User;
 import com.example.museumapp.R;
 import com.example.museumapp.Service.UserService;
 
@@ -49,7 +51,7 @@ public class Register extends AppCompatActivity {
 
         userService.registerUser(username, correo, password, new UserService.UserCallback() {
             @Override
-            public void onSuccess(String[] result) {
+            public void onSuccess(User user) {
                 toast("Usuario Creado");
                 Intent intent = new Intent(Register.this, Login.class);
                 startActivity(intent);

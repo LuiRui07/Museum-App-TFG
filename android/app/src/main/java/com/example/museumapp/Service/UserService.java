@@ -37,7 +37,7 @@ public class UserService {
             public void onResponse(Call<com.example.museumapp.Api.Response> call, retrofit2.Response<com.example.museumapp.Api.Response> response) {
                 if (response.isSuccessful()) {
                     Response loginResponse = response.body();
-                    String message = loginResponse.getMessage();
+                    String message = loginResponse.getMessageAsString();
                     Log.d("LoginResponseSuccesFul", response.toString());
                     if (message.contains("1")) {
                         User user = loginResponse.getUser();
@@ -66,7 +66,8 @@ public class UserService {
             public void onResponse(Call<Response> call, retrofit2.Response<Response> response) {
                 if (response.isSuccessful()) {
                     Response loginResponse = response.body();
-                    String message = loginResponse.getMessage();
+                    Log.d("-------------------------------", loginResponse.getMessageAsString());
+                    String message = loginResponse.getMessageAsString();
                     Log.d("LoginResponseGoogleSuccesFul", response.toString());
                     if (message.contains("1")) {
                         User user = loginResponse.getUser();
@@ -79,9 +80,11 @@ public class UserService {
 
             @Override
             public void onFailure(Call<Response> call, Throwable t) {
-                Log.e("LoginGoogleResponse", "Error en la solicitud: " + t.toString());
+                Log.e("LoginGoogleResponseFailure", "Error en la solicitud: " + t.toString());
                 callback.onFailure("Error en la solicitud: " + t.toString());
             }
+
+
         });
     }
 
@@ -94,7 +97,7 @@ public class UserService {
             @Override
             public void onResponse(Call<Response> call, retrofit2.Response<Response> response) {
                 if (response.isSuccessful()) {
-                    String message = response.body().getMessage();
+                    String message = response.body().getMessageAsString();
                     Log.d("Create?", message);
                     if (message.contains("1")) {
                         callback.onSuccess(null);

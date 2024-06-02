@@ -2,10 +2,12 @@ package com.example.museumapp.Api;
 
 import com.example.museumapp.Models.Obra;
 import com.example.museumapp.Models.User;
+import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
 public class Response {
+
     private String message;
 
     private String mail;
@@ -14,7 +16,7 @@ public class Response {
 
     private User user;
 
-    public String getMessage() {
+    public Object getMessage() {
         return message;
     }
 
@@ -26,8 +28,6 @@ public class Response {
         return user;
     }
 
-    public Response() {}
-
     public Response(String message) {
         this.message = message;
     }
@@ -35,5 +35,14 @@ public class Response {
     public List<Obra> getObras() {
         return obras;
     }
+
+    public String getMessageAsString() {
+        if (message instanceof String) {
+            return (String) message;
+        } else {
+            return message.toString();
+        }
+    }
+
 }
 

@@ -43,9 +43,9 @@ public class Recorridos extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         SharedData sharedData = SharedData.getInstance();
-        String user = sharedData.user;
+        String user = sharedData.getUser().getUser();
 
-        getRecorridos(sharedData.user);
+        getRecorridos(sharedData.user.getId());
     }
 
     public void getRecorridos(String user) {

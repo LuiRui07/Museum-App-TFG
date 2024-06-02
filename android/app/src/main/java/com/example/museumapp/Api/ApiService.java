@@ -10,6 +10,7 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
@@ -23,6 +24,7 @@ public interface ApiService {
     @POST("users/login/")
     Call<Response> loginUser(@Body LoginRequest loginRequest);
 
+    @FormUrlEncoded
     @POST("users/google/")
     Call<Response> loginGoogle(@Field("mail") String mail, @Field("user") String user);
 
