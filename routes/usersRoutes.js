@@ -5,6 +5,7 @@ const ObjectId = mongoose.Types.ObjectId;
 const usersSchema = require("../models/user.js");
 const axios = require('axios');
 
+/// Esta en este orden para evitar problemas
 /* Comprobar que no existe correo y/o usuario */
 router.get("/check", (req, res) => {
   const mail = req.query.mail.toLowerCase(); 
@@ -14,14 +15,14 @@ router.get("/check", (req, res) => {
   let userExists = false;
 
   usersSchema
-    .find({ mail: mail })
+    .find({ mail: mail, isGoogleUser: false})
     .then((dataCorreo) => {
       if (dataCorreo && dataCorreo.length > 0) { 
         correoExists = true;
       }
 
       usersSchema
-        .find({ user: user })
+        .find({ user: user, isGoogleUser: false})
         .then((dataUser) => {
           if (dataUser && dataUser.length > 0) { 
             userExists = true;
@@ -48,12 +49,13 @@ router.post("/login", (req, res) => {
   usersSchema
     .findOne({ 
       $or: [{ mail: mail }, { user: user }],
-      password: password
+      password: password,
+      isGoogleUser: false
      })
     .then((data) => {
       if (data) {
         // Si se encuentra el usuario, devolver además de "1", el user y el mail
-        res.json({ message: "1", user: data.user, mail: data.mail });
+        res.json({ message: "1", user: data.user});
       } else {
         // Si no se encuentra el usuario, devolver "0"
         res.json({ message: "0" });
@@ -62,6 +64,34 @@ router.post("/login", (req, res) => {
     .catch((error) => res.json({ message: error }));
 }); 
 
+router.post("/google", (req, res) => {
+  const { mail } = req.query;
+  usersSchema
+    .findOne({ mail: mail, isGoogleUser: true })
+    .then((data) => {
+      if (data) {
+        res.json({ message: "1", user: data});
+      } else {
+        const newUser = new usersSchema({
+          user: req.query.user, // Asegúrate de que user se envíe en req.body
+          mail: mail.toLowerCase(),
+          password: "",
+          isGoogleUser: true
+        });
+        newUser.save() 
+        .then(() => {
+          usersSchema.findOne({ mail: mail, isGoogleUser: true })
+          .then((userData) => {
+            res.json({ message: "1", user: userData });
+          })
+          .catch((error) => res.json({ message: error }));
+        })
+        .catch((error) => res.json({ message: error }));
+      }
+    })
+    .catch((error) => res.json({ message: error }));
+});
+ 
 
 //LLAMADAS CRUD-------------------------------------------------------------------------------
 
