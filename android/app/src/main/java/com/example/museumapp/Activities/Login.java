@@ -80,7 +80,7 @@ public class Login extends AppCompatActivity {
     private void updateUI(GoogleSignInAccount account) {
         if (account != null) {
             // Usuario está logueado
-            usersService.loginGoogle(account.getEmail(), account.getDisplayName(), new UserService.UserCallback() {
+            usersService.loginGoogle(account.getEmail(), account.getDisplayName(), account.getPhotoUrl().toString(), new UserService.UserCallback() {
                 @Override
                 public void onSuccess(User user) {
                     goHome(user);
@@ -121,6 +121,7 @@ public class Login extends AppCompatActivity {
         usersService.loginUser(username, contra, new UserService.UserCallback() {
             @Override
             public void onSuccess(User user) {
+                    user.setPhoto(null);
                     goHome(user);
             }
 

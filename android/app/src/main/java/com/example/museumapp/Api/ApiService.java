@@ -24,9 +24,8 @@ public interface ApiService {
     @POST("users/login/")
     Call<Response> loginUser(@Body LoginRequest loginRequest);
 
-    @FormUrlEncoded
     @POST("users/google/")
-    Call<Response> loginGoogle(@Field("mail") String mail, @Field("user") String user);
+    Call<Response> loginGoogle(@Body GoogleLoginRequest loginRequest);
 
     @POST("users")
     Call<Response> createUser(@Body UserBody userBody);

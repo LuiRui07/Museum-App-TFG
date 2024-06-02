@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.example.museumapp.Api.ApiClient;
 import com.example.museumapp.Api.ApiService;
+import com.example.museumapp.Api.GoogleLoginRequest;
 import com.example.museumapp.Api.LoginRequest;
 import com.example.museumapp.Api.Response;
 import com.example.museumapp.Api.UserBody;
@@ -29,7 +30,6 @@ public class UserService {
     }
 
     public void loginUser(String user, String contra, UserCallback callback) {
-
         LoginRequest loginRequest = new LoginRequest(user, contra);
         Call<com.example.museumapp.Api.Response> call = apiService.loginUser(loginRequest);
         call.enqueue(new Callback<com.example.museumapp.Api.Response>() {
@@ -58,9 +58,9 @@ public class UserService {
         });
     }
 
-    public void loginGoogle(String mail, String user, UserCallback callback){
-
-        Call<Response> call = apiService.loginGoogle(mail,user);
+    public void loginGoogle(String mail, String user, String photo, UserCallback callback){
+        GoogleLoginRequest loginRequest = new GoogleLoginRequest(mail,user,photo);
+        Call<Response> call = apiService.loginGoogle(loginRequest);
         call.enqueue(new Callback<Response>() {
             @Override
             public void onResponse(Call<Response> call, retrofit2.Response<Response> response) {
