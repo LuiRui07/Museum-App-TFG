@@ -1,5 +1,7 @@
 package com.example.museumapp.Adapters;
 
+import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +11,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.museumapp.Activities.ObraInfo;
+import com.example.museumapp.Activities.Obras;
 import com.example.museumapp.Models.Obra;
 import com.example.museumapp.R;
 import com.squareup.picasso.Picasso;
@@ -19,8 +23,14 @@ public class ObrasAdapter extends RecyclerView.Adapter<ObrasAdapter.ObrasViewHol
 
     private List<Obra> obras;
 
-    public ObrasAdapter(List<Obra> obras) {
+    private Context context;
+
+    private  String museumName;
+
+    public ObrasAdapter(List<Obra> obras, String museumName, Context context) {
         this.obras = obras;
+        this.context = context;
+        this.museumName = museumName;
     }
 
     @NonNull
@@ -34,6 +44,13 @@ public class ObrasAdapter extends RecyclerView.Adapter<ObrasAdapter.ObrasViewHol
     public void onBindViewHolder(@NonNull ObrasViewHolder holder, int position) {
         Obra obra = obras.get(position);
         holder.bind(obra);
+
+        holder.itemView.setOnClickListener(v -> {
+            Intent intent = new Intent(context, ObraInfo.class);
+            intent.putExtra("obra_id", obra.getId());
+            intent.putExtra("museum_name", museumName);
+            context.startActivity(intent);
+        });
     }
 
     @Override

@@ -12,6 +12,7 @@ import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 
 public class ObraService {
@@ -24,7 +25,7 @@ public class ObraService {
     }
 
     public interface ObraCallback {
-        void onSuccess(List<Obra> obras);
+        void onSuccess(List<Obra> obras, Obra obra);
     }
 
     public void getAllArt(ObraCallback callback){
@@ -35,7 +36,7 @@ public class ObraService {
                 if (response.isSuccessful()) {
                     List<Obra> obras = response.body();
                     Log.d("GetObras", obras.toString());
-                    callback.onSuccess(obras);
+                    callback.onSuccess(obras,null);
                 } else {
                     Log.d("GetObras", response.message());
                 }
@@ -48,7 +49,7 @@ public class ObraService {
 
     }
 
-    public void gerArtFromMuseum(String id, ObraCallback callback) {
+    public void getArtFromMuseum(String id, ObraCallback callback) {
         Call<List<Obra>> call = apiService.getObrasFromMuseum(id);
         call.enqueue(new Callback<List<Obra>>() {
             @Override
@@ -56,7 +57,7 @@ public class ObraService {
                 if (response.isSuccessful()) {
                     List<Obra> obras = response.body();
                     Log.d("GetObrasDeMuseoA", obras.toString());
-                    callback.onSuccess(obras);
+                    callback.onSuccess(obras,null);
                 } else {
                     Log.d("GetObrasDeMuseoB", response.errorBody().toString());
                 }
@@ -68,6 +69,28 @@ public class ObraService {
             }
         });
 
+    }
+
+    public void getArtFromId(String id, ObraCallback callback){
+        Call<Obra> call = apiService.getObrasFromId(id);
+
+        call.enqueue(new Callback<Obra>() {
+            @Override
+            public void onResponse(Call<Obra> call, Response<Obra> response) {
+                if (response.isSuccessful()){
+                    Obra obra = response.body();
+                    Log.d("GetObraFromId", obra.toString());
+                    callback.onSuccess(null,obra);
+                } else {
+                    Log.d("GetObrasFromId", response.errorBody().toString());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Obra> call, Throwable t) {
+                Log.d("GetObrasFromId", t.getMessage());
+            }
+        });
     }
 
 }

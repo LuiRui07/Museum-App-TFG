@@ -1,5 +1,6 @@
 package com.example.museumapp.Activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,28 +10,19 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.museumapp.Api.ApiClient;
-import com.example.museumapp.Api.ApiService;
 import com.example.museumapp.Models.Obra;
 import com.example.museumapp.Adapters.ObrasAdapter;
 import com.example.museumapp.R;
 import com.example.museumapp.Service.ObraService;
-import com.example.museumapp.SharedData;
 
 import java.util.List;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
-
 public class Obras extends AppCompatActivity {
-
     private RecyclerView recyclerView;
-
     public ObrasAdapter obrasAdapter;
-
     public ObraService obraService;
+    public String museumId ;
+    public String museumName;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -39,8 +31,8 @@ public class Obras extends AppCompatActivity {
         obraService = new ObraService(this);
 
         Intent intent = getIntent();
-        String museumId = intent.getStringExtra("museum_id");
-        String museumName = intent.getStringExtra("museum_name");
+        museumId = intent.getStringExtra("museum_id");
+        museumName = intent.getStringExtra("museum_name");
         if (intent.hasExtra("museum_id")) {
             Log.d("ObrasActivity", "Received museum_id: " + museumId + " " + museumName);
 
@@ -57,20 +49,21 @@ public class Obras extends AppCompatActivity {
     }
 
     public void getObras(String id) {
+        Context context = this;
         if (id == null) {
             obraService.getAllArt(new ObraService.ObraCallback() {
                 @Override
-                public void onSuccess(List<Obra> obras) {
-                    obrasAdapter = new ObrasAdapter(obras);
+                public void onSuccess(List<Obra> obras, Obra obra) {
+                    obrasAdapter = new ObrasAdapter(obras,museumName, context);
                     recyclerView.setAdapter(obrasAdapter);
                 }
             });
 
         } else {
-            obraService.gerArtFromMuseum(id, new ObraService.ObraCallback() {
+            obraService.getArtFromMuseum(id, new ObraService.ObraCallback() {
                 @Override
-                public void onSuccess(List<Obra> obras) {
-                    obrasAdapter = new ObrasAdapter(obras);
+                public void onSuccess(List<Obra> obras, Obra obra) {
+                    obrasAdapter = new ObrasAdapter(obras,museumName,context);
                     recyclerView.setAdapter(obrasAdapter);
                 }
             });

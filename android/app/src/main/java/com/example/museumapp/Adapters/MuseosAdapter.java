@@ -10,9 +10,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.example.museumapp.Activities.Home;
-import com.example.museumapp.Activities.Museos;
 import com.example.museumapp.Activities.Obras;
 import com.example.museumapp.Models.Museum;
 import com.example.museumapp.R;

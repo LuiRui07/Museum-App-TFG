@@ -37,6 +37,9 @@ public interface ApiService {
     @GET("art/obrasMuseo/{id}")
     Call<List<Obra>> getObrasFromMuseum(@Path("id") String id);
 
+    @GET("art/{id}")
+    Call<Obra> getObrasFromId(@Path("id") String id);
+
     //------------Museos
     @GET("museum/")
     Call<List<Museum>> getAllMuseum();
