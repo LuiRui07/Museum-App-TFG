@@ -106,6 +106,7 @@ public class Home extends AppCompatActivity implements PermissionsListener {
         setupMapView(savedInstanceState);
         setupDrawer();
         locate(mapView);
+        getLocation();
     }
 
     private void initViews() {
@@ -159,7 +160,6 @@ public class Home extends AppCompatActivity implements PermissionsListener {
 
     private void setButtonMuseo() {
         if (buttonEntrar != null) return;
-
         buttonEntrar = new Button(this);
         buttonEntrar.setText("Entrar al Museo");
         buttonEntrar.setId(BUTTON_ENTRAR_ID);
@@ -199,13 +199,14 @@ public class Home extends AppCompatActivity implements PermissionsListener {
             @Override
             public void onSuccess(Museum result, int tipo, List<Museum> museos, Context context) {
                 setButtonMuseo();
-                estas.setText("Estas en " + result.getName());
-                museoActual = result;
                 if (tipo == 2) {
                     Intent intent = new Intent(Home.this, Obras.class);
                     intent.putExtra("museum_id", result.getId());
                     intent.putExtra("museum_name", result.getName());
                     startActivity(intent);
+                } else if (tipo == 1){
+                    museoActual = result;
+                    estas.setText("Estas en " + result.getName());
                 }
             }
 
@@ -213,9 +214,6 @@ public class Home extends AppCompatActivity implements PermissionsListener {
             public void onFailure(String errorMessage) {
                 destroyButtonMuseo();
                 estas.setText("");
-                if (!errorMessage.isEmpty()) {
-                    toast(errorMessage);
-                }
             }
         });
     }
@@ -223,10 +221,24 @@ public class Home extends AppCompatActivity implements PermissionsListener {
     @SuppressLint("MissingPermission")
     private void getLocation() {
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        if (locationManager != null && locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
-        } else {
-            Toast.makeText(this, "Habilita el proveedor de ubicación", Toast.LENGTH_SHORT).show();
+        if (locationManager != null) {
+            // Solicitar última ubicación conocida
+            Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            if (location != null) {
+                setUserLocation(location.getLatitude(), location.getLongitude());
+                // Procesar la ubicación inicial (opcional)
+            } else {
+                // No hay ubicación reciente, el usuario puede activar GPS
+                Toast.makeText(this, "Habilita el GPS para obtener tu ubicación", Toast.LENGTH_SHORT).show();
+            }
+
+            // Solicitar actualizaciones de ubicación (opcional para rastreo continuo)
+            if (PermissionsManager.areLocationPermissionsGranted(Home.this)) {
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+            } else {
+                permissionsManager = new PermissionsManager(this);
+                permissionsManager.requestLocationPermissions(this);
+            }
         }
     }
 
@@ -328,6 +340,7 @@ public class Home extends AppCompatActivity implements PermissionsListener {
 
     public void setUserLocation(double lat, double lon) {
         userLocation = new Double[]{lat, lon};
+        locateMuseum(1, userLocation[0],userLocation[1]);
     }
 
     public void toast(String text) {
