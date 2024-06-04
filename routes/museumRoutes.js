@@ -81,7 +81,7 @@ router.get("/fromCoords/:lat/:lon", (req, res) => {
       $geoNear: {
         near: point,
         distanceField: "dist.calculated",
-        maxDistance: 200, // 200 metros
+        maxDistance: 150, // 200 metros
         spherical: true
       }
     },
