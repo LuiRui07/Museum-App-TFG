@@ -213,7 +213,7 @@ public class Home extends AppCompatActivity implements PermissionsListener {
             @Override
             public void onFailure(String errorMessage) {
                 destroyButtonMuseo();
-                estas.setText("");
+                //estas.setText("");
             }
         });
     }

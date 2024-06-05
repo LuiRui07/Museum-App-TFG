@@ -10,8 +10,9 @@ public class Obra {
     private String century;
     private String image;
     private String category;
-
     private String Museum;
+
+
 
     public String getId() {
         return _id;

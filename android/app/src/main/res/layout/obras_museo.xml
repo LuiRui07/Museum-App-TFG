@@ -10,7 +10,7 @@
         android:id="@+id/museum_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#6750A4"
+        android:background="@android:color/transparent"
         android:elevation="4dp"
         android:gravity="center"
         android:padding="16dp"
@@ -21,10 +21,9 @@
     <!-- RecyclerView -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view"
-        android:layout_width="377dp"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:paddingTop="8dp" />
 
 </LinearLayout>
-

@@ -8,27 +8,52 @@
     android:layout_height="match_parent">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/container_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/container_layout"
+        android:background="@android:color/white"
         tools:context=".home">
 
+        <!-- Texto mejorado -->
+
         <!-- Mapa -->
+
+        <!-- Botón para ubicar la posición del usuario -->
+
+        <TextView
+            android:id="@+id/estas"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:background="@drawable/background_textview"
+            android:paddingStart="16dp"
+            android:paddingTop="8dp"
+            android:paddingEnd="16dp"
+            android:paddingBottom="8dp"
+            android:text="Tu ubicación"
+            android:textAlignment="center"
+            android:textColor="@android:color/white"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.497"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <com.mapbox.mapboxsdk.maps.MapView
             android:id="@+id/mapView"
-            android:layout_width="411dp"
-            android:layout_height="574dp"
+            android:layout_width="418dp"
+            android:layout_height="586dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.495"
+            app:layout_constraintHorizontal_bias="0.571"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/estas"
             app:layout_constraintVertical_bias="1.0"
             app:mapbox_cameraTargetLat="50"
             app:mapbox_cameraTargetLng="50"
             app:mapbox_cameraZoom="50" />
 
-        <!-- Botón para ubicar la posición del usuario -->
         <ImageButton
             android:id="@+id/btn_locate"
             android:layout_width="65dp"
@@ -41,36 +66,21 @@
             app:layout_constraintBottom_toBottomOf="@id/mapView"
             app:layout_constraintEnd_toEndOf="@id/mapView" />
 
-        <TextView
-            android:id="@+id/estas"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="120dp"
-            app:layout_constraintBottom_toTopOf="@+id/mapView"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.274"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="1.0" />
-
+        <!-- Icono del drawer -->
         <ImageButton
             android:id="@+id/imageButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:background="#FEF8FF"
+            android:layout_marginStart="4dp"
+            android:background="@android:color/transparent"
             android:onClick="onClickButton"
+            android:src="@drawable/drawer_icon"
             app:layout_constraintBottom_toTopOf="@+id/mapView"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.018"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.007"
-            app:srcCompat="@drawable/drawer_icon" />
-
+            app:layout_constraintVertical_bias="0.049" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 
     <!-- Menú de navegación -->
     <com.google.android.material.navigation.NavigationView
