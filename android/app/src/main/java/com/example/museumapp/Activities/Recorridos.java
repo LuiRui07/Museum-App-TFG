@@ -2,6 +2,8 @@ package com.example.museumapp.Activities;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -18,10 +20,9 @@ import java.util.List;
 public class Recorridos extends AppCompatActivity {
 
     private RecyclerView recyclerView;
-
     public RutasAdapter rutasAdapter;
-
     public RouteService routeService;
+    public TextView emptyRoutes;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -30,6 +31,7 @@ public class Recorridos extends AppCompatActivity {
 
         routeService = new RouteService(this);
 
+        emptyRoutes = findViewById(R.id.empty_routes);
         recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -46,8 +48,16 @@ public class Recorridos extends AppCompatActivity {
         routeService.getRoutesFromUser(userId, new RouteService.RouteCallback() {
             @Override
             public void onSuccess(List<Route> rutas) {
-                rutasAdapter = new RutasAdapter(rutas,context);
-                recyclerView.setAdapter(rutasAdapter);
+                if (rutas.isEmpty()) {
+                    emptyRoutes.setVisibility(View.VISIBLE);
+                    emptyRoutes.setText("Aún no tienes ningún recorrido.");
+                    recyclerView.setVisibility(View.GONE);
+                } else {
+                    emptyRoutes.setVisibility(View.GONE);
+                    recyclerView.setVisibility(View.VISIBLE);
+                    rutasAdapter = new RutasAdapter(rutas, context);
+                    recyclerView.setAdapter(rutasAdapter);
+                }
             }
         });
     }

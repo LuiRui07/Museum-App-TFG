@@ -53,7 +53,7 @@ public class RouteService {
             public void onResponse(Call<List<Route>> call, retrofit2.Response<List<Route>> response) {
                 if (response.isSuccessful()) {
                     List<Route> rutas = response.body();
-                    Log.d("GetRutasFromUser", rutas.toString());
+                    Log.d("GetRutasFromUserSuccess", rutas.toString());
                     callback.onSuccess(rutas);
                 } else {
                     Log.d("GetRutasFromUser", response.message());

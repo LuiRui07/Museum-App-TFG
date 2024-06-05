@@ -19,6 +19,8 @@ import com.example.museumapp.R;
 import com.example.museumapp.Service.MuseumService;
 import com.squareup.picasso.Picasso;
 
+import org.w3c.dom.Text;
+
 import java.util.List;
 
 public class RutasAdapter extends RecyclerView.Adapter<RutasAdapter.RutasViewHolder> {
@@ -80,7 +82,7 @@ public class RutasAdapter extends RecyclerView.Adapter<RutasAdapter.RutasViewHol
 
                 @Override
                 public void onFailure(String errorMessage) {
-
+                    descriptionTextView.setText("Información del museo no disponible");
                 }
             });
         }
