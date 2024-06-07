@@ -24,6 +24,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MuseumApp"
         tools:targetApi="31">
+        <service android:name="org.altbeacon.beacon.service.BeaconService" android:enabled="true"/>
+        <service android:name="org.altbeacon.beacon.BeaconIntentProcessor" android:enabled="true"/>
+
         <activity
             android:name=".Activities.Login"
             android:exported="true">

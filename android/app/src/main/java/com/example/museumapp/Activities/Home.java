@@ -179,7 +179,8 @@ public class Home extends AppCompatActivity implements PermissionsListener {
         buttonEntrar.setOnClickListener(v -> {
             Toast.makeText(getApplicationContext(), "Entrando al Museo", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(Home.this, InsideMuseum.class);
-            intent.putExtra("Map", museoActual.getMap());
+            sharedData.setMuseo(museoActual);
+            intent.putExtra("map", museoActual.getMap());
             intent.putExtra("location", museoActual.getLocation().getCoordinates());
             startActivity(intent);
         });
