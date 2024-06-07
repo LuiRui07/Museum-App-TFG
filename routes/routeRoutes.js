@@ -68,4 +68,12 @@ router.post("/", (req, res) => {
         .catch((error) => res.json({ message: error }));
     });
 
+  // Get Routes From User & Museum
+  router.get("/user/:id/museum/:museum", (req, res) => {
+    routesSchema
+        .find({user: req.params.id, museum: req.params.museum})
+        .then((data) => res.json(data))
+        .catch((error) => res.json({ message: error }));
+    });
+
 module.exports = router;
