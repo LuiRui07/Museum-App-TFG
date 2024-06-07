@@ -1,6 +1,7 @@
 package com.example.museumapp.Activities;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
@@ -23,6 +24,7 @@ public class Recorridos extends AppCompatActivity {
     public RutasAdapter rutasAdapter;
     public RouteService routeService;
     public TextView emptyRoutes;
+    public String idMuseo;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -38,27 +40,48 @@ public class Recorridos extends AppCompatActivity {
         SharedData sharedData = SharedData.getInstance();
         String user = sharedData.getUser().getUser();
 
-        getRecorridos(sharedData.user.getId());
+        Intent intent = getIntent();
+        int tipo= intent.getIntExtra("tipo",0);
+        idMuseo = intent.getStringExtra("idMuseum");
+        getRecorridos(sharedData.user.getId(),tipo);
     }
 
-    public void getRecorridos(String userId) {
+    public void getRecorridos(String userId, int tipo) {
 
         Context context = this;
 
-        routeService.getRoutesFromUser(userId, new RouteService.RouteCallback() {
-            @Override
-            public void onSuccess(List<Route> rutas) {
-                if (rutas.isEmpty()) {
-                    emptyRoutes.setVisibility(View.VISIBLE);
-                    emptyRoutes.setText("Aún no tienes ningún recorrido.");
-                    recyclerView.setVisibility(View.GONE);
-                } else {
-                    emptyRoutes.setVisibility(View.GONE);
-                    recyclerView.setVisibility(View.VISIBLE);
-                    rutasAdapter = new RutasAdapter(rutas, context);
-                    recyclerView.setAdapter(rutasAdapter);
+        if (tipo != 1) {
+            routeService.getRoutesFromUser(userId, new RouteService.RouteCallback() {
+                @Override
+                public void onSuccess(List<Route> rutas) {
+                    if (rutas.isEmpty()) {
+                        emptyRoutes.setVisibility(View.VISIBLE);
+                        emptyRoutes.setText("Aún no tienes ningún recorrido.");
+                        recyclerView.setVisibility(View.GONE);
+                    } else {
+                        emptyRoutes.setVisibility(View.GONE);
+                        recyclerView.setVisibility(View.VISIBLE);
+                        rutasAdapter = new RutasAdapter(rutas, context, tipo);
+                        recyclerView.setAdapter(rutasAdapter);
+                    }
                 }
-            }
-        });
+            });
+        } else {
+            routeService.getRouteFromUserAndMuseum(userId,idMuseo, new RouteService.RouteCallback() {
+                @Override
+                public void onSuccess(List<Route> rutas) {
+                    if (rutas.isEmpty()) {
+                        emptyRoutes.setVisibility(View.VISIBLE);
+                        emptyRoutes.setText("Aún no tienes ningún recorrido en este museo.");
+                        recyclerView.setVisibility(View.GONE);
+                    } else {
+                        emptyRoutes.setVisibility(View.GONE);
+                        recyclerView.setVisibility(View.VISIBLE);
+                        rutasAdapter = new RutasAdapter(rutas, context, tipo);
+                        recyclerView.setAdapter(rutasAdapter);
+                    }
+                }
+            });
+        }
     }
 }

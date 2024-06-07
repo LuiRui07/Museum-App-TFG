@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:onClick="verObras">
+    android:onClick="verObras"
+    android:id="@+id/constraint_layout">
 
     <com.mapbox.mapboxsdk.maps.MapView
         android:id="@+id/mapView"
@@ -37,6 +38,7 @@
         android:id="@+id/recorridos_inside"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:onClick="verRecorridos"
         android:text="Recorridos"
         app:layout_constraintBottom_toTopOf="@+id/mapView"
         app:layout_constraintEnd_toEndOf="parent"
