@@ -24,4 +24,16 @@
         android:textColor="@android:color/darker_gray"
         android:paddingBottom="8dp"/>
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/obras_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"/>
+
+    <Button
+        android:id="@+id/start_route_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Iniciar Recorrido"
+        android:visibility="gone"/>
 </LinearLayout>

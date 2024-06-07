@@ -3,13 +3,14 @@ package com.example.museumapp.Models;
 import java.util.List;
 
 public class Route {
-
-
     private String _id;
     private String name;
     private String museum;
     private List<String> arts;
     private String user;
+    private boolean isExpanded;
+
+    // Getters y setters
 
     public String get_id() {
         return _id;
@@ -49,6 +50,14 @@ public class Route {
 
     public void setUser(String user) {
         this.user = user;
+    }
+
+    public boolean isExpanded() {
+        return isExpanded;
+    }
+
+    public void setExpanded(boolean expanded) {
+        isExpanded = expanded;
     }
 
     @Override
