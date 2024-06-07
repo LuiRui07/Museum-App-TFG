@@ -48,7 +48,6 @@ public class ObrasAdapter extends RecyclerView.Adapter<ObrasAdapter.ObrasViewHol
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, ObraInfo.class);
             intent.putExtra("obra_id", obra.getId());
-            intent.putExtra("museum_name", museumName);
             context.startActivity(intent);
         });
     }

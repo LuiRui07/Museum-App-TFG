@@ -10,7 +10,7 @@ public class Obra {
     private String century;
     private String image;
     private String category;
-    private String Museum;
+    private String museum;
 
 
 
@@ -79,11 +79,11 @@ public class Obra {
     }
 
     public String getMuseum() {
-        return Museum;
+        return museum;
     }
 
     public void setMuseum(String museum) {
-        Museum = museum;
+        museum = museum;
     }
 
     @Override
@@ -97,7 +97,7 @@ public class Obra {
                 ", century='" + century + '\'' +
                 ", image='" + image + '\'' +
                 ", category='" + category + '\'' +
-                ", Museum='" + Museum + '\'' +
+                ", Museum='" + museum + '\'' +
                 '}';
     }
 }
