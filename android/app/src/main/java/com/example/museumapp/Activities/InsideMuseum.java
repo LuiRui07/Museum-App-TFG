@@ -54,7 +54,7 @@ public class InsideMuseum extends AppCompatActivity {
     SharedData data = SharedData.getInstance();
 
     public String mapSource;
-    private Button buttonQuitarRecorrido;
+    private Button buttonSalir;
     private static final int BUTTON_SALIR_ID = View.generateViewId();
     private static final int REQUEST_CODE_LOCATION_PERMISSION = 1;
 
@@ -68,6 +68,7 @@ public class InsideMuseum extends AppCompatActivity {
 
         constraintLayout = findViewById(R.id.constraint_layout);
         mapView = findViewById(R.id.mapView);
+        buttonSalir = findViewById(R.id.button_salir);
         mapView.onCreate(savedInstanceState);
 
         Intent intent = getIntent();
@@ -101,27 +102,31 @@ public class InsideMuseum extends AppCompatActivity {
 
                         if (location != null && location.length == 2) {
                             LatLng center = new LatLng(location[0], location[1]);
-                            mapboxMap.animateCamera(CameraUpdateFactory.newLatLngZoom(center, 18));
+                            LatLng offsetCenter = new LatLng(center.getLatitude(), center.getLongitude() + 1);
+                            mapboxMap.animateCamera(CameraUpdateFactory.newLatLngZoom(offsetCenter, 16));
                         }
                         // Verificar si hay una ruta seleccionada
                         if (isRouteSelected) {
                             // Llama al método para dibujar la ruta en el mapa si está seleccionada
                             drawRoute(routeCoordinates);
-                            setButtonQuitarRuta();
+                            buttonSalir.setText("Salir de Recorrido");
                         }
 
                         // Ajusta la cámara para hacer zoom en el primer punto de la ruta
                         if (routeCoordinates.size() > 0) {
                             LatLng firstCoordinate = new LatLng(routeCoordinates.get(0).latitude(), routeCoordinates.get(0).longitude());
                             CameraPosition position = new CameraPosition.Builder()
-                                    .target(firstCoordinate)
-                                    .zoom(15.0) // Ajusta el nivel de zoom según sea necesario
+                                    .target(new LatLng(firstCoordinate.getLatitude(), firstCoordinate.getLongitude() + 0.001))
+                                    .zoom(17.05) // Ajusta el nivel de zoom a 18
                                     .build();
                             mapboxMap.animateCamera(CameraUpdateFactory.newCameraPosition(position), 1000);
                         } else if (location != null && location.length == 2) {
                             LatLng center = new LatLng(location[0], location[1]);
-                            mapboxMap.animateCamera(CameraUpdateFactory.newLatLngZoom(center, 12.0));
+                            mapboxMap.animateCamera(CameraUpdateFactory.newLatLngZoom(center, 18.0));
                         }
+
+                        // Desactivar la interacción del usuario con el mapa
+                        mapboxMap.getUiSettings().setAllGesturesEnabled(false);
                     }
                 });
 
@@ -183,40 +188,6 @@ public class InsideMuseum extends AppCompatActivity {
                 }
             });
         }
-    }
-
-    private void setButtonQuitarRuta() {
-        if (buttonQuitarRecorrido != null) return;
-
-        buttonQuitarRecorrido = new Button(this);
-        buttonQuitarRecorrido.setText("Salir");
-        buttonQuitarRecorrido.setId(BUTTON_SALIR_ID);
-        buttonQuitarRecorrido.setTextSize(13);
-        buttonQuitarRecorrido.setBackgroundResource(R.drawable.button_rounded);
-        buttonQuitarRecorrido.setTextColor(Color.parseColor("#FFFFFF"));
-
-        ConstraintLayout.LayoutParams params = new ConstraintLayout.LayoutParams(
-                ConstraintLayout.LayoutParams.WRAP_CONTENT,
-                ConstraintLayout.LayoutParams.WRAP_CONTENT
-        );
-        params.setMargins(0, 0, 16, 16); // Margen derecho y margen inferior
-        params.endToEnd = ConstraintLayout.LayoutParams.PARENT_ID;
-        params.bottomToBottom = R.id.mapView;
-        buttonQuitarRecorrido.setLayoutParams(params);
-
-        buttonQuitarRecorrido.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Lógica para volver a la actividad principal
-                Intent intent = new Intent(InsideMuseum.this, InsideMuseum.class);
-                intent.putExtra("map", data.getMuseo().getMap());
-                intent.putExtra("location", data.getMuseo().getLocation().getCoordinates());
-                startActivity(intent);
-            }
-        });
-
-        ConstraintLayout constraintLayout = findViewById(R.id.constraint_layout);
-        constraintLayout.addView(buttonQuitarRecorrido);
     }
 
     // Método para manejar la selección de la ruta
@@ -369,7 +340,17 @@ public class InsideMuseum extends AppCompatActivity {
         intent.putExtra("idMuseum", data.getMuseo().getId());
         startActivity(intent);
     }
+
+    public void salir(View view){
+        Intent intent;
+        if (isRouteSelected == true){
+            intent = new Intent(InsideMuseum.this, InsideMuseum.class);
+            intent.putExtra("map", data.getMuseo().getMap());
+            intent.putExtra("location", data.getMuseo().getLocation().getCoordinates());
+            startActivity(intent);
+        } else {
+           intent = new Intent(InsideMuseum.this, Home.class);
+        }
+        startActivity(intent);
+    }
 }
-
-
-

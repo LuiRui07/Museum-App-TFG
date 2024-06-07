@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:onClick="verObras"
     android:id="@+id/constraint_layout">
 
     <com.mapbox.mapboxsdk.maps.MapView
@@ -20,6 +19,18 @@
         app:mapbox_cameraTargetLat="50"
         app:mapbox_cameraTargetLng="50"
         app:mapbox_cameraZoom="50" />
+
+    <Button
+        android:id="@+id/button_salir"
+        style="@style/RedButtonStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:background="@drawable/button_rounded"
+        android:onClick="salir"
+        android:text="Salir"
+        app:layout_constraintBottom_toBottomOf="@id/mapView"
+        app:layout_constraintEnd_toEndOf="@id/mapView" />
 
     <Button
         android:id="@+id/obras_inside"
