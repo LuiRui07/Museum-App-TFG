@@ -12,6 +12,7 @@ import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 
 public class RouteService {
@@ -59,6 +60,28 @@ public class RouteService {
                     Log.d("GetRutasFromUser", response.message());
                 }
             }
+            @Override
+            public void onFailure(Call<List<Route>> call, Throwable t) {
+                Log.e("GetRutasFromUserFail", "Error en la solicitud: " + t.getMessage());
+            }
+        });
+    }
+
+    public void getRouteFromUserAndMuseum (String id, String idMuseum, RouteCallback callback) {
+        Call<List<Route>> call = apiService.getRouteFromUserAndMuseum(id,idMuseum);
+
+        call.enqueue(new Callback<List<Route>>() {
+            @Override
+            public void onResponse(Call<List<Route>> call, Response<List<Route>> response) {
+                if (response.isSuccessful()) {
+                    List<Route> rutas = response.body();
+                    Log.d("GetRutasFromUserAndMuseumSuccess", rutas.toString());
+                    callback.onSuccess(rutas);
+                } else {
+                    Log.d("GetRutasFromUserAndMuseum", response.message());
+                }
+            }
+
             @Override
             public void onFailure(Call<List<Route>> call, Throwable t) {
                 Log.e("GetRutasFromUserFail", "Error en la solicitud: " + t.getMessage());

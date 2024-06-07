@@ -57,5 +57,8 @@ public interface ApiService {
     @GET("route/user/{id}")
     Call<List<Route>> getRouteFromUser(@Path("id") String id);
 
+    @GET("route/user/{id}/museum/{museum}")
+    Call<List<Route>> getRouteFromUserAndMuseum(@Path("id") String id, @Path("museum") String idMuseum);
+
 
 }
