@@ -20,10 +20,14 @@ const museumSchema = new mongoose.Schema({
     },
     address: {
         type: String,
-        required: true
+        required: true,
     },
- 
+    beacons: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'beacon',
+        required: false,
+    }], 
 });
 
 museumSchema.index({ location: '2dsphere' });
-module.exports = mongoose.model("museums", museumSchema);
+module.exports = mongoose.model("museum", museumSchema);
