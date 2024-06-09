@@ -7,6 +7,7 @@ public class Museum {
     private String name;
     private Location location;
     private String image;
+    private String address;
 
     public String getId() {
         return _id;
@@ -46,6 +47,14 @@ public class Museum {
 
     public void setLocation(Location location) {
         this.location = location;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     @Override

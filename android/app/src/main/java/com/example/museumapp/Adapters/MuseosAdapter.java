@@ -65,7 +65,7 @@ public class MuseosAdapter extends RecyclerView.Adapter<MuseosAdapter.MuseosView
 
         public void bind(Museum museo) {
             titleTextView.setText(museo.getName());
-                titleTextView.setText(museo.getName());
+            descriptionTextView.setText(museo.getAddress());
                 Picasso.get()
                         .load(museo.getImage())
                         .resize(300, 300)  // Redimensiona la imagen a 300x300 píxeles
