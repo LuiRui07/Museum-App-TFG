@@ -43,7 +43,12 @@ public class BeaconService extends AppCompatActivity implements BeaconConsumer {
             public void didRangeBeaconsInRegion(Collection<Beacon> beacons, Region region) {
                 if (beacons.size() > 0) {
                     Log.d(TAG, "Número de beacons detectados: " + beacons.size());
-                    // Aquí puedes manejar los beacons detectados
+                    for (Beacon beacon : beacons) {
+                        Log.d("AltBeacon", "UUID: " + beacon.getId1() +
+                                " Major: " + beacon.getId2() +
+                                " Minor: " + beacon.getId3() +
+                                " Distancia: " + beacon.getDistance());
+                    }
                 }
             }
         });
