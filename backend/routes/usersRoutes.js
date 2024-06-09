@@ -65,7 +65,7 @@ router.post("/login", (req, res) => {
 }); 
 
 router.post("/google", (req, res) => {
-  const { mail } = req.query;
+  const { mail, user, photo} = req.body;
   usersSchema
     .findOne({ mail: mail, isGoogleUser: true })
     .then((data) => {
@@ -73,10 +73,11 @@ router.post("/google", (req, res) => {
         res.json({ message: "1", user: data});
       } else {
         const newUser = new usersSchema({
-          user: req.query.user, // Asegúrate de que user se envíe en req.body
+          user: user,
           mail: mail.toLowerCase(),
           password: "",
-          isGoogleUser: true
+          isGoogleUser: true,
+          photo: photo
         });
         newUser.save() 
         .then(() => {
