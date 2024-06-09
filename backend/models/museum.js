@@ -18,8 +18,12 @@ const museumSchema = new mongoose.Schema({
         type: { type: String, enum: ['Point'], required: true },
         coordinates: { type: [Number], required: true }
     },
-    
+    beacons: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'beacon',
+        required: false,
+    }], 
 });
 
 museumSchema.index({ location: '2dsphere' });
-module.exports = mongoose.model("museums", museumSchema);
+module.exports = mongoose.model("museum", museumSchema);

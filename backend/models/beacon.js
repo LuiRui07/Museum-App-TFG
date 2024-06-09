@@ -7,16 +7,16 @@ const beaconsSchema = new mongoose.Schema({
         required: true,
     },
     major: {
-        type: String,
+        type: Number,
         required: true,
     },
     minor: {
-        type: String,
+        type: Number,
         required: true
     },
-    map : {
+    museum : {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'map',
+        ref: 'museum',
     },
     
 });

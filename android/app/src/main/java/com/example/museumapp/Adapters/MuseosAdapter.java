@@ -2,6 +2,7 @@ package com.example.museumapp.Adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,7 +37,7 @@ public class MuseosAdapter extends RecyclerView.Adapter<MuseosAdapter.MuseosView
     @Override
     public void onBindViewHolder(@NonNull MuseosAdapter.MuseosViewHolder holder, int position) {
         Museum museo = museos.get(position);
-        holder.bind(museo);
+        holder.bind(museo,context);
 
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, Obras.class);
@@ -63,15 +64,37 @@ public class MuseosAdapter extends RecyclerView.Adapter<MuseosAdapter.MuseosView
             imageView = itemView.findViewById(R.id.image_view);
         }
 
-        public void bind(Museum museo) {
+        public void bind(Museum museo, Context context) {
             titleTextView.setText(museo.getName());
-            descriptionTextView.setText(museo.getAddress());
-                Picasso.get()
-                        .load(museo.getImage())
-                        .resize(300, 300)  // Redimensiona la imagen a 300x300 píxeles
-                        .centerCrop()     // Opcional: Recorta la imagen para llenar el `ImageView` manteniendo la relación de aspecto
-                        .error(R.drawable.default_art_icon) // Imagen de fallback en caso de error
-                        .into(imageView);
+            String address = museo.getAddress();
+
+            descriptionTextView.setText(address);
+            descriptionTextView.setTextColor(context.getColor(android.R.color.holo_blue_dark));
+
+            descriptionTextView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Uri gmmIntentUri = Uri.parse("geo:0,0?q=" + Uri.encode(address));
+                    Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                    mapIntent.setPackage("com.google.android.apps.maps");
+                    if (mapIntent.resolveActivity(context.getPackageManager()) != null) {
+                        context.startActivity(mapIntent);
+                    } else {
+                        // Si no está instalada la app de Google Maps, puedes mostrar un mensaje o intentar abrir el navegador
+                        Uri webUri = Uri.parse("https://www.google.com/maps/search/?api=1&query=" + Uri.encode(address));
+                        Intent webIntent = new Intent(Intent.ACTION_VIEW, webUri);
+                        context.startActivity(webIntent);
+                    }
+                }
+            });
+            Picasso.get()
+                    .load(museo.getImage())
+                    .resize(300, 300)  // Redimensiona la imagen a 300x300 píxeles
+                    .centerCrop()     // Opcional: Recorta la imagen para llenar el `ImageView` manteniendo la relación de aspecto
+                    .error(R.drawable.default_art_icon) // Imagen de fallback en caso de error
+                    .into(imageView);
+
+
             }
     }
 }
