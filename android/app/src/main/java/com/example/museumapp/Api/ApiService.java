@@ -60,5 +60,8 @@ public interface ApiService {
     @GET("route/user/{id}/museum/{museum}")
     Call<List<Route>> getRouteFromUserAndMuseum(@Path("id") String id, @Path("museum") String idMuseum);
 
+    @POST("route")
+    Call<Response> createRoute(@Body RouteBody userBody);  // Por implementar
+
 
 }
