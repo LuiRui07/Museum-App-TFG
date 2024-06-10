@@ -1,71 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:padding="16dp">
 
-    <LinearLayout
+    <Spinner
+        android:id="@+id/spinner_museum"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:prompt="@string/select_museum_prompt" />
 
-        <!-- Título de la actividad -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Crear Recorrido"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            android:layout_gravity="center"
-            android:layout_marginBottom="24dp"/>
+    <Spinner
+        android:id="@+id/spinner_artworks"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:prompt="@string/select_artwork_prompt"
+        android:visibility="gone" />
 
-        <!-- Spinner para seleccionar el museo -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Selecciona un museo"
-            android:layout_marginBottom="8dp"/>
-        <Spinner
-            android:id="@+id/spinner_museum"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"/>
+    <Button
+        android:id="@+id/btn_create_route"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/create_route_button" />
 
-        <!-- Contenedor dinámico para los spinners de obras de arte -->
-        <LinearLayout
-            android:id="@+id/layout_artworks"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginBottom="16dp">
-
-            <!-- Spinner inicial para seleccionar la obra de arte -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Selecciona una obra"
-                android:layout_marginBottom="8dp"/>
-            <Spinner
-                android:id="@+id/spinner_artwork_1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"/>
-        </LinearLayout>
-
-        <!-- Botón para agregar más spinners de obras de arte -->
-        <Button
-            android:id="@+id/btn_add_artwork"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Agregar otra obra"
-            android:layout_gravity="center"
-            android:layout_marginBottom="16dp"/>
-
-        <!-- Botón para crear la ruta -->
-        <Button
-            android:id="@+id/btn_create_route"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="Crear Recorrido" />
-    </LinearLayout>
-</ScrollView>
+</LinearLayout>
