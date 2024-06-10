@@ -10,9 +10,9 @@ app.use(cors());
 const authMiddleware = require("./middleware");
 app.use(authMiddleware);  
 
-app.use('/users', require("./routes/usersRoutes"));
+app.use('/users', require("./routes/userRoutes"));
 app.use('/art', require('./routes/artRoutes'))
-app.use('/beacon', require('./routes/beaconsRoutes'));
+app.use('/beacon', require('./routes/beaconRoutes'));
 app.use("/museum", require("./routes/museumRoutes"));
 app.use("/route", require("./routes/routeRoutes"));
 
@@ -28,3 +28,5 @@ app.get("/", (req, res) => {
 });
 
 app.listen(port, console.log("Servidor escuchando en el puerto ", port));
+
+

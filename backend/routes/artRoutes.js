@@ -3,8 +3,6 @@ const router = express.Router();
 const mongoose = require("mongoose");
 const ObjectId = mongoose.Types.ObjectId;
 const artSchema = require("../models/art.js");
-const axios = require('axios');
-const { route } = require("./usersRoutes.js");
 
 //LLAMADAS CRUD-------------------------------------------------------------------------------
 

@@ -5,7 +5,6 @@ const ObjectId = mongoose.Types.ObjectId;
 const usersSchema = require("../models/user.js");
 const axios = require('axios');
 
-/// Esta en este orden para evitar problemas
 /* Comprobar que no existe correo y/o usuario */
 router.get("/check", (req, res) => {
   const mail = req.query.mail.toLowerCase(); 
