@@ -84,4 +84,9 @@ public class Recorridos extends AppCompatActivity {
             });
         }
     }
+
+    public void createRoute(View view){
+        Intent intent = new Intent(this,CreateRoute.class);
+        startActivity(intent);
+    }
 }
