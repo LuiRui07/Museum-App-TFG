@@ -3,6 +3,7 @@ package com.example.museumapp.Activities;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -38,6 +39,7 @@ public class Recorridos extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         SharedData sharedData = SharedData.getInstance();
+        Log.e("shared", sharedData.toString());
         String user = sharedData.getUser().getUser();
 
         Intent intent = getIntent();

@@ -2,6 +2,7 @@ package com.example.museumapp.Activities;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -21,6 +22,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class CreateRoute extends AppCompatActivity {
 
@@ -29,7 +31,8 @@ public class CreateRoute extends AppCompatActivity {
     private Button btnCreateRoute;
     private MuseumService museumService;
     private ObraService obraService;
-    private Map<String, List<Obra>> artworksByMuseum = new HashMap<>();
+    private Map<Museum, List<Obra>> artworksByMuseum = new HashMap<>();
+    private List<String> museumNames = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,35 +46,6 @@ public class CreateRoute extends AppCompatActivity {
         museumService = new MuseumService(this);
         obraService = new ObraService(this);
 
-        // Configurar el adaptador para el Spinner de museos
-        ArrayAdapter<String> museumAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, new ArrayList<>());
-        museumAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerMuseum.setAdapter(museumAdapter);
-
-        // Configurar listener para el Spinner de museos
-        spinnerMuseum.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String selectedMuseum = spinnerMuseum.getSelectedItem().toString();
-                updateArtworksSpinner(selectedMuseum);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                spinnerArtworks.setVisibility(View.GONE);
-            }
-        });
-
-        // Configurar listener para el botón de crear ruta
-        btnCreateRoute.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String selectedMuseum = spinnerMuseum.getSelectedItem().toString();
-                String selectedArtwork = spinnerArtworks.getSelectedItem().toString();
-                Toast.makeText(CreateRoute.this, "Crear ruta para " + selectedArtwork + " en " + selectedMuseum, Toast.LENGTH_SHORT).show();
-            }
-        });
-
         // Inicializar los datos de los museos y obras
         initializeData();
     }
@@ -79,36 +53,20 @@ public class CreateRoute extends AppCompatActivity {
     private void initializeData() {
         museumService.getAllMuseums(new MuseumService.MuseumCallback() {
             @Override
-            public void onSuccess(Museum museum, int tipo, List<Museum> museums, Context context) {
-                // Limpiar el mapa y lista antes de añadir datos nuevos
-                artworksByMuseum.clear();
+            public void onSuccess(Museum museum, int tipo, List<Museum> museos, Context context) {
+                for (int i = 0; i < museos.size(); i++) {
+                    final Museum m = museos.get(i);
+                    museumNames.add(m.getName()); // Agregar el nombre del museo a la lista de nombres
 
-                // Preparar nombres de museos para el adaptador
-                List<String> museumNames = new ArrayList<>();
-                for (Museum m : museums) {
-                    museumNames.add(m.getName());
-                }
-                ArrayAdapter<String> museumAdapter = new ArrayAdapter<>(CreateRoute.this, android.R.layout.simple_spinner_item, museumNames);
-                museumAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-                // Actualizar el Spinner de museos en el hilo principal de la UI
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        spinnerMuseum.setAdapter(museumAdapter);
-                    }
-                });
-
-                // Obtener las obras para cada museo
-                for (Museum m : museums) {
                     obraService.getArtFromMuseum(m.getId(), new ObraService.ObraCallback() {
                         @Override
                         public void onSuccess(List<Obra> obras, Obra obra) {
-                            artworksByMuseum.put(m.getName(), obras);
+                            artworksByMuseum.put(m, obras);
 
-                            // Mostrar las obras del primer museo en el inicio
-                            if (m == museums.get(0)) {
-                                updateArtworksSpinner(m.getName());
+                            // Verificar si se han obtenido todas las obras para todos los museos
+                            if (artworksByMuseum.size() == museos.size()) {
+                                // Todos los datos han sido cargados correctamente, actualizar la UI
+                                updateUI();
                             }
                         }
                     });
@@ -117,24 +75,53 @@ public class CreateRoute extends AppCompatActivity {
 
             @Override
             public void onFailure(String errorMessage) {
-                Toast.makeText(CreateRoute.this, "Error al obtener museos: " + errorMessage, Toast.LENGTH_SHORT).show();
+                // Manejar el fallo si ocurre
             }
         });
     }
 
-    private void updateArtworksSpinner(String selectedMuseum) {
-        if (artworksByMuseum.containsKey(selectedMuseum)) {
-            List<Obra> artworks = artworksByMuseum.get(selectedMuseum);
-            List<String> artworksString = new ArrayList<>();
-            for (Obra obra : artworks) {
-                artworksString.add(obra.getName());
+    private void updateUI() {
+        ArrayAdapter<String> museumAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, museumNames);
+        museumAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerMuseum.setAdapter(museumAdapter);
+
+        // Configurar listener para el Spinner de museos
+        spinnerMuseum.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String selectedMuseum = (String) spinnerMuseum.getSelectedItem();
+                List<String> artworks = new ArrayList<>();
+                for (Museum museum : artworksByMuseum.keySet()) {
+                    if (museum.getName().equals(selectedMuseum)) {
+                        List<Obra> obras= artworksByMuseum.get(museum);
+                        for (Obra o : obras){
+                            artworks.add(o.getName());
+                        }
+                    }
+                }
+                if (artworks != null && !artworks.isEmpty()) {
+                    ArrayAdapter<String> artworkAdapter = new ArrayAdapter<>(CreateRoute.this, android.R.layout.simple_spinner_item, artworks);
+                    artworkAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spinnerArtworks.setAdapter(artworkAdapter);
+                    spinnerArtworks.setVisibility(View.VISIBLE);
+                } else {
+                   // spinnerArtworks.setVisibility(View.GONE);
+                }
             }
-            ArrayAdapter<String> artworkAdapter = new ArrayAdapter<>(CreateRoute.this, android.R.layout.simple_spinner_item, artworksString);
-            artworkAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            spinnerArtworks.setAdapter(artworkAdapter);
-            spinnerArtworks.setVisibility(View.VISIBLE);
-        } else {
-            spinnerArtworks.setVisibility(View.GONE);
-        }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+
+        //Botón de crear ruta
+        btnCreateRoute.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Museum selectedMuseum = (Museum) spinnerMuseum.getSelectedItem();
+                Obra selectedArtwork = (Obra) spinnerArtworks.getSelectedItem();
+                Toast.makeText(CreateRoute.this, "Crear ruta para " + selectedArtwork.getName() + " en " + selectedMuseum.getName(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

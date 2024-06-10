@@ -44,4 +44,11 @@ public class SharedData {
         instance = null; // También nulifica la instancia única
     }
 
+    @Override
+    public String toString() {
+        return "SharedData{" +
+                "user=" + user +
+                ", museo=" + museo +
+                '}';
+    }
 }
