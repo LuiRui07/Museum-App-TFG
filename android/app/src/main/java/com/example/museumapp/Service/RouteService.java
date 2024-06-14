@@ -6,6 +6,7 @@ import android.util.Log;
 import com.example.museumapp.Adapters.RutasAdapter;
 import com.example.museumapp.Api.ApiClient;
 import com.example.museumapp.Api.ApiService;
+import com.example.museumapp.Api.RouteBody;
 import com.example.museumapp.Models.Route;
 
 import java.util.List;
@@ -85,6 +86,30 @@ public class RouteService {
             @Override
             public void onFailure(Call<List<Route>> call, Throwable t) {
                 Log.e("GetRutasFromUserFail", "Error en la solicitud: " + t.getMessage());
+            }
+        });
+    }
+
+    public void createRoute (RouteBody routeBody, RouteCallback callback){
+        Call<com.example.museumapp.Api.Response> call = apiService.createRoute(routeBody);
+
+        call.enqueue(new Callback<com.example.museumapp.Api.Response>() {
+            @Override
+            public void onResponse(Call<com.example.museumapp.Api.Response> call, Response<com.example.museumapp.Api.Response> response) {
+                if (response.isSuccessful()) {
+                    String message = response.body().getMessageAsString();
+                    Log.d("Create?", message);
+                    if (message.contains("1")) {
+                        callback.onSuccess(null);
+                    }
+                } else {
+                    Log.d("LoginResponse", response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<com.example.museumapp.Api.Response> call, Throwable t) {
+                Log.e("CrearRuta", "Error en la solicitud: " + t.getMessage());
             }
         });
     }

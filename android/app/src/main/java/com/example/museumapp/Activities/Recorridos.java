@@ -40,12 +40,14 @@ public class Recorridos extends AppCompatActivity {
 
         SharedData sharedData = SharedData.getInstance();
         Log.e("shared", sharedData.toString());
-        String user = sharedData.getUser().getUser();
 
         Intent intent = getIntent();
         int tipo= intent.getIntExtra("tipo",0);
         idMuseo = intent.getStringExtra("idMuseum");
-        getRecorridos(sharedData.user.getId(),tipo);
+        if( sharedData.getUser() != null){
+            String user = sharedData.getUser().getUser();
+            getRecorridos(sharedData.user.getId(),tipo);
+        }
     }
 
     public void getRecorridos(String userId, int tipo) {

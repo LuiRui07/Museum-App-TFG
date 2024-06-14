@@ -11,6 +11,13 @@ public class RouteBody {
     String user;
     List<Obra> arts;
 
+    public RouteBody(String name, String museum, String user, List<Obra> arts) {
+        this.name = name;
+        this.museum = museum;
+        this.user = user;
+        this.arts = arts;
+    }
+
     public String getName() {
         return name;
     }

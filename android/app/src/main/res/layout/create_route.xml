@@ -1,27 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_create"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="16dp">
 
-    <Spinner
-        android:id="@+id/spinner_museum"
+    <!-- LinearLayout secundario para contener los Spinners -->
+    <LinearLayout
+        android:id="@+id/spinner_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:prompt="@string/select_museum_prompt" />
+        android:orientation="vertical">
 
-    <Spinner
-        android:id="@+id/spinner_artworks"
-        android:layout_width="match_parent"
+        <!-- Spinner de museos -->
+        <Spinner
+            android:id="@+id/spinner_museum"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:prompt="@string/select_museum_prompt" />
+
+        <!-- Spinner de obras -->
+        <Spinner
+            android:id="@+id/spinner_artworks"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:prompt="@string/select_artwork_prompt" />
+    </LinearLayout>
+
+    <!-- Botón para añadir obra -->
+    <Button
+        android:id="@+id/btn_add_art"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:prompt="@string/select_artwork_prompt" />
+        android:layout_gravity="center"
+        android:layout_marginTop="16dp"
+        android:onClick="addSpinner"
+        android:text="Añadir Obra" />
 
+    <!-- Botón para crear ruta -->
     <Button
         android:id="@+id/btn_create_route"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:layout_marginTop="16dp"
+        android:onClick="createRoute"
         android:text="@string/create_route_button" />
 
 </LinearLayout>
