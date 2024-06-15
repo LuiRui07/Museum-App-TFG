@@ -47,7 +47,7 @@ public class Register extends AppCompatActivity {
             toast("El correo no es válido");
         } else if (username == ""){
             toast("Usuario Incorrecto");
-        }
+        } else {
 
         userService.registerUser(username, correo, password, new UserService.UserCallback() {
             @Override
@@ -65,6 +65,6 @@ public class Register extends AppCompatActivity {
 
 
 
-    }
+    }}
 
 }
