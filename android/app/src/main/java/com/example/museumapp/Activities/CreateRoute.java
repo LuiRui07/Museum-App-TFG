@@ -38,7 +38,6 @@ public class CreateRoute extends AppCompatActivity {
     private Button btnCreateRoute;
     private MuseumService museumService;
     private ObraService obraService;
-    private RouteService routeService;
     private Map<Museum, List<Obra>> artworksByMuseum = new HashMap<>();
     private List<String> museumNames = new ArrayList<>();
     public String selectedMuseum;

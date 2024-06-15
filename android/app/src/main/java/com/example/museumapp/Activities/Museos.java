@@ -17,7 +17,6 @@ public class Museos extends AppCompatActivity {
 
     private RecyclerView recyclerView;
     public MuseosAdapter museosAdapter;
-
     public MuseumService museumService;
 
     @Override

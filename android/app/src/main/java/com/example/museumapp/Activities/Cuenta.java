@@ -15,11 +15,8 @@ import com.squareup.picasso.Picasso;
 import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
 public class Cuenta extends AppCompatActivity {
-
     Button leave;
-
     SharedData data;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

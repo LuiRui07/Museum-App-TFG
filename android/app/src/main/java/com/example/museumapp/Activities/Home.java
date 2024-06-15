@@ -228,7 +228,6 @@ public class Home extends AppCompatActivity implements PermissionsListener {
             Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
             if (location != null) {
                 setUserLocation(location.getLatitude(), location.getLongitude());
-                // Procesar la ubicación inicial (opcional)
             } else {
                 // No hay ubicación reciente, el usuario puede activar GPS
                 Toast.makeText(this, "Habilita el GPS para obtener tu ubicación", Toast.LENGTH_SHORT).show();
@@ -343,9 +342,5 @@ public class Home extends AppCompatActivity implements PermissionsListener {
     public void setUserLocation(double lat, double lon) {
         userLocation = new Double[]{lat, lon};
         locateMuseum(1, userLocation[0],userLocation[1]);
-    }
-
-    public void toast(String text) {
-        Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
     }
 }

@@ -64,9 +64,7 @@ public class InsideMuseum extends AppCompatActivity {
     private ObraService obraService;
     private List<Obra> obrasMuseo;
     private List<Point> puntosMuseo;
-    private String routeId;
     private double[] location;
-    private static final int BUTTON_SALIR_ID = View.generateViewId();
     private static final int REQUEST_CODE_LOCATION_PERMISSION = 1;
     SharedData data = SharedData.getInstance();
     ConstraintLayout constraintLayout;

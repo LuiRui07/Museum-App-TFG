@@ -20,11 +20,8 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 public class ObrasAdapter extends RecyclerView.Adapter<ObrasAdapter.ObrasViewHolder> {
-
     private List<Obra> obras;
-
     private Context context;
-
     private  String museumName;
 
     public ObrasAdapter(List<Obra> obras, String museumName, Context context) {

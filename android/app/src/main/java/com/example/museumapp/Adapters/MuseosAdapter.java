@@ -19,7 +19,6 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 public class MuseosAdapter extends RecyclerView.Adapter<MuseosAdapter.MuseosViewHolder> {
-
     private List<Museum> museos;
     private Context context;
 

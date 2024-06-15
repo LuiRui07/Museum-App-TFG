@@ -2,11 +2,8 @@ package com.example.museumapp.Api;
 
 public class UserBody {
     String user;
-
     String mail;
-
     String password;
-
     Boolean isGoogleUser;
 
     public UserBody (String user, String mail, String password){

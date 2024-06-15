@@ -9,25 +9,19 @@ import java.util.List;
 public class Response {
 
     private String message;
-
     private String mail;
-
     private List<Obra> obras;
-
     private User user;
 
     public Object getMessage() {
         return message;
     }
-
     public String getMail() {
         return mail;
     }
-
     public User getUser() {
         return user;
     }
-
     public Response(String message) {
         this.message = message;
     }
