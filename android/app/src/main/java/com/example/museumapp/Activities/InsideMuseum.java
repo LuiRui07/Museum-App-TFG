@@ -65,6 +65,7 @@ public class InsideMuseum extends AppCompatActivity {
     private List<Obra> obrasMuseo;
     private List<Point> puntosMuseo;
     private String routeId;
+    private double[] location;
     private static final int BUTTON_SALIR_ID = View.generateViewId();
     private static final int REQUEST_CODE_LOCATION_PERMISSION = 1;
     SharedData data = SharedData.getInstance();
@@ -86,7 +87,7 @@ public class InsideMuseum extends AppCompatActivity {
         Intent intent = getIntent();
         mapSource = intent.getStringExtra("map");
         museumId = intent.getStringExtra("museum");
-        double[] location = intent.getDoubleArrayExtra("location");
+        location = intent.getDoubleArrayExtra("location");
         isRouteSelected = intent.getBooleanExtra("routeSelected", false);
 
         if (location != null && location.length == 2) {
@@ -354,10 +355,14 @@ public class InsideMuseum extends AppCompatActivity {
         if (isRouteSelected == true){
             intent = new Intent(InsideMuseum.this, InsideMuseum.class);
             intent.putExtra("map", data.getMuseo().getMap());
+            intent.putExtra("museum", museumId);
             intent.putExtra("location", data.getMuseo().getLocation().getCoordinates());
             startActivity(intent);
         } else {
            intent = new Intent(InsideMuseum.this, Home.class);
+           intent.putExtra("map", mapSource);
+           intent.putExtra("museum", museumId);
+           intent.putExtra("location", location);
         }
         startActivity(intent);
     }
