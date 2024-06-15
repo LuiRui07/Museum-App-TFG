@@ -51,7 +51,6 @@ public class Cuenta extends AppCompatActivity {
 
     public void LogOut(View view){
         data.destroy();
-
         Intent intent = new Intent(this, Login.class);
         startActivity(intent);
     }

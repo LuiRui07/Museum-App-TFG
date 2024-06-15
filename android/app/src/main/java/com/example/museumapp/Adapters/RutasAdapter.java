@@ -65,8 +65,10 @@ public class RutasAdapter extends RecyclerView.Adapter<RutasAdapter.RutasViewHol
                 holder.startRouteButton.setOnClickListener(v -> {
                     Intent intent = new Intent(context, InsideMuseum.class); // Ver recorrido
                     intent.putExtra("map", data.getMuseo().getMap());
+                    intent.putExtra("museum",ruta.getMuseum());
                     intent.putExtra("location", data.getMuseo().getLocation().getCoordinates());
                     intent.putExtra("routeSelected", true);
+                    data.setRoute(ruta);
                     context.startActivity(intent);
                 });
             } else {

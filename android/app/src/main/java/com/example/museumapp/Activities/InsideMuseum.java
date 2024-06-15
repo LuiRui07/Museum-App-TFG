@@ -3,6 +3,7 @@ package com.example.museumapp.Activities;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.PointF;
 import android.location.Location;
@@ -18,8 +19,12 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.example.museumapp.Models.Obra;
+import com.example.museumapp.Models.Route;
 import com.example.museumapp.R;
 import com.example.museumapp.Service.BeaconService;
+import com.example.museumapp.Service.ObraService;
+import com.example.museumapp.Service.RouteService;
 import com.example.museumapp.SharedData;
 import com.mapbox.android.core.location.LocationEngine;
 import com.mapbox.android.core.location.LocationEngineCallback;
@@ -41,23 +46,28 @@ import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.maps.Style;
 import com.mapbox.mapboxsdk.style.layers.LineLayer;
+import com.mapbox.mapboxsdk.style.layers.Property;
+import com.mapbox.mapboxsdk.style.layers.PropertyFactory;
+import com.mapbox.mapboxsdk.style.layers.SymbolLayer;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class InsideMuseum extends AppCompatActivity {
-
     private MapView mapView;
     private MapboxMap mapboxMap;
     private boolean isRouteSelected = false;
-    SharedData data = SharedData.getInstance();
-
     public String mapSource;
+    public String museumId;
     private Button buttonSalir;
+    private ObraService obraService;
+    private List<Obra> obrasMuseo;
+    private List<Point> puntosMuseo;
+    private String routeId;
     private static final int BUTTON_SALIR_ID = View.generateViewId();
     private static final int REQUEST_CODE_LOCATION_PERMISSION = 1;
-
+    SharedData data = SharedData.getInstance();
     ConstraintLayout constraintLayout;
 
     @Override
@@ -70,19 +80,46 @@ public class InsideMuseum extends AppCompatActivity {
         mapView = findViewById(R.id.mapView);
         buttonSalir = findViewById(R.id.button_salir);
         mapView.onCreate(savedInstanceState);
+        obraService = new ObraService(this);
+        puntosMuseo = new ArrayList<>();
 
         Intent intent = getIntent();
         mapSource = intent.getStringExtra("map");
+        museumId = intent.getStringExtra("museum");
         double[] location = intent.getDoubleArrayExtra("location");
-        isRouteSelected = intent.getBooleanExtra("routeSelected",false);
+        isRouteSelected = intent.getBooleanExtra("routeSelected", false);
 
         if (location != null && location.length == 2) {
-            // Invertir
             double temp = location[0];
             location[0] = location[1];
             location[1] = temp;
         }
 
+        getObras(location);
+    }
+
+    private void getObras(double[] location) {
+        obraService.getArtFromMuseum(museumId, new ObraService.ObraCallback() {
+            @Override
+            public void onSuccess(List<Obra> obras, Obra obra) {
+                setObras(obras);
+                initMap(location);
+            }
+        });
+    }
+
+    public void setObras(List<Obra> obras) {
+        obrasMuseo = obras;
+        for (Obra o : obrasMuseo) {
+            double[] cord = o.getLocation().getCoordinates();
+            puntosMuseo.add(Point.fromLngLat(cord[0], cord[1]));
+        }
+
+        Log.e("OBRAS", obras.toString());
+        Log.e("PUNTOSMUSEO", puntosMuseo.toString());
+    }
+
+    private void initMap(double[] location) {
         mapView.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(@NonNull MapboxMap mapboxMap) {
@@ -91,64 +128,26 @@ public class InsideMuseum extends AppCompatActivity {
                 mapboxMap.setStyle(new Style.Builder().fromUri(mapSource), new Style.OnStyleLoaded() {
                     @Override
                     public void onStyleLoaded(@NonNull Style style) {
-                        // Define las coordenadas de la ruta de ejemplo
-                        List<Point> routeCoordinates = new ArrayList<>();
-                        routeCoordinates.add(Point.fromLngLat(-4.4141808491612, 36.71894427343516)); // Longitud, Latitud
-                        routeCoordinates.add(Point.fromLngLat(-4.412477632486366, 36.71865740871274)); // Longitud, Latitud
-                        routeCoordinates.add(Point.fromLngLat(-4.4126331624193, 36.718831019893)); // Nuevo punto
-                        routeCoordinates.add(Point.fromLngLat(-4.4126331624191, 36.7188310198921)); // Nuevo punto
-
                         enableLocationComponent(style);
 
                         if (location != null && location.length == 2) {
                             LatLng center = new LatLng(location[0], location[1]);
-                            LatLng offsetCenter = new LatLng(center.getLatitude(), center.getLongitude() + 1);
-                            mapboxMap.animateCamera(CameraUpdateFactory.newLatLngZoom(offsetCenter, 16));
+                            mapboxMap.animateCamera(CameraUpdateFactory.newLatLngZoom(center, 18.1));
                         }
-                        // Verificar si hay una ruta seleccionada
+
+                        drawObras(obrasMuseo);
+
                         if (isRouteSelected) {
-                            // Llama al método para dibujar la ruta en el mapa si está seleccionada
-                            drawRoute(routeCoordinates);
                             buttonSalir.setText("Salir de Recorrido");
+                            List<Point> routeCoordinates = getObrasRoute();
+                            drawRoute(routeCoordinates);
                         }
-
-                        // Ajusta la cámara para hacer zoom en el primer punto de la ruta
-                        if (routeCoordinates.size() > 0) {
-                            LatLng firstCoordinate = new LatLng(routeCoordinates.get(0).latitude(), routeCoordinates.get(0).longitude());
-                            CameraPosition position = new CameraPosition.Builder()
-                                    .target(new LatLng(firstCoordinate.getLatitude(), firstCoordinate.getLongitude() + 0.001))
-                                    .zoom(17.05) // Ajusta el nivel de zoom a 18
-                                    .build();
-                            mapboxMap.animateCamera(CameraUpdateFactory.newCameraPosition(position), 1000);
-                        } else if (location != null && location.length == 2) {
-                            LatLng center = new LatLng(location[0], location[1]);
-                            mapboxMap.animateCamera(CameraUpdateFactory.newLatLngZoom(center, 18.0));
-                        }
-
-                        // Desactivar la interacción del usuario con el mapa
-                        mapboxMap.getUiSettings().setAllGesturesEnabled(false);
                     }
                 });
 
                 mapboxMap.addOnMapClickListener(new MapboxMap.OnMapClickListener() {
                     @Override
                     public boolean onMapClick(@NonNull LatLng point) {
-                        // Buscar características en el punto clicado
-                        PointF screenPoint = mapboxMap.getProjection().toScreenLocation(point);
-                        List<Feature> features = mapboxMap.queryRenderedFeatures(screenPoint);
-                        Log.e("INSIDE", "ALGO HAS CLICKADO");
-                        Log.e("INSIDE", features.toString());
-                        Log.e("INSIDE", screenPoint.toString());
-                        // Verificar si alguna característica fue clicada
-                        if (!features.isEmpty()) {
-
-                            Feature feature = features.get(0);
-                            String id = feature.getStringProperty("id"); // Obtener ID del ícono
-                            // Manejar el clic según el ID u otra propiedad
-                            handleIconClick(id);
-                            return true;
-                        }
-
                         return false;
                     }
                 });
@@ -156,69 +155,78 @@ public class InsideMuseum extends AppCompatActivity {
         });
     }
 
-    private void handleIconClick(String id) {
-        // Reaccionar según el ID del ícono clicado
-        if (id != null) {
-            Toast.makeText(this, "Icono clicado con ID: " + id, Toast.LENGTH_SHORT).show();
-            // Realizar otras acciones según el ID
-            // Por ejemplo, puedes iniciar una nueva actividad, mostrar un diálogo, etc.
+    private List<Point> getObrasRoute() {
+        List<Point> routeCoordinates = new ArrayList<>();
+        Route route = data.getRoute();
+        List<String> rutas = route.getArts();
+
+        for (String artId : rutas) {
+            for (Obra obra : obrasMuseo) {
+                if (obra.getId().equals(artId)) {
+                    double[] coords = obra.getLocation().getCoordinates();
+                    routeCoordinates.add(Point.fromLngLat(coords[0], coords[1]));
+                    break;
+                }
+            }
+        }
+        Log.e("ROUTECORD",routeCoordinates.toString());
+
+        return routeCoordinates;
+    }
+
+    private void drawObras(List<Obra> obras) {
+        if (mapboxMap != null) {
+            mapboxMap.getStyle(new Style.OnStyleLoaded() {
+                @Override
+                public void onStyleLoaded(@NonNull Style style) {
+                    style.addImage("artwork-icon", BitmapFactory.decodeResource(getResources(), R.drawable.artwork_icon));
+
+                    for (Obra obra : obras) {
+                        Point point = Point.fromLngLat(obra.getLocation().getCoordinates()[0], obra.getLocation().getCoordinates()[1]);
+                        Feature feature = Feature.fromGeometry(point);
+                        feature.addStringProperty("title", obra.getName());
+
+                        GeoJsonSource geoJsonSource = new GeoJsonSource("artwork-source-" + obra.getId(), feature);
+                        style.addSource(geoJsonSource);
+
+                        SymbolLayer symbolLayer = new SymbolLayer("artwork-layer-" + obra.getId(), "artwork-source-" + obra.getId());
+                        symbolLayer.setProperties(
+                                PropertyFactory.iconImage("artwork-icon"),
+                                PropertyFactory.iconAllowOverlap(true),
+                                PropertyFactory.iconSize(0.3f),
+                                PropertyFactory.textField("{title}"),
+                                PropertyFactory.textSize(12f),
+                                PropertyFactory.textOffset(new Float[]{0f, 1.5f}),
+                                PropertyFactory.textAnchor(Property.TEXT_ANCHOR_TOP)
+                        );
+                        style.addLayer(symbolLayer);
+                    }
+                }
+            });
         }
     }
 
-    // Método para dibujar la ruta en el mapa
     private void drawRoute(List<Point> routeCoordinates) {
         if (mapboxMap != null) {
             mapboxMap.getStyle(new Style.OnStyleLoaded() {
                 @Override
                 public void onStyleLoaded(@NonNull Style style) {
-                    // Remueve la capa anterior si existe
                     style.removeLayer("route-layer");
                     style.removeSource("route-source");
 
-                    // Agrega una fuente GeoJSON con la lista de coordenadas de la ruta
                     style.addSource(new GeoJsonSource("route-source",
                             LineString.fromLngLats(routeCoordinates)));
 
-                    // Agrega una capa de línea para mostrar la ruta
                     style.addLayer(new LineLayer("route-layer", "route-source")
                             .withProperties(
-                                    com.mapbox.mapboxsdk.style.layers.PropertyFactory.lineColor(Color.parseColor("#3bb2d0")),
-                                    com.mapbox.mapboxsdk.style.layers.PropertyFactory.lineWidth(4f) // Ajusta el grosor de la línea aquí
+                                    PropertyFactory.lineColor(Color.parseColor("#3bb2d0")),
+                                    PropertyFactory.lineWidth(4f)
                             ));
                 }
             });
         }
     }
 
-    // Método para manejar la selección de la ruta
-    private void handleRouteSelection(boolean selected) {
-        isRouteSelected = selected;
-        if (selected) {
-            // Simplemente llama al método para dibujar la ruta si está seleccionada
-            drawRoute(getSelectedRouteCoordinates()); // Aquí obtén las coordenadas de la ruta seleccionada
-        } else {
-            // Si no está seleccionada, puedes remover la ruta del mapa si es necesario
-            if (mapboxMap != null && mapboxMap.getStyle() != null) {
-                Style style = mapboxMap.getStyle();
-                if (style != null) {
-                    style.removeLayer("route-layer");
-                    style.removeSource("route-source");
-                }
-            }
-        }
-    }
-
-    // Método ficticio para obtener las coordenadas de la ruta seleccionada
-    private List<Point> getSelectedRouteCoordinates() {
-        // Aquí deberías implementar la lógica para obtener las coordenadas de la ruta seleccionada
-        List<Point> selectedRouteCoordinates = new ArrayList<>();
-        // Por ahora, devuelve un conjunto de coordenadas de ejemplo
-        selectedRouteCoordinates.add(Point.fromLngLat(-4.4141808491612, 36.71894427343516)); // Longitud, Latitud
-        selectedRouteCoordinates.add(Point.fromLngLat(-4.412477632486366, 36.71865740871274)); // Longitud, Latitud
-        selectedRouteCoordinates.add(Point.fromLngLat(-4.4126331624193, 36.718831019893)); // Nuevo punto
-        selectedRouteCoordinates.add(Point.fromLngLat(-4.4126331624191, 36.7188310198921)); // Nuevo punto
-        return selectedRouteCoordinates;
-    }
 
     @SuppressWarnings({"MissingPermission"})
     private void enableLocationComponent(@NonNull Style loadedMapStyle) {

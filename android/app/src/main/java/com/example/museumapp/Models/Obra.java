@@ -11,6 +11,7 @@ public class Obra {
     private String image;
     private String category;
     private String museum;
+    private Location location;
 
 
 
@@ -86,10 +87,18 @@ public class Obra {
         museum = museum;
     }
 
+    public Location getLocation() {
+        return location;
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
+    }
+
     @Override
     public String toString() {
         return "Obra{" +
-                "id='" + _id + '\'' +
+                "_id='" + _id + '\'' +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", author='" + author + '\'' +
@@ -97,7 +106,8 @@ public class Obra {
                 ", century='" + century + '\'' +
                 ", image='" + image + '\'' +
                 ", category='" + category + '\'' +
-                ", Museum='" + museum + '\'' +
+                ", museum='" + museum + '\'' +
+                ", location=" + location +
                 '}';
     }
 }

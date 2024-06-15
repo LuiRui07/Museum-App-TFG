@@ -12,11 +12,10 @@ import java.net.URI;
 public class SharedData {
 
     protected static SharedData instance;
-
     public User user;
-
     public Museum museo = null;
 
+    public Route route = null;
     public RouteBody routeBody = null;
 
     public User getUser() {
@@ -45,6 +44,14 @@ public class SharedData {
 
     public void setRouteBody(RouteBody route) {
         this.routeBody = route;
+    }
+
+    public Route getRoute() {
+        return route;
+    }
+
+    public void setRoute(Route route) {
+        this.route = route;
     }
 
     public static synchronized SharedData getInstance() {

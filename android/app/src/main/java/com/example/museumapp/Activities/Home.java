@@ -181,6 +181,7 @@ public class Home extends AppCompatActivity implements PermissionsListener {
             Intent intent = new Intent(Home.this, InsideMuseum.class);
             sharedData.setMuseo(museoActual);
             intent.putExtra("map", museoActual.getMap());
+            intent.putExtra("museum",museoActual.getId());
             intent.putExtra("location", museoActual.getLocation().getCoordinates());
             startActivity(intent);
         });
