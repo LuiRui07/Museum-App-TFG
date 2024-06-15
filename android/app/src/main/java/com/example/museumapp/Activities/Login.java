@@ -22,13 +22,11 @@ import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 
 public class Login extends AppCompatActivity {
-
     private static final int RC_SIGN_IN = 183107755; // Constante para el código de solicitud de inicio de sesión
     private GoogleSignInClient mGoogleSignInClient;
     private UserService usersService;
     private TextView TextViewContra;
     private TextView TextViewUser;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,7 +51,6 @@ public class Login extends AppCompatActivity {
             }
         });
     }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

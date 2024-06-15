@@ -14,12 +14,6 @@
         android:background="@android:color/white"
         tools:context=".home">
 
-        <!-- Texto mejorado -->
-
-        <!-- Mapa -->
-
-        <!-- Botón para ubicar la posición del usuario -->
-
         <TextView
             android:id="@+id/estas"
             android:layout_width="wrap_content"
@@ -66,7 +60,6 @@
             app:layout_constraintBottom_toBottomOf="@id/mapView"
             app:layout_constraintEnd_toEndOf="@id/mapView" />
 
-        <!-- Icono del drawer -->
         <ImageButton
             android:id="@+id/imageButton"
             android:layout_width="wrap_content"
@@ -82,7 +75,6 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <!-- Menú de navegación -->
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/navigation_view"
         android:layout_width="wrap_content"
