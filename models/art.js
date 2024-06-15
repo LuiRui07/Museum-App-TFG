@@ -33,7 +33,11 @@ const artSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'museums',
         required: true
-    }
+    },
+    location: {
+        type: { type: String, enum: ['Point'], required: true },
+        coordinates: { type: [Number], required: true }
+    },
 });
 
 module.exports = mongoose.model("art", artSchema);
