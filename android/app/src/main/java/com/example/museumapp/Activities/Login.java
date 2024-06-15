@@ -1,5 +1,7 @@
 package com.example.museumapp.Activities;
+
 import androidx.appcompat.app.AppCompatActivity;
+
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
@@ -23,9 +25,9 @@ public class Login extends AppCompatActivity {
 
     private static final int RC_SIGN_IN = 183107755; // Constante para el código de solicitud de inicio de sesión
     private GoogleSignInClient mGoogleSignInClient;
-    private String contra ;
-    private String username ;
     private UserService usersService;
+    private TextView TextViewContra;
+    private TextView TextViewUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,50 +35,43 @@ public class Login extends AppCompatActivity {
         setContentView(R.layout.login);
 
         usersService = new UserService(this);
+        TextViewContra = findViewById(R.id.contra);
+        TextViewUser = findViewById(R.id.user);
 
-        // Configurar Google Sign-In para solicitar el ID del usuario, dirección de correo electrónico y perfil básico.
-        // ID y perfil básico están incluidos en DEFAULT_SIGN_IN.
+        // Configuración de Google Sign-In
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .build();
-        // Crear un GoogleSignInClient con las opciones especificadas por gso.
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
+        // Configuración del botón de inicio de sesión con Google
         findViewById(R.id.sign_in_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                signIn();
+                Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+                startActivityForResult(signInIntent, RC_SIGN_IN);
             }
         });
-
-    }
-
-    private void signIn() {
-        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-        startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RC_SIGN_IN) {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-            handleSignInResult(task);
-        }
-
-    private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
-        try {
-            GoogleSignInAccount account = completedTask.getResult(ApiException.class);
-            updateUI(account);
-        } catch (ApiException e) {
-            // Sign in failed, update UI appropriately.
-            Log.w("SignInActivity", "signInResult:failed code=" + e.getStatusCode());
-            updateUI(null);
+            try {
+                GoogleSignInAccount account = task.getResult(ApiException.class);
+                updateUI(account);
+            } catch (ApiException e) {
+                Log.w("SignInActivity", "signInResult:failed code=" + e.getStatusCode());
+                updateUI(null);
+            }
         }
     }
 
     private void updateUI(GoogleSignInAccount account) {
         if (account != null) {
-            // Usuario está logueado
+            // Usuario está logueado con Google
             usersService.loginGoogle(account.getEmail(), account.getDisplayName(), account.getPhotoUrl().toString(), new UserService.UserCallback() {
                 @Override
                 public void onSuccess(User user) {
@@ -89,7 +84,7 @@ public class Login extends AppCompatActivity {
                 }
             });
         } else {
-            toast("Error al iniciar sesion con google");
+            toast("Error al iniciar sesión con Google");
         }
     }
 
@@ -97,27 +92,20 @@ public class Login extends AppCompatActivity {
         Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
     }
 
-    public void Register(View view){
+    public void Register(View view) {
         Intent intent = new Intent(this, Register.class);
         startActivity(intent);
     }
 
     @SuppressLint("NotConstructor")
     public void Login(View view) {
-        TextView c = findViewById(R.id.contra);
-        contra = c.getText().toString();
-        TextView u = findViewById(R.id.user);
-        username = u.getText().toString();
-
-        if (username.isEmpty() || contra.isEmpty()) {
-            Toast.makeText(this, "Debe escribir un usuario y una contraseña", Toast.LENGTH_SHORT).show();
-        }
-
+        String contra = TextViewContra.getText().toString();
+        String username = TextViewUser.getText().toString();
         usersService.loginUser(username, contra, new UserService.UserCallback() {
             @Override
             public void onSuccess(User user) {
-                    user.setPhoto(null);
-                    goHome(user);
+                user.setPhoto(null);
+                goHome(user);
             }
 
             @Override
@@ -134,5 +122,4 @@ public class Login extends AppCompatActivity {
         Intent intent = new Intent(getApplicationContext(), Home.class);
         startActivity(intent);
     }
-
 }
