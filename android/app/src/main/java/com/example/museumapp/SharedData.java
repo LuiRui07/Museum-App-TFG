@@ -2,7 +2,9 @@ package com.example.museumapp;
 
 import android.net.Uri;
 
+import com.example.museumapp.Api.RouteBody;
 import com.example.museumapp.Models.Museum;
+import com.example.museumapp.Models.Route;
 import com.example.museumapp.Models.User;
 
 import java.net.URI;
@@ -14,6 +16,8 @@ public class SharedData {
     public User user;
 
     public Museum museo = null;
+
+    public RouteBody routeBody = null;
 
     public User getUser() {
         return user;
@@ -29,6 +33,18 @@ public class SharedData {
 
     public void setMuseo(Museum museo) {
         this.museo = museo;
+    }
+
+    public static void setInstance(SharedData instance) {
+        SharedData.instance = instance;
+    }
+
+    public RouteBody getRouteBody() {
+        return routeBody;
+    }
+
+    public void setRouteBody(RouteBody route) {
+        this.routeBody = route;
     }
 
     public static synchronized SharedData getInstance() {

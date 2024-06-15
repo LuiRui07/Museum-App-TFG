@@ -22,8 +22,10 @@ import com.example.museumapp.R;
 import com.example.museumapp.Service.MuseumService;
 import com.example.museumapp.Service.ObraService;
 import com.example.museumapp.Service.RouteService;
+import com.example.museumapp.SharedData;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,8 +42,10 @@ public class CreateRoute extends AppCompatActivity {
     private Map<Museum, List<Obra>> artworksByMuseum = new HashMap<>();
     private List<String> museumNames = new ArrayList<>();
     public String selectedMuseum;
-
     public LinearLayout linearLayout;
+    private List<Spinner> spinners = new ArrayList<>();
+    private Map<Spinner, String> spinnerSelections = new HashMap<>();
+    public SharedData data;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +61,8 @@ public class CreateRoute extends AppCompatActivity {
         obraService = new ObraService(this);
         routeBody = new RouteBody(null,null,null,null);
 
+        selectedMuseum = "";
+        data = SharedData.getInstance();
         // Inicializar los datos de los museos y obras
         initializeData();
     }
@@ -100,13 +106,10 @@ public class CreateRoute extends AppCompatActivity {
         spinnerMuseum.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-                Log.e("AEEEAEA", "es" + position);
-                Log.e("SEEEEEET",artworksByMuseum.keySet().toArray().toString());
                 if (getMuseumIdFromPosition(artworksByMuseum.keySet()) != null){
                     routeBody.setMuseum(getMuseumIdFromPosition(artworksByMuseum.keySet()));
                 }
-                selectedMuseum = (String) spinnerMuseum.getSelectedItem();
+                selectedMuseum = spinnerMuseum.getSelectedItem().toString();
                 List<String> artworks = new ArrayList<>();
                 for (Museum museum : artworksByMuseum.keySet()) {
                     if (museum.getName().equals(selectedMuseum)) {
@@ -121,6 +124,19 @@ public class CreateRoute extends AppCompatActivity {
                     artworkAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     spinnerArtworks.setAdapter(artworkAdapter);
                     spinnerArtworks.setVisibility(View.VISIBLE);
+
+                    spinnerArtworks.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                        @Override
+                        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                            String selected = (String) parent.getItemAtPosition(position);
+                            spinnerSelections.put(spinnerArtworks, selected);
+                        }
+
+                        @Override
+                        public void onNothingSelected(AdapterView<?> parent) {
+
+                        }
+                    });
                 } else {
                    // spinnerArtworks.setVisibility(View.GONE);
                 }
@@ -145,11 +161,27 @@ public class CreateRoute extends AppCompatActivity {
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT);
-        layoutParams.topMargin = 16; // Ajusta el margen superior según tu necesidad
+        layoutParams.topMargin = 20;
+        layoutParams.bottomMargin = 20;
         newSpinner.setLayoutParams(layoutParams);
 
         // Agregar el Spinner al LinearLayout
         linearLayout.addView(newSpinner);
+
+        spinners.add(newSpinner);
+
+        newSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String selected = (String) parent.getItemAtPosition(position);
+                spinnerSelections.put(newSpinner, selected);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                spinnerSelections.remove(newSpinner);
+            }
+        });
     }
 
     public String getMuseumIdFromPosition(Set<Museum> museums){
@@ -164,7 +196,11 @@ public class CreateRoute extends AppCompatActivity {
     }
 
     public List<String> getObrasFromMusem(String name) {
-        List<Obra> obras = artworksByMuseum.get(name);
+        List<Obra> obras = artworksByMuseum.get(getMuseumFromName(name));
+        if (obras != null){
+            Log.e("MUM", obras.toString());
+        }
+        Log.e("MUM",artworksByMuseum.toString());
         List<String> res = new ArrayList<>();
         if (obras != null) {
             for (Obra ob : obras) {
@@ -174,15 +210,40 @@ public class CreateRoute extends AppCompatActivity {
         return res;
     }
 
+    public Museum getMuseumFromName(String name){
+        Set<Museum> museos = artworksByMuseum.keySet();
+        Museum res = null;
+        for (Museum m : museos){
+            if (m.getName() == name){
+                res = m;
+            }
+        }
+        return res;
+    }
+
+    private void setRoutesFromStrings(){
+        Collection<List<Obra>> obras = artworksByMuseum.values();
+        List<Obra> res = new ArrayList<>();
+        for (String obra: spinnerSelections.values()){
+            for (List<Obra> list : obras){
+                for (Obra obraValue : list){
+                    if (obra == obraValue.getName()){
+                        res.add(obraValue);
+                    }
+                }
+            }
+        }
+        routeBody.setArts(res);
+    }
+
     public void createRoute(View view){
         Context context = this;
-        routeService.createRoute(routeBody, new RouteService.RouteCallback() {
-            @Override
-            public void onSuccess(List<Route> rutas) {
-                Intent intent = new Intent(context,Recorridos.class);
-                startActivity(intent);
-                Toast.makeText(CreateRoute.this, "Recorrido creado", Toast.LENGTH_SHORT).show();
-            }
-        });
+        routeBody.setMuseum(getMuseumFromName(selectedMuseum).getId());
+        routeBody.setUser(data.getUser().getId());
+        setRoutesFromStrings();
+        Log.e("ROUTE FINAL", routeBody.toString());
+        data.setRouteBody(routeBody);
+        Intent intent = new Intent(this, CreateRouteFinal.class);
+        startActivity(intent);
     }
 }
