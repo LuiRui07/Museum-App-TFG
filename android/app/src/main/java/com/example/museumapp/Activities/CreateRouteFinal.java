@@ -50,6 +50,8 @@ public class CreateRouteFinal extends AppCompatActivity {
                 public void onSuccess(List<Route> rutas) {
                     Toast.makeText(context, "Recorrido creado", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(CreateRouteFinal.this,Recorridos.class);
+                    intent.putExtra("tipo",1);
+                    intent.putExtra("idMuseum", data.getMuseo().getId());
                     startActivity(intent);
                 }
             });

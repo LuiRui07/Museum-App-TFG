@@ -25,18 +25,12 @@ public class Cuenta extends AppCompatActivity {
         data = SharedData.getInstance();
 
         TextView userName = findViewById(R.id.account_name);
-
         TextView mail = findViewById(R.id.account_email);
-
         ImageView photo = findViewById(R.id.user_photo);
-
         leave = findViewById(R.id.logOut);
 
-
         mail.setText(data.user.getMail());
-
         userName.setText(data.user.getUser());
-
 
         if (data.user.getPhoto() != null){
             Picasso.get()

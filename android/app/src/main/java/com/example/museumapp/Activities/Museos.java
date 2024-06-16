@@ -40,14 +40,9 @@ public class Museos extends AppCompatActivity {
                 museosAdapter = new MuseosAdapter(museos,context);
                 recyclerView.setAdapter(museosAdapter);
             }
-
             @Override
             public void onFailure(String errorMessage) {
             }
         });
-
-
-
-        }
-
     }
+}

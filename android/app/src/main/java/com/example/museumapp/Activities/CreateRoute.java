@@ -147,7 +147,16 @@ public class CreateRoute extends AppCompatActivity {
         });
     }
 
-    public void addSpinner(View view){
+    public void addSpinner(View view) {
+        // Crear un nuevo LinearLayout horizontal para contener el Spinner y el botón de borrar
+        LinearLayout horizontalLayout = new LinearLayout(this);
+        horizontalLayout.setOrientation(LinearLayout.HORIZONTAL);
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT);
+        layoutParams.topMargin = 16;
+        horizontalLayout.setLayoutParams(layoutParams);
+
         // Crear un nuevo Spinner
         Spinner newSpinner = new Spinner(this);
 
@@ -157,16 +166,32 @@ public class CreateRoute extends AppCompatActivity {
         newSpinner.setAdapter(adapter);
 
         // Configurar las propiedades del layout del Spinner
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT);
-        layoutParams.topMargin = 20;
-        layoutParams.bottomMargin = 20;
-        newSpinner.setLayoutParams(layoutParams);
+        LinearLayout.LayoutParams spinnerLayoutParams = new LinearLayout.LayoutParams(
+                0,
+                LinearLayout.LayoutParams.WRAP_CONTENT, 1.0f);
+        newSpinner.setLayoutParams(spinnerLayoutParams);
 
-        // Agregar el Spinner al LinearLayout
-        linearLayout.addView(newSpinner);
+        // Crear un botón de borrar
+        Button btnDelete = new Button(this);
+        btnDelete.setText("Borrar");
+        btnDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Eliminar el LinearLayout horizontal que contiene el Spinner y el botón de borrar
+                linearLayout.removeView(horizontalLayout);
+                spinners.remove(newSpinner); // Eliminar el Spinner de la lista de Spinners
+                spinnerSelections.remove(newSpinner); // Eliminar la selección del Spinner de spinnerSelections
+            }
+        });
 
+        // Agregar el Spinner y el botón de borrar al layout horizontal
+        horizontalLayout.addView(newSpinner);
+        horizontalLayout.addView(btnDelete);
+
+        // Agregar el LinearLayout horizontal al contenedor principal
+        linearLayout.addView(horizontalLayout);
+
+        // Agregar el Spinner a la lista de Spinners
         spinners.add(newSpinner);
 
         newSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -182,6 +207,9 @@ public class CreateRoute extends AppCompatActivity {
             }
         });
     }
+
+
+
 
     public String getMuseumIdFromPosition(Set<Museum> museums){
         String res = null;
@@ -236,12 +264,13 @@ public class CreateRoute extends AppCompatActivity {
     }
 
     public void createRoute(View view){
-        Context context = this;
         routeBody.setMuseum(getMuseumFromName(selectedMuseum).getId());
         routeBody.setUser(data.getUser().getId());
         setRoutesFromStrings();
-        Log.e("ROUTE FINAL", routeBody.toString());
         data.setRouteBody(routeBody);
+
+        Log.e("ROUTE FINAL", routeBody.toString());
+
         Intent intent = new Intent(this, CreateRouteFinal.class);
         startActivity(intent);
     }

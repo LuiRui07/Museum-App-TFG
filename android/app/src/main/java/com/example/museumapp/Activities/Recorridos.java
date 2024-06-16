@@ -27,6 +27,8 @@ public class Recorridos extends AppCompatActivity {
     public TextView emptyRoutes;
     public String idMuseo;
 
+    public int tipo;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,7 +44,7 @@ public class Recorridos extends AppCompatActivity {
         Log.e("shared", sharedData.toString());
 
         Intent intent = getIntent();
-        int tipo= intent.getIntExtra("tipo",0);
+        tipo= intent.getIntExtra("tipo",0);
         idMuseo = intent.getStringExtra("idMuseum");
         if( sharedData.getUser() != null){
             String user = sharedData.getUser().getUser();

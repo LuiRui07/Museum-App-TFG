@@ -6,21 +6,22 @@
     android:orientation="vertical"
     android:padding="16dp">
 
-    <!-- LinearLayout secundario para contener los Spinners -->
+    <!-- Contenedor de Spinners -->
     <LinearLayout
         android:id="@+id/spinner_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_marginBottom="16dp">
 
-        <!-- Spinner de museos -->
+        <!-- Spinner de Museos -->
         <Spinner
             android:id="@+id/spinner_museum"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:prompt="@string/select_museum_prompt" />
 
-        <!-- Spinner de obras -->
+        <!-- Spinner de Obras -->
         <Spinner
             android:id="@+id/spinner_artworks"
             android:layout_width="match_parent"
@@ -29,24 +30,24 @@
             android:prompt="@string/select_artwork_prompt" />
     </LinearLayout>
 
-    <!-- Botón para añadir obra -->
+    <!-- Botón para Añadir Obra -->
     <Button
         android:id="@+id/btn_add_art"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
+        android:layout_gravity="end"
         android:layout_marginTop="16dp"
-        android:onClick="addSpinner"
-        android:text="Añadir Obra" />
+        android:text="Añadir Obra"
+        android:onClick="addSpinner" />
 
-    <!-- Botón para crear ruta -->
+    <!-- Botón para Crear Ruta -->
     <Button
         android:id="@+id/btn_create_route"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
+        android:layout_gravity="center_horizontal"
         android:layout_marginTop="16dp"
-        android:onClick="createRoute"
-        android:text="@string/create_route_button" />
+        android:text="@string/create_route_button"
+        android:onClick="createRoute" />
 
 </LinearLayout>
