@@ -35,7 +35,6 @@ public class CreateRoute extends AppCompatActivity {
     private RouteBody routeBody;
     private Spinner spinnerMuseum;
     private Spinner spinnerArtworks;
-    private Button btnCreateRoute;
     private MuseumService museumService;
     private ObraService obraService;
     private Map<Museum, List<Obra>> artworksByMuseum = new HashMap<>();
@@ -53,7 +52,6 @@ public class CreateRoute extends AppCompatActivity {
 
         spinnerMuseum = findViewById(R.id.spinner_museum);
         spinnerArtworks = findViewById(R.id.spinner_artworks);
-        btnCreateRoute = findViewById(R.id.btn_create_route);
         linearLayout = findViewById(R.id.spinner_container);
 
         museumService = new MuseumService(this);
