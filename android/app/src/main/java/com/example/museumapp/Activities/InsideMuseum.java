@@ -102,6 +102,7 @@ public class InsideMuseum extends AppCompatActivity {
             @Override
             public void onSuccess(List<Obra> obras, Obra obra) {
                 setObras(obras);
+                verifyObras(obras);
                 initMap(location);
             }
         });
@@ -178,30 +179,72 @@ public class InsideMuseum extends AppCompatActivity {
             mapboxMap.getStyle(new Style.OnStyleLoaded() {
                 @Override
                 public void onStyleLoaded(@NonNull Style style) {
+                    // Cargar la imagen del icono si aún no está cargada
                     style.addImage("artwork-icon", BitmapFactory.decodeResource(getResources(), R.drawable.artwork_icon));
 
                     for (Obra obra : obras) {
-                        Point point = Point.fromLngLat(obra.getLocation().getCoordinates()[0], obra.getLocation().getCoordinates()[1]);
+                        // Obtener las coordenadas de la obra
+                        double[] coords = obra.getLocation().getCoordinates();
+                        if (coords == null || coords.length != 2) {
+                            Log.e("OBRA_INVALIDA", "Obra con coordenadas inválidas: " + obra.getName());
+                            continue; // Saltar esta obra si las coordenadas no son válidas
+                        }
+
+                        // Crear un punto a partir de las coordenadas de la obra
+                        Point point = Point.fromLngLat(coords[0], coords[1]);
+
+                        // Crear una Feature desde el punto
                         Feature feature = Feature.fromGeometry(point);
                         feature.addStringProperty("title", obra.getName());
 
-                        GeoJsonSource geoJsonSource = new GeoJsonSource("artwork-source-" + obra.getId(), feature);
-                        style.addSource(geoJsonSource);
+                        // Crear o actualizar la GeoJsonSource
+                        String sourceId = "artwork-source-" + obra.getId();
+                        GeoJsonSource geoJsonSource = style.getSourceAs(sourceId);
+                        if (geoJsonSource == null) {
+                            geoJsonSource = new GeoJsonSource(sourceId, feature);
+                            style.addSource(geoJsonSource);
+                            Log.e("SOURCE_ADDED", "Fuente añadida: " + sourceId);
+                        } else {
+                            geoJsonSource.setGeoJson(feature);
+                            Log.e("SOURCE_UPDATED", "Fuente actualizada: " + sourceId);
+                        }
 
-                        SymbolLayer symbolLayer = new SymbolLayer("artwork-layer-" + obra.getId(), "artwork-source-" + obra.getId());
-                        symbolLayer.setProperties(
-                                PropertyFactory.iconImage("artwork-icon"),
-                                PropertyFactory.iconAllowOverlap(true),
-                                PropertyFactory.iconSize(0.3f),
-                                PropertyFactory.textField("{title}"),
-                                PropertyFactory.textSize(12f),
-                                PropertyFactory.textOffset(new Float[]{0f, 1.5f}),
-                                PropertyFactory.textAnchor(Property.TEXT_ANCHOR_TOP)
-                        );
-                        style.addLayer(symbolLayer);
+                        // Crear o actualizar la SymbolLayer
+                        String layerId = "artwork-layer-" + obra.getId();
+                        SymbolLayer symbolLayer = style.getLayerAs(layerId);
+                        if (symbolLayer == null) {
+                            symbolLayer = new SymbolLayer(layerId, sourceId);
+                            symbolLayer.setProperties(
+                                    PropertyFactory.iconImage("artwork-icon"),
+                                    PropertyFactory.iconAllowOverlap(true),
+                                    PropertyFactory.iconSize(0.3f),
+                                    PropertyFactory.textField("{title}"),
+                                    PropertyFactory.textSize(12f),
+                                    PropertyFactory.textOffset(new Float[]{0f, 1.5f}),
+                                    PropertyFactory.textAnchor(Property.TEXT_ANCHOR_TOP),
+                                    PropertyFactory.visibility(Property.VISIBLE)
+                            );
+                            symbolLayer.setMaxZoom(22); // Asegura que el icono sea visible en todos los niveles de zoom
+                            symbolLayer.setMinZoom(0);
+                            style.addLayer(symbolLayer);
+                            Log.e("LAYER_ADDED", "Capa añadida: " + layerId);
+                        } else {
+                            Log.e("LAYER_EXISTS", "Capa ya existente: " + layerId);
+                        }
                     }
                 }
             });
+        }
+    }
+
+    private void verifyObras(List<Obra> obras) {
+        for (Obra obra : obras) {
+            double[] coords = obra.getLocation().getCoordinates();
+            if (coords == null || coords.length != 2) {
+                Log.e("OBRA_INVALIDA", "Obra con coordenadas inválidas: " + obra.getName());
+            } else {
+                Log.e("OBRA_VALIDA", "Obra válida: " + obra.getName() + " Coordenadas: " + coords[0] + ", " + coords[1]);
+            }
         }
     }
 
