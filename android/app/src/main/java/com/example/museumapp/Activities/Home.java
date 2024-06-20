@@ -208,7 +208,7 @@ public class Home extends AppCompatActivity implements PermissionsListener {
                     startActivity(intent);
                 } else if (tipo == 1){
                     museoActual = result;
-                    estas.setText("Estas en " + result.getName());
+                    estas.setText("Estás en " + result.getName());
                 }
             }
 
