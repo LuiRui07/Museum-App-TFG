@@ -69,7 +69,7 @@ public class Login extends AppCompatActivity {
     private void updateUI(GoogleSignInAccount account) {
         if (account != null) {
             // Usuario está logueado con Google
-            usersService.loginGoogle(account.getEmail(), account.getDisplayName(), account.getPhotoUrl().toString(), new UserService.UserCallback() {
+            usersService.loginGoogle(account.getEmail(), account.getDisplayName(),(account.getPhotoUrl() == null ? null : account.getPhotoUrl().toString()), new UserService.UserCallback() {
                 @Override
                 public void onSuccess(User user) {
                     goHome(user);
