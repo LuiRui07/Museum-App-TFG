@@ -1,13 +1,12 @@
 package com.example.museumapp.Service;
 
+import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.os.Bundle;
+import android.os.IBinder;
 import android.util.Log;
-import androidx.appcompat.app.AppCompatActivity;
-
-import com.example.museumapp.R;
+import android.widget.Toast;
 
 import org.altbeacon.beacon.Beacon;
 import org.altbeacon.beacon.BeaconConsumer;
@@ -18,15 +17,14 @@ import org.altbeacon.beacon.Region;
 
 import java.util.Collection;
 
-public class BeaconService extends AppCompatActivity implements BeaconConsumer {
+public class BeaconService extends Service implements BeaconConsumer {
     private static final String TAG = "BeaconService";
     private BeaconManager beaconManager;
     private Region region;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.obra_info);
+    public void onCreate() {
+        super.onCreate();
 
         // Inicializar BeaconManager
         beaconManager = BeaconManager.getInstanceForApplication(this);
@@ -48,24 +46,28 @@ public class BeaconService extends AppCompatActivity implements BeaconConsumer {
                                 " Major: " + beacon.getId2() +
                                 " Minor: " + beacon.getId3() +
                                 " Distancia: " + beacon.getDistance());
+
+                        // Mostrar mensaje Toast con la información del beacon
+                        // Debes usar un handler ya que Toast no se puede llamar directamente desde un servicio
+                        new android.os.Handler(getMainLooper()).post(() ->
+                                Toast.makeText(BeaconService.this, "Beacon detectado: " + beacon.getId1(), Toast.LENGTH_SHORT).show());
                     }
                 }
             }
         });
-    }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        // Iniciar escaneo de beacons cuando la actividad se reanuda
         beaconManager.bind(this);
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-        // Detener escaneo de beacons cuando la actividad se pausa
+    public void onDestroy() {
+        super.onDestroy();
         beaconManager.unbind(this);
+    }
+
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null; // No estamos proporcionando binding, así que retorna null
     }
 
     @Override
@@ -75,11 +77,6 @@ public class BeaconService extends AppCompatActivity implements BeaconConsumer {
         } catch (Exception e) {
             Log.e(TAG, "No se pudo iniciar el escaneo de beacons: " + e.getMessage());
         }
-    }
-
-    @Override
-    public Context getApplicationContext() {
-        return this.getApplicationContext();
     }
 
     @Override
