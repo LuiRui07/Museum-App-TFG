@@ -268,8 +268,10 @@ public class CreateRoute extends AppCompatActivity {
         data.setRouteBody(routeBody);
 
         Log.e("ROUTE FINAL", routeBody.toString());
+        Log.e("MUSEORUTA", routeBody.getMuseum().toString());
 
         Intent intent = new Intent(this, CreateRouteFinal.class);
+        intent.putExtra("museumID",routeBody.getMuseum());
         startActivity(intent);
     }
 }

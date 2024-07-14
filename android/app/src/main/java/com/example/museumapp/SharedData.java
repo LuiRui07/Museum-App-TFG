@@ -12,9 +12,8 @@ import java.net.URI;
 public class SharedData {
 
     protected static SharedData instance;
-    public User user;
+    public User user = null;
     public Museum museo = null;
-
     public Route route = null;
     public RouteBody routeBody = null;
 

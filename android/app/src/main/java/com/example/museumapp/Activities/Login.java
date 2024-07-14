@@ -115,6 +115,7 @@ public class Login extends AppCompatActivity {
     public void goHome(User user) {
         SharedData sharedData = SharedData.getInstance();
         sharedData.setUser(user);
+        Log.e("user", user.toString());
         Log.e("UserData", sharedData.toString());
         Intent intent = new Intent(getApplicationContext(), Home.class);
         startActivity(intent);

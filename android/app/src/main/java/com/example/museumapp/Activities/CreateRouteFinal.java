@@ -28,6 +28,8 @@ public class CreateRouteFinal extends AppCompatActivity {
     private RouteBody routeBody;
     private RouteService routeService;
 
+    private String museum;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,6 +37,10 @@ public class CreateRouteFinal extends AppCompatActivity {
         routeBody = data.getRouteBody();
         routeName = findViewById(R.id.routeNameEditText);
         routeService = new RouteService(this);
+
+        Intent intent = getIntent();
+        museum = intent.getStringExtra("museumID");
+        Log.e("Museo Recibido", museum + "0");
     }
 
     public void onClick(View view){
@@ -51,7 +57,7 @@ public class CreateRouteFinal extends AppCompatActivity {
                     Toast.makeText(context, "Recorrido creado", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(CreateRouteFinal.this,Recorridos.class);
                     intent.putExtra("tipo",1);
-                    intent.putExtra("idMuseum", data.getMuseo().getId());
+                    intent.putExtra("idMuseum",museum);
                     startActivity(intent);
                 }
             });
